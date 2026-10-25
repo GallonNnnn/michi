@@ -1019,12 +1019,12 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   const FLOWER = '<svg viewBox="-12 -12 24 24"><use href="#sakura"/></svg>';
 
   // озвучка
+  const AUDIO = window.KANA_AUDIO || null;
   let jaVoice = null;
   const canSpeak = 'speechSynthesis' in window;
   function pickVoice() { try { jaVoice = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)) || null; } catch (e) {} updateVoiceUI(); }
   if (canSpeak) { pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {} }
   // записанная озвучка (на хостинге), иначе — синтез браузера
-  const AUDIO = window.KANA_AUDIO || null;
   const canPlay = canSpeak || !!AUDIO;
   let voicePref = store.get('kana.voice', 'f');
   let curAudio = null;
