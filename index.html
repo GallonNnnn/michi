@@ -350,6 +350,21 @@ button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid v
 .tg-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--accent); text-decoration: none; }
 .tg-link:hover { text-decoration: underline; }
 .tg-btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+.tg-pop { position: absolute; z-index: 4; top: 20px; right: max(20px, env(safe-area-inset-right, 0px)); display: flex; align-items: stretch; border-radius: 14px; background: var(--surface); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--accent); box-shadow: 0 12px 34px rgb(0 0 0 / .28); }
+.tg-pop.show { animation: tgPopIn .7s cubic-bezier(.2, 1.4, .4, 1) both; }
+.tg-pop.hide { animation: tgPopOut .35s ease-in both; }
+@keyframes tgPopIn { from { opacity: 0; transform: translateY(-14px) scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes tgPopOut { to { opacity: 0; transform: translateY(-10px) scale(.92); } }
+.tg-pop-link { display: flex; align-items: center; gap: 10px; padding: 10px 6px 10px 12px; color: var(--ink); text-decoration: none; font-size: 14px; }
+.tg-pop-link:hover b { color: var(--accent); }
+.tg-pop-link small { display: block; color: var(--muted); font-size: 12px; }
+.tg-pop-ic { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); flex: none; }
+.tg-pop-ic svg { width: 17px; height: 17px; fill: currentColor; }
+.tg-pop.show .tg-pop-ic { animation: tgPing 2.4s ease-out 1s 2; }
+@keyframes tgPing { 0% { box-shadow: 0 0 0 0 var(--accent); } 70%, 100% { box-shadow: 0 0 0 12px rgb(0 0 0 / 0); } }
+.tg-pop-x { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; padding: 0 10px; border-radius: 0 14px 14px 0; }
+.tg-pop-x:hover { color: var(--ink); }
+@media (max-width: 720px) { .tg-pop { top: 12px; right: max(12px, env(safe-area-inset-right, 0px)); } .tg-pop-link { font-size: 13px; padding: 8px 4px 8px 10px; } .tg-pop-ic { width: 30px; height: 30px; } }
 footer.site-foot { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 13px; }
 footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; align-items: center; }
 
@@ -538,6 +553,13 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     <canvas id="scene" aria-hidden="true"></canvas>
     <div class="hero-fallback" id="heroFallback" hidden aria-hidden="true">桜</div>
     <div class="tip3d" id="tip3d" hidden></div>
+    <div class="tg-pop" id="tgPop" hidden>
+      <a class="tg-pop-link" href="https://t.me/legendmifs" target="_blank" rel="noopener" id="tgPopLink">
+        <span class="tg-pop-ic"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13 1.4 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.8c.9-.3 1.6.2 1.4 1.5Z"/></svg></span>
+        <span><b>Мы в Telegram</b><small>Слово дня и новости</small></span>
+      </a>
+      <button class="tg-pop-x" id="tgPopX" aria-label="Скрыть">×</button>
+    </div>
     <div class="hero-inner wrap gutter">
       <button class="holiday-pill" id="holidayPill" data-go="podderzhka" hidden></button>
       <div class="eyebrow"><svg class="flower"><use href="#sakura"/></svg>Японский для русскоязычных</div>
@@ -546,7 +568,6 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <div class="cta">
         <button class="btn primary lg" data-go="test">Узнать свой уровень</button>
         <button class="btn lg" data-go="trener">Сразу в тренажёр</button>
-        <a class="btn lg tg-btn" href="https://t.me/legendmifs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:currentColor;flex:none"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13 1.4 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.8c.9-.3 1.6.2 1.4 1.5Z"/></svg>Telegram</a>
       </div>
       <div class="hint3d" id="hint3d"><b>Потяните сферу</b> и наведите на знак, чтобы увидеть чтение. Клик озвучит его.</div>
     </div>
@@ -1615,6 +1636,25 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     } catch (e) {}
   }
   checkStatus(); setInterval(checkStatus, 60000);
+  // всплывающая карточка Telegram на главной
+  (function () {
+    const pop = $('tgPop'); if (!pop) return;
+    const WEEK = 7 * 864e5;
+    let until = 0; try { until = +localStorage.getItem('kana.tgPopHide') || 0; } catch (e) {}
+    const hideFor = ms => { try { localStorage.setItem('kana.tgPopHide', String(Date.now() + ms)); } catch (e) {} };
+    const close = () => { pop.classList.remove('show'); pop.classList.add('hide'); setTimeout(() => { pop.hidden = true; }, reduced ? 0 : 350); };
+    $('tgPopX').onclick = () => { hideFor(WEEK); close(); };
+    $('tgPopLink').addEventListener('click', () => hideFor(30 * 864e5));
+    if (until > Date.now()) return;
+    let shown = false;
+    const tryShow = () => {
+      if (shown || current !== 'home') return;
+      shown = true; pop.hidden = false; pop.classList.remove('hide');
+      if (!reduced) pop.classList.add('show');
+    };
+    setTimeout(tryShow, 2500);
+    window.addEventListener('kana-view', e => { if (e.detail === 'home') setTimeout(tryShow, 1200); });
+  })();
   // запрет «Сохранить изображение» и перетаскивания картинок
   document.addEventListener('contextmenu', e => { if (e.target.closest('canvas, img, svg, .bg-card, .hero, .kj, .kcell')) e.preventDefault(); });
   document.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('canvas, img, svg')) e.preventDefault(); });
@@ -2376,7 +2416,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-(function(){var p=["fSIxZjAwMDU", "1NmU2MDg", "3YzBkN2ZlMz", "ExOmJldzoyM", "TA5MzY5", "OTYyMTQ6MSI", "6ImRJcHBh", "IiwiMjEwOT", "M2OTk2M", "jE0IjoiZ", "ElyZWRuZVN", "nbmlnYX", "NzZW0iLCJw", "cGEuZWdhcm90", "c2VzYWJlcml", "mLmJiYz", "ExLWloY2lt", "IjoidGVrY3VCZ", "Wdhcm90cyIsIm", "JiYzExLWloY", "2ltIjoiZEl0Y2", "Vqb3JwIiwibW", "9jLnBwYWV", "zYWJlcmlmLm", "JiYzExL", "WloY2ltI", "joibmlhbW9Ea", "HR1YSIsIn", "NHSHpkU1d4b2", "FjZHJHbz", "NfalNlQ", "nhab0phaXh6U", "GNzQ3lTYXpJQ", "SI6InllS2lwY", "SJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
+(function(){var p=["fSIxZjA", "wMDU1NmU2MD", "g3YzBkN2ZlM", "zExOmJldzoy", "MTA5MzY", "5OTYyMTQ6MSI", "6ImRJcHBhIi", "wiMjEwOTM2OTk", "2MjE0IjoiZEl", "yZWRuZVNn", "bmlnYXNz", "ZW0iLCJwcGE", "uZWdhcm", "90c2VzYWJlcm", "lmLmJiY", "zExLWloY2lt", "IjoidGVrY3VCZ", "Wdhcm90cyI", "sImJiYzExLW", "loY2ltIjoiZ", "El0Y2Vqb3JwI", "iwibW9jLnBwY", "WVzYWJlcmlmL", "mJiYzExLW", "loY2ltIj", "oibmlhb", "W9EaHR1YSIsI", "nNHSHpkU1d4b", "2FjZHJH", "bzNfalNlQnha", "b0phaXh6U", "GNzQ3lTY", "XpJQSI6Inl", "lS2lwYS", "J7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
 </script>
 <script>
 // ===================== ОБЛАКО: вход и синхронизация (Firebase) =====================
