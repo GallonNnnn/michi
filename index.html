@@ -365,6 +365,20 @@ button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid v
 .tg-pop-x { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; padding: 0 10px; border-radius: 0 14px 14px 0; }
 .tg-pop-x:hover { color: var(--ink); }
 @media (max-width: 720px) { .tg-pop { top: 12px; right: max(12px, env(safe-area-inset-right, 0px)); } .tg-pop-link { font-size: 13px; padding: 8px 4px 8px 10px; } .tg-pop-ic { width: 30px; height: 30px; } }
+.ev-btn { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px 5px 6px; border: 0; border-radius: 999px; color: var(--accent-ink); font-size: 13px; white-space: nowrap; isolation: isolate;
+  background: linear-gradient(100deg, var(--accent), var(--plum), var(--accent)); background-size: 220% 100%; animation: evShift 4s linear infinite; box-shadow: 0 0 0 0 var(--accent); }
+.ev-btn::after { content: ""; position: absolute; inset: -3px; border-radius: inherit; border: 2px solid var(--accent); opacity: 0; animation: evRing 2.2s ease-out infinite; z-index: -1; }
+.ev-btn:hover { filter: brightness(1.08); }
+.ev-spark { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / .9); flex: none; }
+.ev-spark svg { width: 14px; height: 14px; fill: var(--accent); animation: evSpin 6s linear infinite; }
+.ev-txt { display: flex; align-items: baseline; gap: 6px; }
+.ev-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; opacity: .85; }
+.ev-txt b { font-weight: 700; font-size: 13px; }
+.ev-date { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; background: rgb(0 0 0 / .18); font-variant-numeric: tabular-nums; }
+@keyframes evShift { to { background-position: -220% 0; } }
+@keyframes evRing { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
+@keyframes evSpin { to { transform: rotate(360deg); } }
+@media (max-width: 860px) { .ev-btn { order: -1; } .ev-date { display: none; } }
 footer.site-foot { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 13px; }
 footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; align-items: center; }
 
@@ -524,6 +538,11 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <button data-go="podderzhka">Поддержать</button>
     </div>
     <div class="nav-tools">
+      <button class="ev-btn" id="evBtn" data-go="prazdniki" hidden>
+        <span class="ev-spark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg></span>
+        <span class="ev-txt"><span class="ev-lbl">Ивент</span><b id="evName"></b></span>
+        <span class="ev-date" id="evDate"></span>
+      </button>
       <div class="lvl-switch" role="group" aria-label="Уровень">
         <button data-lvl="n">Новичок</button>
         <button data-lvl="m">Средний</button>
@@ -1636,6 +1655,13 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     } catch (e) {}
   }
   checkStatus(); setInterval(checkStatus, 60000);
+  // кнопка ивента в шапке
+  if (HOL_NOW) {
+    $('evBtn').hidden = false;
+    $('evName').textContent = HOL_NOW.name;
+    $('evDate').textContent = 'до ' + HOL_NOW.to[1] + '.' + String(HOL_NOW.to[0]).padStart(2, '0');
+    $('evBtn').title = `Праздничный урок «${HOL_NOW.name}» открыт до ${hDate(HOL_NOW.to)}`;
+  }
   // всплывающая карточка Telegram на главной
   (function () {
     const pop = $('tgPop'); if (!pop) return;
@@ -2416,7 +2442,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-(function(){var p=["fSIxZjA", "wMDU1NmU2MD", "g3YzBkN2ZlM", "zExOmJldzoy", "MTA5MzY", "5OTYyMTQ6MSI", "6ImRJcHBhIi", "wiMjEwOTM2OTk", "2MjE0IjoiZEl", "yZWRuZVNn", "bmlnYXNz", "ZW0iLCJwcGE", "uZWdhcm", "90c2VzYWJlcm", "lmLmJiY", "zExLWloY2lt", "IjoidGVrY3VCZ", "Wdhcm90cyI", "sImJiYzExLW", "loY2ltIjoiZ", "El0Y2Vqb3JwI", "iwibW9jLnBwY", "WVzYWJlcmlmL", "mJiYzExLW", "loY2ltIj", "oibmlhb", "W9EaHR1YSIsI", "nNHSHpkU1d4b", "2FjZHJH", "bzNfalNlQnha", "b0phaXh6U", "GNzQ3lTY", "XpJQSI6Inl", "lS2lwYS", "J7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
+(function(){var p=["fSIxZjA", "wMDU1NmU2MD", "g3YzBkN2", "ZlMzExOmJ", "ldzoyMTA5MzY5", "OTYyMTQ", "6MSI6ImRJc", "HBhIiwiMjEwOT", "M2OTk2MjE", "0IjoiZE", "lyZWRuZVNn", "bmlnYXNzZW0i", "LCJwcGEuZWd", "hcm90c2Vz", "YWJlcml", "mLmJiYzE", "xLWloY2l", "tIjoidGVr", "Y3VCZWdhcm90c", "yIsImJiYzExL", "WloY2ltIjoiZE", "l0Y2Vqb", "3JwIiwibW9", "jLnBwYWV", "zYWJlcmlmLmJi", "YzExLWloY2ltI", "joibmlhbW9EaH", "R1YSIsI", "nNHSHpkU1", "d4b2FjZ", "HJHbzNfalNlQn", "hab0pha", "Xh6UGNzQ3lTYX", "pJQSI6InllS2l", "wYSJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
 </script>
 <script>
 // ===================== ОБЛАКО: вход и синхронизация (Firebase) =====================
