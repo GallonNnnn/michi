@@ -1,0 +1,2353 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Твой личный путеводитель в японский язык: азбука, кандзи, грамматика, фразы и тренажёр с русскими чтениями.">
+<title>Твой личный путеводитель в японский язык</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Klee+One:wght@400;600&family=Unbounded:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+img { max-width: 100%; }
+/* Layout: ханами — бледно-розовое небо днём и сливовая ночь; сфера из каны в лепестках, разделы как страницы сайта, клетки-прописи генко-ёси */
+:root {
+  --bg: #fff5f8;
+  --bg-2: #fde4ed;
+  --surface: rgb(255 255 255 / .8);
+  --surface-solid: #ffffff;
+  --ink: #3b1d2f;
+  --muted: #8b6578;
+  --line: #f1d0dc;
+  --guide: #f0c3d3;
+  --accent: #d94c80;
+  --accent-ink: #ffffff;
+  --accent-soft: #fde1eb;
+  --plum: #7d4c93;
+  --plum-soft: #efe3f5;
+  --good: #2b8553;
+  --good-soft: #def3e6;
+  --bad: #c4423a;
+  --bad-soft: #fbe2df;
+  --petal: #f7a9c4;
+  --f-kana: "Klee One", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --f-ui: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1b0f1a; --bg-2: #2c1529; --surface: rgb(44 22 41 / .78); --surface-solid: #2b1628; --ink: #fbeaf2; --muted: #c49db2;
+  --line: #4b2a45; --guide: #5b3453; --accent: #ff8db5; --accent-ink: #2b0b1b; --accent-soft: rgb(255 141 181 / .15);
+  --plum: #d7aaea; --plum-soft: rgb(215 170 234 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14);
+  --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #ffb3cd; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1b0f1a; --bg-2: #2c1529; --surface: rgb(44 22 41 / .78); --surface-solid: #2b1628; --ink: #fbeaf2; --muted: #c49db2;
+  --line: #4b2a45; --guide: #5b3453; --accent: #ff8db5; --accent-ink: #2b0b1b; --accent-soft: rgb(255 141 181 / .15);
+  --plum: #d7aaea; --plum-soft: rgb(215 170 234 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14);
+  --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #ffb3cd; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 16px; line-height: 1.55;
+  background-image: radial-gradient(1100px 520px at 85% -5%, var(--bg-2), transparent 70%), radial-gradient(800px 500px at -10% 60%, var(--accent-soft), transparent 70%); background-attachment: fixed; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1160px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.kana { font-family: var(--f-kana); font-weight: 600; }
+.flower { width: 1em; height: 1em; fill: var(--accent); flex: none; }
+
+/* ===== шапка сайта ===== */
+.site-nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.nav-row { display: flex; align-items: center; gap: 12px 22px; padding-block: 10px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 9px; background: none; border: 0; padding: 0; font-family: var(--f-display); font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.logo .flower { font-size: 26px; animation: spin 18s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.links { display: flex; gap: 2px; overflow-x: auto; flex: 1 1 auto; min-width: 0; scrollbar-width: none; }
+.links::-webkit-scrollbar { display: none; }
+.links button { background: none; border: 0; padding: 7px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.links button:hover { color: var(--ink); background: var(--accent-soft); }
+.links button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+.lvl-switch { display: inline-flex; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.lvl-switch button { border: 0; background: none; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.lvl-switch button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+@media (max-width: 860px) { .links { order: 3; flex-basis: 100%; } }
+
+/* ===== общие ===== */
+.page { padding-block: 32px 80px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 24px; }
+.page-head h2 { font-family: var(--f-display); font-size: clamp(26px, 4vw, 38px); font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 12px; }
+.page-head h2 .jp { font-family: var(--f-kana); font-weight: 600; color: var(--accent); font-size: .8em; }
+.page-head p { color: var(--muted); max-width: 60ch; margin-top: 6px; }
+.lvl-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 600; }
+.lvl-badge .kana { font-size: 15px; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-bottom: 18px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: none; padding: 6px 14px; border-radius: 7px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--plum); color: var(--bg); }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; }
+.btn { border: 1px solid var(--line); background: var(--surface-solid); padding: 9px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; transition: border-color .15s, transform .15s; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { transform: translateY(-1px); }
+.btn.lg { padding: 12px 22px; font-size: 15px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--surface-solid); border-radius: 999px; padding: 5px 12px; font-size: 14px; color: var(--muted); }
+.chip .kana { font-size: 16px; color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.chip .cnt { font-size: 12px; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
+.card { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 16px; }
+.play { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-solid); display: grid; place-items: center; flex: none; }
+.play:hover { border-color: var(--accent); }
+.play svg { width: 16px; height: 16px; fill: var(--accent); stroke: var(--accent); }
+.play:disabled { opacity: .35; cursor: default; }
+.play.sm { width: 32px; height: 32px; }
+.play.sm svg { width: 13px; height: 13px; }
+.muted { color: var(--muted); }
+.voice-note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+/* ===== главная: герой ===== */
+.hero { position: relative; height: clamp(440px, 64vh, 620px); overflow: hidden; }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+.hero canvas.dragging { cursor: grabbing; }
+.hero-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 18px; pointer-events: none; }
+.hero-inner > * { pointer-events: auto; max-width: 600px; }
+.eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); display: flex; align-items: center; gap: 8px; }
+.hero h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(32px, 5.2vw, 60px); line-height: 1.05; letter-spacing: -0.025em; }
+.hero h1 span { color: var(--accent); }
+.lead-hero { color: var(--muted); font-size: 17px; max-width: 44ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.hint3d { font-size: 13px; color: var(--muted); }
+.hint3d b { color: var(--ink); font-weight: 600; }
+.tip3d { position: absolute; z-index: 2; pointer-events: none; transform: translate(-50%, calc(-100% - 22px)); background: var(--surface-solid); border: 1px solid var(--accent); border-radius: 12px; padding: 6px 12px; font-size: 15px; white-space: nowrap; box-shadow: 0 10px 30px rgb(120 30 70 / .18); }
+.tip3d .kana { font-size: 22px; margin-right: 6px; color: var(--accent); }
+.tip3d .ro { color: var(--muted); font-size: 13px; margin-left: 6px; }
+.hero-fallback { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); font-family: var(--f-kana); font-size: clamp(120px, 22vw, 280px); color: var(--guide); line-height: 1; pointer-events: none; }
+@media (max-width: 720px) {
+  .hero-inner { justify-content: flex-end; padding-block: 0 28px; }
+  .hero-inner::before { content: ""; position: absolute; inset: 35% 0 0; background: linear-gradient(transparent, var(--bg) 55%); z-index: -1; pointer-events: none; }
+}
+
+/* ===== главная: уровни ===== */
+.section-title { font-family: var(--f-display); font-size: 24px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.section-sub { color: var(--muted); margin-bottom: 20px; }
+.levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; perspective: 1400px; }
+@media (max-width: 860px) { .levels { grid-template-columns: minmax(0, 1fr); } }
+.lvl-card { position: relative; text-align: left; padding: 24px 22px 20px; border: 1.5px solid var(--line); border-radius: 18px; background: var(--surface); backdrop-filter: blur(10px); display: grid; gap: 10px; align-content: start; overflow: hidden;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out, border-color .2s, box-shadow .2s; }
+.lvl-card:hover { border-color: var(--accent); }
+.lvl-card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), 0 20px 40px rgb(200 60 110 / .12); }
+.lvl-card .jp-big { position: absolute; right: 14px; top: 6px; font-family: var(--f-kana); font-weight: 600; font-size: 64px; line-height: 1.1; color: var(--accent-soft); pointer-events: none; }
+.lvl-card[aria-pressed="true"] .jp-big { color: var(--guide); }
+.lvl-card .petals { display: flex; gap: 3px; }
+.lvl-card .petals svg { width: 18px; height: 18px; fill: var(--line); }
+.lvl-card .petals svg.on { fill: var(--accent); }
+.lvl-card h3 { font-size: 22px; font-weight: 700; }
+.lvl-card .jlpt { font-size: 12px; color: var(--plum); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.lvl-card p { color: var(--muted); font-size: 14px; }
+.lvl-card ul { margin: 4px 0 0; padding-left: 18px; font-size: 14px; display: grid; gap: 3px; }
+.lvl-card .pick { margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent); }
+
+.sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 14px; }
+.sec-card { text-align: left; padding: 20px; display: grid; gap: 6px; transition: transform .2s, border-color .2s; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.sec-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.sec-card .glyph { font-family: var(--f-kana); font-weight: 600; font-size: 40px; line-height: 1.1; color: var(--accent); }
+.sec-card h3 { font-size: 17px; }
+.sec-card p { color: var(--muted); font-size: 14px; }
+.sec-card .meta { font-size: 13px; color: var(--plum); font-weight: 500; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.home-block { padding-block: 40px 0; }
+.progress-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
+.pstat { padding: 16px 18px; }
+.pstat .lbl { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.pstat b { font-size: 26px; font-variant-numeric: tabular-nums; font-family: var(--f-display); }
+.pstat .of { color: var(--muted); font-size: 14px; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--plum), var(--accent)); width: 0; transition: width .5s; }
+
+/* ===== азбука ===== */
+.az { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .az { grid-template-columns: minmax(0, 1fr); } }
+.grid-scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.kgrid { display: grid; grid-template-columns: 38px repeat(5, minmax(52px, 1fr)); gap: 7px; min-width: 330px; perspective: 900px; }
+.kgrid.y3 { grid-template-columns: 38px repeat(3, minmax(60px, 1fr)); max-width: 420px; }
+.kgrid .colh, .kgrid .rowh { font-size: 12px; color: var(--muted); display: grid; place-items: center; letter-spacing: .04em; }
+.kcell { position: relative; aspect-ratio: 1 / 1; max-width: 100%; border: 0; padding: 0; background: none; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+.kcell .face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background:
+    linear-gradient(90deg, var(--guide) 50%, transparent 50%) center / 6px 1px repeat-x,
+    linear-gradient(var(--guide) 50%, transparent 50%) center / 1px 6px repeat-y,
+    var(--surface-solid); }
+.kcell .back { transform: rotateY(180deg); border-color: var(--plum); }
+.kcell .back .k, .kcell .back .r { color: var(--plum); }
+.kcell[aria-pressed="true"] .face { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .kcell:hover { transform: rotateY(180deg) translateZ(6px); } }
+.kcell .k { font-family: var(--f-kana); font-weight: 600; font-size: clamp(22px, 4vw, 34px); line-height: 1.1; }
+.kgrid.y3 .kcell .k { font-size: clamp(20px, 3.4vw, 28px); }
+.kcell .r { font-size: 12px; color: var(--muted); line-height: 1.2; }
+.kcell .dot { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+.kcell .dot.weak { background: var(--bad); }
+.kempty { aspect-ratio: 1 / 1; }
+.rowsep { grid-column: 1 / -1; font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; padding-top: 14px; border-top: 1px dashed var(--line); margin-top: 8px; }
+.kgrid.intro .kcell { animation: flipIn .7s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--d) * 12ms); }
+@keyframes flipIn { from { transform: rotateX(-95deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.sub-h { font-size: 15px; font-weight: 600; margin: 28px 0 4px; }
+.sub-p { color: var(--muted); font-size: 14px; margin-bottom: 12px; max-width: 60ch; }
+.detail { padding: 22px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 84px); }
+.big-wrap { perspective: 700px; }
+.big { width: 156px; height: 156px; margin: 0 auto; display: grid; place-items: center; font-family: var(--f-kana); font-weight: 600; font-size: 100px; line-height: 1; border: 1.5px solid var(--accent); border-radius: 6px;
+  background:
+    linear-gradient(90deg, var(--guide) 50%, transparent 50%) center / 8px 1px repeat-x,
+    linear-gradient(var(--guide) 50%, transparent 50%) center / 1px 8px repeat-y, var(--surface-solid);
+  animation: spinIn .8s cubic-bezier(.2,.8,.2,1); }
+.big.small-t { font-size: 70px; }
+@keyframes spinIn { from { transform: rotateY(-120deg) scale(.8); opacity: .2; } to { transform: none; opacity: 1; } }
+.dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 18px 0 0; font-size: 15px; }
+.dl dt { color: var(--muted); }
+.dl dd { margin: 0; font-weight: 500; }
+.dl dd .kana { font-size: 20px; color: var(--plum); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.note-sm { font-size: 13px; color: var(--muted); margin-top: 14px; }
+.tip { margin-top: 24px; background: var(--accent-soft); border-radius: 14px; padding: 16px 18px; font-size: 14px; max-width: 72ch; }
+.tip h3 { font-size: 15px; margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+.tip ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+/* ===== кандзи ===== */
+.kj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 14px; perspective: 1200px; }
+.kj { position: relative; height: 250px; border: 0; padding: 0; background: none; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.8,.2,1); text-align: left; }
+.kj.flipped { transform: rotateY(180deg); }
+.kj .face { position: absolute; inset: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface-solid); backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 16px; display: flex; flex-direction: column; }
+.kj .front { align-items: center; justify-content: center; gap: 6px; text-align: center;
+  background:
+    linear-gradient(90deg, var(--guide) 50%, transparent 50%) center 42% / 8px 1px repeat-x,
+    linear-gradient(var(--guide) 50%, transparent 50%) center / 1px 8px repeat-y, var(--surface-solid); }
+.kj .front .glyph { font-family: var(--f-kana); font-weight: 600; font-size: 104px; line-height: 1; }
+.kj .front .mean { font-weight: 600; font-size: 16px; }
+.kj .front .hint { font-size: 12px; color: var(--muted); }
+.kj .back { transform: rotateY(180deg); gap: 8px; border-color: var(--accent); }
+.kj .back .row { display: grid; grid-template-columns: 44px 1fr; gap: 8px; font-size: 14px; align-items: baseline; }
+.kj .back .row b { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.kj .back .row .kana { font-size: 17px; }
+.kj .back .ex { margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.kj .back .ex .w { font-family: var(--f-kana); font-weight: 600; font-size: 22px; }
+.kj .back .ex .rd { color: var(--accent); font-size: 14px; }
+.kj .back .ex .tr { font-size: 13px; color: var(--muted); }
+.kj .dot { position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+
+/* ===== грамматика ===== */
+.lessons { display: grid; gap: 16px; }
+.lesson { padding: 22px; display: grid; gap: 14px; }
+.lesson-h { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.lesson-h .num { font-family: var(--f-display); font-size: 14px; color: var(--accent); font-weight: 700; }
+.lesson-h h3 { font-size: 20px; }
+.lesson .expl { max-width: 70ch; }
+.formula { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; background: var(--plum-soft); border-radius: 12px; font-size: 15px; justify-self: start; }
+.formula .slot { padding: 3px 9px; border: 1px dashed var(--plum); border-radius: 7px; color: var(--plum); font-size: 14px; }
+.formula .kana { font-size: 19px; color: var(--accent); }
+.examples { display: grid; gap: 8px; }
+.ex-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-solid); }
+.ex-row .jp { font-family: var(--f-kana); font-weight: 600; font-size: 20px; line-height: 1.35; }
+.ex-row .kn { font-size: 13px; color: var(--muted); }
+.ex-row .rd { color: var(--accent); font-size: 14px; font-weight: 500; }
+.ex-row .tr { font-size: 14px; }
+.ex-row .play { grid-row: 1 / span 4; }
+
+/* ===== фразы ===== */
+.phr { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; perspective: 1200px; }
+.pcard { padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; align-items: start;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out, border-color .2s; }
+.pcard:hover { border-color: var(--accent); }
+.pcard .cat { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--plum); font-weight: 600; grid-column: 1; }
+.pcard .jp { font-family: var(--f-kana); font-weight: 600; font-size: 24px; line-height: 1.35; grid-column: 1; }
+.pcard .kn { font-size: 13px; color: var(--muted); grid-column: 1 / -1; }
+.pcard .rd { color: var(--accent); font-weight: 500; grid-column: 1 / -1; }
+.pcard .tr-ru { font-weight: 500; grid-column: 1 / -1; }
+.pcard .note { color: var(--muted); font-size: 13px; grid-column: 1 / -1; }
+.pcard .play { grid-column: 2; grid-row: 1 / span 2; }
+
+/* ===== тренажёр ===== */
+.tr { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 900px) { .tr { grid-template-columns: minmax(0, 1fr); } }
+.panel { padding: 18px; display: grid; gap: 18px; }
+.panel h3 { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.stage { padding: 30px 20px; display: grid; justify-items: center; gap: 22px; }
+.q-prompt { font-size: 14px; color: var(--muted); text-align: center; }
+.q-card { perspective: 800px; transition: transform .25s ease-out; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; max-width: 100%; }
+.q-big { min-width: 176px; min-height: 176px; max-width: 100%; padding: 12px 22px; display: grid; place-items: center; text-align: center; font-size: 110px; line-height: 1.1; border: 1.5px solid var(--accent); border-radius: 8px;
+  background:
+    linear-gradient(90deg, var(--guide) 50%, transparent 50%) center / 8px 1px repeat-x,
+    linear-gradient(var(--guide) 50%, transparent 50%) center / 1px 8px repeat-y, var(--surface-solid);
+  box-shadow: 0 20px 50px rgb(150 40 90 / .12); overflow-wrap: anywhere; }
+.q-big.kana { font-family: var(--f-kana); font-weight: 600; }
+.q-big.jp { font-family: var(--f-kana); font-weight: 600; font-size: clamp(26px, 4vw, 38px); }
+.q-big.txt { font-weight: 600; font-size: 52px; }
+.q-big.txt.long { font-size: clamp(22px, 3.2vw, 30px); }
+.q-big.enter { animation: qFlip .6s cubic-bezier(.2,.8,.2,1); }
+.q-big.ok { border-color: var(--good); box-shadow: 0 0 0 4px var(--good-soft); animation: pop .45s; }
+.q-big.no { border-color: var(--bad); animation: shake .4s; }
+@keyframes qFlip { from { transform: rotateX(100deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes pop { 50% { transform: scale(1.07); } }
+@keyframes shake { 20%, 60% { transform: translateX(-8px) rotateY(-10deg); } 40%, 80% { transform: translateX(8px) rotateY(10deg); } }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; max-width: 520px; }
+.opt { position: relative; border: 1.5px solid var(--line); background: var(--surface-solid); border-radius: 12px; padding: 16px 12px 14px; font-size: 18px; font-weight: 600; transition: border-color .12s, background .12s, transform .2s; overflow-wrap: anywhere; }
+.opt.kana { font-family: var(--f-kana); font-size: 36px; padding: 8px 10px; }
+.opt.jp { font-family: var(--f-kana); font-size: 18px; }
+.opt:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-2px); }
+.opt:disabled { cursor: default; }
+.opt .n { position: absolute; top: 5px; left: 9px; font-family: var(--f-ui); font-size: 11px; color: var(--muted); font-weight: 500; }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.feedback { min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; text-align: center; font-size: 15px; }
+.feedback .ok { color: var(--good); font-weight: 600; }
+.feedback .no { color: var(--bad); font-weight: 600; }
+.score { display: flex; gap: 22px; font-size: 14px; color: var(--muted); flex-wrap: wrap; justify-content: center; }
+.score b { color: var(--ink); font-variant-numeric: tabular-nums; font-size: 18px; margin-right: 4px; }
+.hint-keys { font-size: 12px; color: var(--muted); }
+
+.test { max-width: 720px; margin: 0 auto; padding: 32px clamp(18px, 4vw, 40px); display: grid; }
+.test-h { font-family: var(--f-display); font-size: clamp(24px, 3.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 8px; }
+.t-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.t-block { color: var(--plum); font-weight: 600; }
+.t-q { font-size: 19px; margin: 22px 0 10px; }
+.t-jp { font-size: clamp(34px, 6vw, 56px); line-height: 1.3; margin-bottom: 14px; color: var(--accent); }
+.t-opts { max-width: none; }
+.opt.idk { grid-column: 1 / -1; font-size: 15px; font-weight: 500; color: var(--muted); padding: 10px; }
+.tr-level { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.tr-jp { font-size: 56px; color: var(--accent); line-height: 1.2; }
+.tr-score { display: grid; gap: 6px; margin-top: 16px; max-width: 460px; }
+.tr-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); font-size: 14px; font-variant-numeric: tabular-nums; }
+footer.site-foot { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 13px; }
+footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; align-items: center; }
+
+
+/* ===== сцены-фоны (подписка «Ханами») ===== */
+#bgScene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+#bgScene[hidden] { display: none; }
+.view, footer.site-foot { position: relative; z-index: 1; }
+:root[data-scene] body { background-image: none; }
+:root[data-mode="light"] { --bg: #fff5f8; --bg-2: #fde4ed; --surface: rgb(255 255 255 / .8); --surface-solid: #ffffff; --ink: #3b1d2f; --muted: #8b6578; --line: #f1d0dc; --guide: #f0c3d3; --accent: #d94c80; --accent-ink: #ffffff; --accent-soft: #fde1eb; --plum: #7d4c93; --plum-soft: #efe3f5; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; --petal: #f7a9c4; color-scheme: light; }
+:root[data-mode="dark"] { --bg: #1b0f1a; --bg-2: #2c1529; --surface: rgb(44 22 41 / .78); --surface-solid: #2b1628; --ink: #fbeaf2; --muted: #c49db2; --line: #4b2a45; --guide: #5b3453; --accent: #ff8db5; --accent-ink: #2b0b1b; --accent-soft: rgb(255 141 181 / .15); --plum: #d7aaea; --plum-soft: rgb(215 170 234 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #ffb3cd; color-scheme: dark; }
+:root[data-scene="tokyo"][data-mode="dark"] { --bg: #0c0b1e; --bg-2: #1a1640; --surface: rgb(20 18 48 / .74); --surface-solid: #17153a; --ink: #f2eeff; --muted: #aaa4d8; --line: #2e2a63; --guide: #3a3578; --accent: #ff6fa8; --accent-ink: #1a0712; --accent-soft: rgb(255 111 168 / .16); --plum: #8fd3ff; --plum-soft: rgb(143 211 255 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #ffaecb; color-scheme: dark; }
+:root[data-scene="tokyo"][data-mode="light"] { --bg: #f4f2fb; --bg-2: #e3def5; --surface: rgb(255 255 255 / .82); --surface-solid: #ffffff; --ink: #1e1a3a; --muted: #5f5988; --line: #dcd7ef; --guide: #cdc6e8; --accent: #d63d78; --accent-ink: #ffffff; --accent-soft: #fbe0ea; --plum: #2a74a6; --plum-soft: #e0eef8; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; --petal: #f59ac0; color-scheme: light; }
+:root[data-scene="fields"][data-mode="light"] { --bg: #fff4ea; --bg-2: #ffe2c9; --surface: rgb(255 251 246 / .82); --surface-solid: #fffaf4; --ink: #3a2418; --muted: #85654f; --line: #f0d8c4; --guide: #ebc9ad; --accent: #cf4f37; --accent-ink: #ffffff; --accent-soft: #fde3d9; --plum: #4f7a3a; --plum-soft: #e6f0dc; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; --petal: #ffcf9e; color-scheme: light; }
+:root[data-scene="fields"][data-mode="dark"] { --bg: #0f1a14; --bg-2: #1b2b20; --surface: rgb(18 32 24 / .78); --surface-solid: #172a1e; --ink: #eef6e6; --muted: #a6bfa0; --line: #2a4232; --guide: #355240; --accent: #ffb067; --accent-ink: #2a1606; --accent-soft: rgb(255 176 103 / .15); --plum: #9fd67a; --plum-soft: rgb(159 214 122 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #fff1a8; color-scheme: dark; }
+:root[data-scene="momiji"][data-mode="light"] { --bg: #fbf3ea; --bg-2: #f7dcc3; --surface: rgb(255 250 244 / .84); --surface-solid: #fffaf3; --ink: #3b1e14; --muted: #86604f; --line: #efd3c0; --guide: #e8c2a6; --accent: #c2351f; --accent-ink: #ffffff; --accent-soft: #fadcd2; --plum: #8f5410; --plum-soft: #f6e7d0; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; --petal: #d9472a; color-scheme: light; }
+:root[data-scene="momiji"][data-mode="dark"] { --bg: #1a0f0c; --bg-2: #2e1712; --surface: rgb(40 20 15 / .78); --surface-solid: #2a1712; --ink: #fbeee6; --muted: #c9a08e; --line: #4a2a20; --guide: #5c3428; --accent: #ff7a4f; --accent-ink: #2a0c04; --accent-soft: rgb(255 122 79 / .15); --plum: #f0b45a; --plum-soft: rgb(240 180 90 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #e8582f; color-scheme: dark; }
+:root[data-scene="winter"][data-mode="light"] { --bg: #f3f6fb; --bg-2: #dfe8f4; --surface: rgb(255 255 255 / .84); --surface-solid: #ffffff; --ink: #1d2738; --muted: #5f6d85; --line: #d8e0ec; --guide: #c8d3e4; --accent: #c2342c; --accent-ink: #ffffff; --accent-soft: #f8dedb; --plum: #3d5f8f; --plum-soft: #e1e9f5; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; --petal: #b9cde6; color-scheme: light; }
+:root[data-scene="winter"][data-mode="dark"] { --bg: #0d1424; --bg-2: #18233b; --surface: rgb(18 28 48 / .78); --surface-solid: #172238; --ink: #eaf1fb; --muted: #9fb0cc; --line: #2a3858; --guide: #34456a; --accent: #ff6b5e; --accent-ink: #2a0705; --accent-soft: rgb(255 107 94 / .15); --plum: #8fb8ff; --plum-soft: rgb(143 184 255 / .14); --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); --petal: #e8f0ff; color-scheme: dark; }
+:root[data-scene^="h-"][data-mode="dark"] { --bg: #10101c; --bg-2: #1d1a33; --surface: rgb(24 22 42 / .78); --surface-solid: #1b1930; --ink: #f3f0fb; --muted: #aaa5c6; --line: #302c4d; --guide: #3b3660; --accent-ink: #160d10; --good: #72e0a2; --good-soft: rgb(114 224 162 / .14); --bad: #ff8a7f; --bad-soft: rgb(255 138 127 / .14); color-scheme: dark; }
+:root[data-scene^="h-"][data-mode="light"] { --bg: #fbf8f4; --bg-2: #f1e9de; --surface: rgb(255 255 255 / .84); --surface-solid: #ffffff; --ink: #2a2230; --muted: #6a5f74; --line: #e9e0d6; --guide: #ddd2c5; --accent-ink: #ffffff; --good: #2b8553; --good-soft: #def3e6; --bad: #c4423a; --bad-soft: #fbe2df; color-scheme: light; }
+:root[data-scene="h-newyear"][data-mode="light"] { --accent: #c7302a; --accent-soft: rgb(199 48 42 / .14); --plum: #9a6f08; --plum-soft: rgb(154 111 8 / .14); --petal: #e8b84b; }
+:root[data-scene="h-newyear"][data-mode="dark"] { --accent: #ff6a5c; --accent-soft: rgb(255 106 92 / .16); --plum: #f2c84b; --plum-soft: rgb(242 200 75 / .16); --petal: #ffe08a; }
+:root[data-scene="h-hina"][data-mode="light"] { --accent: #c94a7c; --accent-soft: rgb(201 74 124 / .14); --plum: #5f8a32; --plum-soft: rgb(95 138 50 / .14); --petal: #f7b2c8; }
+:root[data-scene="h-hina"][data-mode="dark"] { --accent: #ff9cc0; --accent-soft: rgb(255 156 192 / .16); --plum: #a8d07a; --plum-soft: rgb(168 208 122 / .16); --petal: #ffc4d6; }
+:root[data-scene="h-kodomo"][data-mode="light"] { --accent: #2f66c8; --accent-soft: rgb(47 102 200 / .14); --plum: #c93f2a; --plum-soft: rgb(201 63 42 / .14); --petal: #9cc7ff; }
+:root[data-scene="h-kodomo"][data-mode="dark"] { --accent: #7fb0ff; --accent-soft: rgb(127 176 255 / .16); --plum: #ff8a6e; --plum-soft: rgb(255 138 110 / .16); --petal: #b8d6ff; }
+:root[data-scene="h-tanabata"][data-mode="light"] { --accent: #5f45c4; --accent-soft: rgb(95 69 196 / .14); --plum: #9a6a0c; --plum-soft: rgb(154 106 12 / .14); --petal: #c9b8ff; }
+:root[data-scene="h-tanabata"][data-mode="dark"] { --accent: #b6a4ff; --accent-soft: rgb(182 164 255 / .16); --plum: #ffd86b; --plum-soft: rgb(255 216 107 / .16); --petal: #fff3b0; }
+:root[data-scene="h-hanabi"][data-mode="light"] { --accent: #d63d78; --accent-soft: rgb(214 61 120 / .14); --plum: #2683ab; --plum-soft: rgb(38 131 171 / .14); --petal: #ffb067; }
+:root[data-scene="h-hanabi"][data-mode="dark"] { --accent: #ff6fa8; --accent-soft: rgb(255 111 168 / .16); --plum: #7fd8ff; --plum-soft: rgb(127 216 255 / .16); --petal: #ffd08a; }
+:root[data-scene="h-tsukimi"][data-mode="light"] { --accent: #9a6212; --accent-soft: rgb(154 98 18 / .14); --plum: #4f63a0; --plum-soft: rgb(79 99 160 / .14); --petal: #e8d9b0; }
+:root[data-scene="h-tsukimi"][data-mode="dark"] { --accent: #f2c25a; --accent-soft: rgb(242 194 90 / .16); --plum: #a9b8e8; --plum-soft: rgb(169 184 232 / .16); --petal: #fff0c8; }
+:root[data-scene="h-halloween"][data-mode="light"] { --accent: #c2500c; --accent-soft: rgb(194 80 12 / .14); --plum: #6e36a3; --plum-soft: rgb(110 54 163 / .14); --petal: #e0681c; }
+:root[data-scene="h-halloween"][data-mode="dark"] { --accent: #ff8a3d; --accent-soft: rgb(255 138 61 / .16); --plum: #c08bff; --plum-soft: rgb(192 139 255 / .16); --petal: #ff9a4d; }
+:root[data-scene="h-xmas"][data-mode="light"] { --accent: #c2342c; --accent-soft: rgb(194 52 44 / .14); --plum: #2b7a4b; --plum-soft: rgb(43 122 75 / .14); --petal: #b9cde6; }
+:root[data-scene="h-xmas"][data-mode="dark"] { --accent: #ff6b5e; --accent-soft: rgb(255 107 94 / .16); --plum: #6be3a6; --plum-soft: rgb(107 227 166 / .16); --petal: #ffffff; }
+.holiday-pill { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--accent); background: var(--surface); backdrop-filter: blur(8px); color: var(--accent); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 999px; }
+.holiday-pill:hover { background: var(--accent-soft); }
+.thumb-wrap { position: relative; }
+.bg-card.sealed .bg-thumb { filter: blur(5px) saturate(.5); opacity: .7; }
+.seal { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink); font-size: 14px; font-weight: 600; text-align: center; }
+.seal svg { width: 22px; height: 22px; }
+.seal span { background: var(--surface-solid); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); }
+.bg-tag.date { background: var(--plum-soft); color: var(--plum); }
+.acc-btn { border: 1px solid var(--line); background: var(--surface-solid); border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.acc-btn:hover { border-color: var(--accent); }
+.acc-btn.in { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: rgb(20 8 16 / .45); backdrop-filter: blur(4px); }
+.modal-card { position: relative; width: 100%; max-width: 400px; padding: 26px 24px 22px; background: var(--surface-solid); }
+.modal-card h3 { font-family: var(--f-display); font-size: 22px; }
+.modal-x { position: absolute; right: 10px; top: 8px; border: 0; background: none; font-size: 26px; line-height: 1; color: var(--muted); padding: 4px 8px; }
+.auth-form { display: grid; gap: 6px; margin-top: 16px; }
+.auth-form label { font-size: 13px; font-weight: 500; color: var(--muted); margin-top: 6px; }
+.auth-form input { font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.auth-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.auth-form .btn { margin-top: 10px; }
+.auth-msg { font-size: 13px; color: var(--bad); min-height: 1.2em; }
+.auth-msg.ok { color: var(--good); }
+.auth-alt { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.mode-switch { display: inline-flex; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.mode-switch button { border: 0; background: none; padding: 5px 10px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; min-width: 34px; }
+.mode-switch button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.mode-switch button[aria-pressed="true"] { background: var(--plum); color: var(--bg); }
+.nav-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+@media (max-width: 860px) { .nav-tools { margin-left: auto; } }
+:root[data-scene] .page-head h2, :root[data-scene] .page-head p, :root[data-scene] .hero-inner { text-shadow: 0 1px 12px var(--bg); }
+
+.sup-badge { font-family: var(--f-kana); font-weight: 600; font-size: 13px; padding: 3px 9px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.sup-layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 960px) { .sup-layout { grid-template-columns: minmax(0, 1fr); } }
+.plan { padding: 24px; display: grid; gap: 14px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 84px); overflow: hidden; }
+.plan .plan-jp { position: absolute; right: 16px; top: 8px; font-family: var(--f-kana); font-weight: 600; font-size: 70px; line-height: 1.1; color: var(--accent-soft); pointer-events: none; }
+.plan h3 { font-family: var(--f-display); font-size: 26px; font-weight: 700; position: relative; }
+.plan .price { font-family: var(--f-display); font-size: 34px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.plan .price span { font-family: var(--f-ui); font-size: 15px; font-weight: 500; color: var(--muted); }
+.plan ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; }
+.plan li { display: flex; gap: 10px; align-items: flex-start; }
+.plan li .flower { font-size: 16px; margin-top: 3px; }
+.plan li.soon { color: var(--muted); }
+.plan li .soon-tag { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--plum); font-weight: 600; margin-left: 6px; }
+.plan .free-note { font-size: 13px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; }
+.code-row { display: flex; gap: 8px; }
+.code-row input { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 14px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-solid); color: var(--ink); text-transform: uppercase; letter-spacing: .04em; }
+.code-row input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.code-msg { font-size: 13px; color: var(--bad); min-height: 1em; }
+.sup-ok { color: var(--good); font-weight: 600; font-size: 14px; }
+.bg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.bg-card { border: 1.5px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); backdrop-filter: blur(10px); display: grid; transition: border-color .2s, transform .2s; }
+.bg-card:hover { transform: translateY(-2px); }
+.bg-card.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.bg-thumb { width: 100%; aspect-ratio: 16 / 9; max-width: 100%; display: block; background: var(--bg-2); }
+.bg-body { padding: 14px 16px 16px; display: grid; gap: 8px; }
+.bg-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.bg-top h3 { font-size: 17px; }
+.bg-jp { color: var(--accent); font-size: 16px; }
+.bg-body p { color: var(--muted); font-size: 14px; }
+.bg-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.bg-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.bg-tag.free { background: var(--good-soft); color: var(--good); }
+.bg-actions { display: flex; gap: 8px; }
+.bg-on { font-size: 14px; font-weight: 600; color: var(--accent); padding: 9px 4px; }
+.preview-bar { position: fixed; z-index: 25; left: 0; right: 0; bottom: 0; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding-top: 12px; background: var(--surface-solid); border-top: 1px solid var(--accent); box-shadow: 0 -10px 30px rgb(0 0 0 / .12); }
+.preview-bar .wrap { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.preview-bar p { font-size: 14px; }
+.preview-bar .btns { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="sakura" viewBox="-12 -12 24 24">
+      <g>
+        <path id="ptl" d="M0 -1.2 C -4 -4 -3.6 -9.4 -1.1 -10.8 L 0 -9.2 L 1.1 -10.8 C 3.6 -9.4 4 -4 0 -1.2 Z"/>
+        <use href="#ptl" transform="rotate(72)"/><use href="#ptl" transform="rotate(144)"/><use href="#ptl" transform="rotate(216)"/><use href="#ptl" transform="rotate(288)"/>
+        <circle r="1.6" opacity=".55"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<canvas id="bgScene" aria-hidden="true" hidden></canvas>
+
+<nav class="site-nav">
+  <div class="wrap gutter nav-row">
+    <button class="logo" data-go="home" aria-label="На главную"><svg class="flower"><use href="#sakura"/></svg>Путеводитель в японский</button>
+    <span class="sup-badge" id="supBadge" title="Сторонник проекта" hidden>花見</span>
+    <div class="links" id="links">
+      <button data-go="home">Главная</button>
+      <button data-go="azbuka">Азбука</button>
+      <button data-go="kandzi">Кандзи</button>
+      <button data-go="grammatika">Грамматика</button>
+      <button data-go="frazy">Фразы</button>
+      <button data-go="trener">Тренажёр</button>
+      <button data-go="podderzhka">Поддержать</button>
+    </div>
+    <div class="nav-tools">
+      <div class="lvl-switch" role="group" aria-label="Уровень">
+        <button data-lvl="n">Новичок</button>
+        <button data-lvl="m">Средний</button>
+        <button data-lvl="p">Профи</button>
+      </div>
+      <button class="acc-btn" id="accBtn" hidden>Войти</button>
+      <div class="mode-switch" role="group" aria-label="Тема сайта">
+        <button data-setmode="auto" title="Как в системе">Авто</button>
+        <button data-setmode="light" title="Светлая тема" aria-label="Светлая тема"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+        <button data-setmode="dark" title="Тёмная тема" aria-label="Тёмная тема"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ГЛАВНАЯ -->
+<section id="view-home" class="view">
+  <header class="hero">
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="hero-fallback" id="heroFallback" hidden aria-hidden="true">桜</div>
+    <div class="tip3d" id="tip3d" hidden></div>
+    <div class="hero-inner wrap gutter">
+      <button class="holiday-pill" id="holidayPill" data-go="podderzhka" hidden></button>
+      <div class="eyebrow"><svg class="flower"><use href="#sakura"/></svg>Японский для русскоязычных</div>
+      <h1>Твой личный путеводитель <span>в японский язык</span></h1>
+      <p class="lead-hero">Азбука, кандзи, грамматика и живые фразы с русскими чтениями и озвучкой. Выберите уровень, и сайт подстроит уроки под вас.</p>
+      <div class="cta">
+        <button class="btn primary lg" data-go="test">Узнать свой уровень</button>
+        <button class="btn lg" data-go="trener">Сразу в тренажёр</button>
+      </div>
+      <div class="hint3d" id="hint3d"><b>Потяните сферу</b> и наведите на знак, чтобы увидеть чтение. Клик озвучит его.</div>
+    </div>
+  </header>
+  <div class="wrap gutter" style="padding-bottom:80px">
+    <div class="home-block" id="levels-anchor">
+      <h2 class="section-title"><svg class="flower"><use href="#sakura"/></svg>Ваш уровень</h2>
+      <p class="section-sub">От уровня зависят кандзи, грамматика, фразы и колоды тренажёра. Поменять можно в любой момент в шапке. Не уверены? <button class="linkish" data-go="test" style="font-size:inherit">Пройдите тест на 2 минуты</button>.</p>
+      <div class="levels" id="levels"></div>
+    </div>
+    <div class="home-block">
+      <h2 class="section-title"><svg class="flower"><use href="#sakura"/></svg>Разделы</h2>
+      <p class="section-sub" id="secSub">Для уровня «Новичок»</p>
+      <div class="sections" id="sections"></div>
+    </div>
+    <div class="home-block">
+      <h2 class="section-title"><svg class="flower"><use href="#sakura"/></svg>Прогресс</h2>
+      <p class="section-sub">Знак или слово считается выученным после трёх верных ответов подряд почти без ошибок.</p>
+      <div class="progress-row" id="progressRow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ТЕСТ -->
+<section id="view-test" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="test card">
+      <div id="testIntro">
+        <span class="eyebrow"><svg class="flower"><use href="#sakura"/></svg>Вводный тест</span>
+        <h2 class="test-h">Какой у вас уровень японского?</h2>
+        <p class="muted">12 вопросов от азбуки до вежливой речи, около двух минут. Если не знаете ответ, нажмите «Не знаю»: угадывание только собьёт результат. Когда вопросы станут слишком сложными, тест закончится сам.</p>
+        <div class="cta" style="margin-top:20px">
+          <button class="btn primary lg" id="testStart">Начать тест</button>
+          <button class="btn lg" id="testSkip">Я совсем не знаю японский</button>
+        </div>
+      </div>
+      <div id="testRun" hidden>
+        <div class="t-top"><span id="tStep"></span><span id="tBlock" class="t-block"></span></div>
+        <div class="bar"><i id="tBar"></i></div>
+        <h3 class="t-q" id="tQ"></h3>
+        <div class="t-jp kana" id="tJp"></div>
+        <div class="opts t-opts" id="tOpts"></div>
+      </div>
+      <div id="testResult" hidden>
+        <span class="eyebrow"><svg class="flower"><use href="#sakura"/></svg>Ваш результат</span>
+        <div class="tr-level"><span class="kana tr-jp" id="trJp"></span><h2 class="test-h" id="trName"></h2></div>
+        <p id="trNote"></p>
+        <div class="tr-score" id="trScore"></div>
+        <div class="cta" style="margin-top:20px">
+          <button class="btn primary lg" id="trApply"></button>
+          <button class="btn lg" id="trAgain">Пройти ещё раз</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- АЗБУКА -->
+<section id="view-azbuka" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Азбука <span class="jp">かな</span></h2>
+        <p>Хирагана для японских слов, катакана для заимствованных. Наведите на клетку, и она перевернётся парным знаком.</p>
+      </div>
+      <div class="controls" style="margin:0">
+        <div class="seg" role="group" aria-label="Азбука">
+          <button id="azH" aria-pressed="true">Хирагана</button>
+          <button id="azK" aria-pressed="false">Катакана</button>
+        </div>
+        <label class="check"><input type="checkbox" id="azDak" checked> Звонкие</label>
+      </div>
+    </div>
+    <div class="az">
+      <div>
+        <div class="grid-scroll"><div class="kgrid" id="kgrid"></div></div>
+        <h3 class="sub-h">Комбинированные слоги</h3>
+        <p class="sub-p">Маленькие ゃ, ゅ, ょ после слога на «и» сливаются с ним: き + ゃ = きゃ, «кя».</p>
+        <div class="grid-scroll"><div class="kgrid y3" id="ygrid"></div></div>
+        <div class="tip">
+          <h3><svg class="flower"><use href="#sakura"/></svg>Как читать подсказки</h3>
+          <ul>
+            <li>Русские чтения даны по системе Поливанова: し — си, ち — ти, つ — цу, じ — дзи.</li>
+            <li>ん перед б, п, м читается как «м»: こんばんは — комбанва.</li>
+            <li>Двоеточие в чтении значит долгий звук: ありがとう — аригато:.</li>
+            <li>Зелёная точка — знак выучен в тренажёре, красная — в нём часто ошибаетесь.</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="detail card" id="detail" aria-live="polite"></aside>
+    </div>
+  </div>
+</section>
+
+<!-- КАНДЗИ -->
+<section id="view-kandzi" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Кандзи <span class="jp">漢字</span></h2>
+        <p>Иероглифы с онным чтением (китайским, катаканой) и кунным (японским, хираганой). Нажмите на карточку, чтобы перевернуть её.</p>
+      </div>
+      <span class="lvl-badge" data-badge></span>
+    </div>
+    <div class="kj-grid" id="kjGrid"></div>
+  </div>
+</section>
+
+<!-- ГРАММАТИКА -->
+<section id="view-grammatika" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Грамматика <span class="jp">文法</span></h2>
+        <p>Короткие уроки: схема конструкции и живые примеры с чтением и озвучкой.</p>
+      </div>
+      <span class="lvl-badge" data-badge></span>
+    </div>
+    <div class="lessons" id="lessons"></div>
+  </div>
+</section>
+
+<!-- ФРАЗЫ -->
+<section id="view-frazy" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Фразы <span class="jp">表現</span></h2>
+        <p>Готовые выражения по темам. Нажмите на кнопку, чтобы послушать.</p>
+      </div>
+      <span class="lvl-badge" data-badge></span>
+    </div>
+    <div class="chips" id="catChips" style="margin-bottom:18px"></div>
+    <div class="phr" id="phr"></div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+</section>
+
+<!-- ТРЕНАЖЁР -->
+<section id="view-trener" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Тренажёр <span class="jp">練習</span></h2>
+        <p>Ответы запоминаются: то, в чём вы ошибаетесь, будет выпадать чаще.</p>
+      </div>
+      <span class="lvl-badge" data-badge></span>
+    </div>
+    <div class="tr">
+      <div class="panel card">
+        <div>
+          <h3>Что тренируем</h3>
+          <div class="seg" role="group" aria-label="Колода">
+            <button data-deck="kana" aria-pressed="true">Кана</button>
+            <button data-deck="kanji" aria-pressed="false">Кандзи</button>
+            <button data-deck="phr" aria-pressed="false">Фразы</button>
+          </div>
+        </div>
+        <div>
+          <h3>Направление</h3>
+          <div class="seg" role="group" aria-label="Режим">
+            <button data-tm="read" aria-pressed="true">Японский → русский</button>
+            <button data-tm="write" aria-pressed="false">Русский → японский</button>
+          </div>
+        </div>
+        <div id="kanaOpts">
+          <h3>Азбука</h3>
+          <div class="seg" role="group" aria-label="Азбука для тренировки">
+            <button data-ts="h" aria-pressed="true">Хирагана</button>
+            <button data-ts="k" aria-pressed="false">Катакана</button>
+            <button data-ts="both" aria-pressed="false">Обе</button>
+          </div>
+          <h3 style="margin-top:16px">Ряды</h3>
+          <div class="chips" id="rowChips"></div>
+          <div style="display:flex;gap:14px;margin-top:10px">
+            <button class="linkish" id="selBasic">Все основные</button>
+            <button class="linkish" id="selAll">Все</button>
+          </div>
+        </div>
+        <p class="muted" id="deckNote" style="font-size:14px" hidden></p>
+      </div>
+      <div class="stage card" id="stage">
+        <div class="q-prompt" id="qPrompt"></div>
+        <div class="q-card" id="qCard"><div class="q-big kana" id="qBig"></div></div>
+        <div class="opts" id="opts"></div>
+        <div class="feedback" id="fb"></div>
+        <div class="score">
+          <span><b id="sRight">0</b>верно</span>
+          <span><b id="sTotal">0</b>всего</span>
+          <span><b id="sStreak">0</b>серия</span>
+        </div>
+        <div class="hint-keys">Клавиши 1–4 выбирают ответ, Enter — следующий вопрос</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПОДДЕРЖАТЬ -->
+<section id="view-podderzhka" class="view" hidden>
+  <div class="wrap gutter page" id="supportRoot">
+    <div class="page-head">
+      <div>
+        <h2>Поддержать проект <span class="jp">花見</span></h2>
+        <p>Все уроки, кандзи, фразы и тренажёр бесплатны и такими останутся. Подписка «Ханами» — способ сказать спасибо и получить красивые фоны для сайта.</p>
+      </div>
+    </div>
+    <div class="sup-layout">
+      <aside class="plan card">
+        <span class="plan-jp" aria-hidden="true">花見</span>
+        <h3>Ханами</h3>
+        <div class="price">79 ₽ <span>в месяц</span></div>
+        <p class="muted" style="font-size:14px">После оплаты на Boosty вы получаете код на 30 дней. Новый код продлевает подписку с даты окончания, дни не сгорают.</p>
+        <ul>
+          <li><svg class="flower"><use href="#sakura"/></svg><span>Все фоны: Ночной Токио, Рисовые поля, Осенние клёны, Зимние ворота</span></li>
+          <li><svg class="flower"><use href="#sakura"/></svg><span>Значок <span class="kana">花見</span> в шапке сайта</span></li>
+                    <li class="soon"><svg class="flower"><use href="#sakura"/></svg><span>Шрифты каны: кисть, рукопись, пиксели<span class="soon-tag">скоро</span></span></li>
+          <li class="soon"><svg class="flower"><use href="#sakura"/></svg><span>Ранний доступ к новым разделам<span class="soon-tag">скоро</span></span></li>
+        </ul>
+        <button class="btn primary lg" disabled>Оформить на Boosty — скоро</button>
+        <div id="supStatus"></div>
+        <form id="codeBox" class="code-form" novalidate style="display:grid;gap:8px">
+          <label for="codeInput" id="codeLabel" style="font-size:14px;font-weight:500">Уже поддержали? Введите код</label>
+          <div class="code-row" id="codeForm-row">
+            <input id="codeInput" autocomplete="off" placeholder="HANAMI-XXXX">
+            <button class="btn" type="submit">Активировать</button>
+          </div>
+          <div class="code-msg" id="codeMsg" aria-live="polite"></div>
+        </form>
+        <p class="free-note">Без подписки сайт работает полностью: любой фон можно примерить бесплатно.</p>
+      </aside>
+      <div>
+        <h3 class="sub-h" style="margin-top:0">Фоны сайта</h3>
+        <p class="sub-p">Фон меняет небо, цвета и то, что падает по экрану. У каждого есть светлый и тёмный вариант, переключатель — в шапке сайта.</p>
+        <div class="bg-grid" id="bgGrid"></div>
+        <h3 class="sub-h" style="margin-top:36px">Праздничные фоны</h3>
+        <p class="sub-p">Бесплатно для всех, но только в дни праздника. В это время праздничный фон можно выбрать наравне с остальными, а после праздника он снова закроется до следующего года.</p>
+        <label class="check"><input type="checkbox" id="holiAuto"> Включать праздничный фон автоматически</label>
+        <div class="bg-grid" id="holiGrid" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="preview-bar gutter" id="previewBar" hidden>
+  <div class="wrap">
+    <p id="pvText"></p>
+    <div class="btns">
+      <button class="btn primary" id="pvSupport">Поддержать и оставить</button>
+      <button class="btn" id="pvBack">Вернуть мой фон</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="authModal" hidden>
+  <div class="modal-card card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button class="modal-x" id="authClose" aria-label="Закрыть">×</button>
+    <div id="authOut">
+      <h3 id="authTitle">Вход в аккаунт</h3>
+      <p class="muted" style="font-size:14px;margin-top:4px">Прогресс, уровень и фон будут сохраняться в облаке и появятся на любом устройстве.</p>
+      <div class="seg" role="group" aria-label="Вход или регистрация" style="margin-top:14px">
+        <button data-amode="in" aria-pressed="true">Вход</button>
+        <button data-amode="up" aria-pressed="false">Регистрация</button>
+      </div>
+      <form id="authForm" class="auth-form" novalidate>
+        <label for="authEmail">Почта</label>
+        <input id="authEmail" type="email" autocomplete="email" placeholder="you@mail.ru">
+        <label for="authPass">Пароль</label>
+        <input id="authPass" type="password" autocomplete="current-password" placeholder="Не короче 6 символов">
+        <div class="auth-msg" id="authMsg" aria-live="polite"></div>
+        <button class="btn primary lg" type="submit" id="authSubmit">Войти</button>
+      </form>
+      <div class="auth-alt">
+        <button class="linkish" id="authReset">Забыли пароль?</button>
+        <button class="btn" id="authGoogle">Войти через Google</button>
+      </div>
+    </div>
+    <div id="authIn" hidden>
+      <h3>Аккаунт</h3>
+      <p id="authWho" style="margin-top:6px;font-weight:500"></p>
+      <p class="muted" id="authSync" style="font-size:14px;margin-top:4px"></p>
+      <div class="btns"><button class="btn" id="authLogout">Выйти</button></div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-foot gutter">
+  <div class="wrap"><span>Путеводитель в японский · чтения по системе Поливанова</span><span id="footSync">Прогресс хранится в этом браузере</span></div>
+</footer>
+
+<script>
+(function () {
+  // ===================== ДАННЫЕ =====================
+  // [хирагана, катакана, ромадзи, по-русски]
+  const ROWS = [
+    { id: 'a',  label: 'а',  t: 'b', cells: [['あ','ア','a','а'],['い','イ','i','и'],['う','ウ','u','у'],['え','エ','e','э'],['お','オ','o','о']] },
+    { id: 'ka', label: 'ка', t: 'b', cells: [['か','カ','ka','ка'],['き','キ','ki','ки'],['く','ク','ku','ку'],['け','ケ','ke','кэ'],['こ','コ','ko','ко']] },
+    { id: 'sa', label: 'са', t: 'b', cells: [['さ','サ','sa','са'],['し','シ','shi','си'],['す','ス','su','су'],['せ','セ','se','сэ'],['そ','ソ','so','со']] },
+    { id: 'ta', label: 'та', t: 'b', cells: [['た','タ','ta','та'],['ち','チ','chi','ти'],['つ','ツ','tsu','цу'],['て','テ','te','тэ'],['と','ト','to','то']] },
+    { id: 'na', label: 'на', t: 'b', cells: [['な','ナ','na','на'],['に','ニ','ni','ни'],['ぬ','ヌ','nu','ну'],['ね','ネ','ne','нэ'],['の','ノ','no','но']] },
+    { id: 'ha', label: 'ха', t: 'b', cells: [['は','ハ','ha','ха'],['ひ','ヒ','hi','хи'],['ふ','フ','fu','фу'],['へ','ヘ','he','хэ'],['ほ','ホ','ho','хо']] },
+    { id: 'ma', label: 'ма', t: 'b', cells: [['ま','マ','ma','ма'],['み','ミ','mi','ми'],['む','ム','mu','му'],['め','メ','me','мэ'],['も','モ','mo','мо']] },
+    { id: 'ya', label: 'я',  t: 'b', cells: [['や','ヤ','ya','я'],null,['ゆ','ユ','yu','ю'],null,['よ','ヨ','yo','ё']] },
+    { id: 'ra', label: 'ра', t: 'b', cells: [['ら','ラ','ra','ра'],['り','リ','ri','ри'],['る','ル','ru','ру'],['れ','レ','re','рэ'],['ろ','ロ','ro','ро']] },
+    { id: 'wa', label: 'ва', t: 'b', cells: [['わ','ワ','wa','ва'],null,null,null,['を','ヲ','wo','о']] },
+    { id: 'n',  label: 'н',  t: 'b', cells: [['ん','ン','n','н'],null,null,null,null] },
+    { id: 'ga', label: 'га', t: 'd', cells: [['が','ガ','ga','га'],['ぎ','ギ','gi','ги'],['ぐ','グ','gu','гу'],['げ','ゲ','ge','гэ'],['ご','ゴ','go','го']] },
+    { id: 'za', label: 'дза',t: 'd', cells: [['ざ','ザ','za','дза'],['じ','ジ','ji','дзи'],['ず','ズ','zu','дзу'],['ぜ','ゼ','ze','дзэ'],['ぞ','ゾ','zo','дзо']] },
+    { id: 'da', label: 'да', t: 'd', cells: [['だ','ダ','da','да'],['ぢ','ヂ','ji','дзи'],['づ','ヅ','zu','дзу'],['で','デ','de','дэ'],['ど','ド','do','до']] },
+    { id: 'ba', label: 'ба', t: 'd', cells: [['ば','バ','ba','ба'],['び','ビ','bi','би'],['ぶ','ブ','bu','бу'],['べ','ベ','be','бэ'],['ぼ','ボ','bo','бо']] },
+    { id: 'pa', label: 'па', t: 'd', cells: [['ぱ','パ','pa','па'],['ぴ','ピ','pi','пи'],['ぷ','プ','pu','пу'],['ぺ','ペ','pe','пэ'],['ぽ','ポ','po','по']] },
+    { id: 'kya', label: 'кя', t: 'y', cells: [['きゃ','キャ','kya','кя'],['きゅ','キュ','kyu','кю'],['きょ','キョ','kyo','кё']] },
+    { id: 'sha', label: 'ся', t: 'y', cells: [['しゃ','シャ','sha','ся'],['しゅ','シュ','shu','сю'],['しょ','ショ','sho','сё']] },
+    { id: 'cha', label: 'тя', t: 'y', cells: [['ちゃ','チャ','cha','тя'],['ちゅ','チュ','chu','тю'],['ちょ','チョ','cho','тё']] },
+    { id: 'nya', label: 'ня', t: 'y', cells: [['にゃ','ニャ','nya','ня'],['にゅ','ニュ','nyu','ню'],['にょ','ニョ','nyo','нё']] },
+    { id: 'hya', label: 'хя', t: 'y', cells: [['ひゃ','ヒャ','hya','хя'],['ひゅ','ヒュ','hyu','хю'],['ひょ','ヒョ','hyo','хё']] },
+    { id: 'mya', label: 'мя', t: 'y', cells: [['みゃ','ミャ','mya','мя'],['みゅ','ミュ','myu','мю'],['みょ','ミョ','myo','мё']] },
+    { id: 'rya', label: 'ря', t: 'y', cells: [['りゃ','リャ','rya','ря'],['りゅ','リュ','ryu','рю'],['りょ','リョ','ryo','рё']] },
+    { id: 'gya', label: 'гя', t: 'y', cells: [['ぎゃ','ギャ','gya','гя'],['ぎゅ','ギュ','gyu','гю'],['ぎょ','ギョ','gyo','гё']] },
+    { id: 'ja',  label: 'дзя',t: 'y', cells: [['じゃ','ジャ','ja','дзя'],['じゅ','ジュ','ju','дзю'],['じょ','ジョ','jo','дзё']] },
+    { id: 'bya', label: 'бя', t: 'y', cells: [['びゃ','ビャ','bya','бя'],['びゅ','ビュ','byu','бю'],['びょ','ビョ','byo','бё']] },
+    { id: 'pya', label: 'пя', t: 'y', cells: [['ぴゃ','ピャ','pya','пя'],['ぴゅ','ピュ','pyu','пю'],['ぴょ','ピョ','pyo','пё']] },
+  ];
+  const NOTES = {
+    'は': 'Как частица читается «ва»: わたしは — ватаси ва.',
+    'へ': 'Как частица читается «э».',
+    'を': 'Используется почти только как частица. Читается «о».',
+    'ん': 'Единственная согласная без гласной. Перед б, п, м звучит как «м».',
+    'つ': 'Маленькая っ удваивает следующую согласную: きって — киттэ.',
+    'ぢ': 'Звучит так же, как じ, встречается редко.',
+    'づ': 'Звучит так же, как ず, встречается редко.',
+    'し': 'Мягкое «си», ближе к «щи» без «щ».',
+    'ふ': 'Звук между «ф» и «х», губы почти не смыкаются.',
+    'う': 'После о и у часто просто удлиняет звук: ありがとう — аригато:.',
+  };
+  const ALL = [];
+  ROWS.forEach(r => r.cells.forEach(c => { if (c) ALL.push({ h: c[0], k: c[1], ro: c[2], ru: c[3], row: r.id, t: r.t }); }));
+  const BY_CHAR = {};
+  ALL.forEach(x => { BY_CHAR[x.h] = x; BY_CHAR[x.k] = x; });
+
+  const LEVELS = {
+    n: { name: 'Новичок', jp: '初級', jlpt: 'С нуля · до JLPT N5', n: 1,
+         desc: 'Учим азбуку, читаем первые слова и говорим простые вежливые фразы.',
+         list: ['Хирагана и катакана', '12 первых кандзи: числа и природа', 'Конструкции «A は B です», вопрос с か', 'Приветствия, магазин, знакомство'] },
+    m: { name: 'Средний', jp: '中級', jlpt: 'JLPT N4–N3', n: 2,
+         desc: 'Вежливые глаголы, просьбы и желания. Хватит для поездки в Японию.',
+         list: ['Комбинированные слоги きゃ, しゅ…', '12 кандзи для учёбы и быта', 'Формы ます, ～てください, ～たい, ～ている', 'Транспорт, кафе, если что-то пошло не так'] },
+    p: { name: 'Профи', jp: '上級', jlpt: 'JLPT N2 и выше', n: 3,
+         desc: 'Вежливая речь кэйго, деловые формулы, пословицы и оттенки смысла.',
+         list: ['12 кандзи из новостей и деловых текстов', 'Кэйго, условия ～ば/～たら, ～わけではない', 'Деловая переписка и совещания', 'Пословицы и устойчивые выражения'] },
+  };
+
+  // кандзи: [знак, значение, он, он-рус, кун, кун-рус, слово, чтение, транскрипция, перевод]
+  const KANJI = {
+    n: [
+      ['一','один','イチ','ити','ひと(つ)','хитоцу','一つ','ひとつ','хитоцу','одна штука'],
+      ['二','два','ニ','ни','ふた(つ)','футацу','二月','にがつ','нигацу','февраль'],
+      ['三','три','サン','сан','みっ(つ)','миццу','三人','さんにん','саннин','три человека'],
+      ['人','человек','ジン, ニン','дзин, нин','ひと','хито','日本人','にほんじん','нихондзин','японец'],
+      ['日','день, солнце','ニチ','нити','ひ, か','хи, ка','日本','にほん','нихон','Япония'],
+      ['月','луна, месяц','ゲツ, ガツ','гэцу, гацу','つき','цуки','月曜日','げつようび','гэцуё:би','понедельник'],
+      ['山','гора','サン','сан','やま','яма','富士山','ふじさん','фудзисан','гора Фудзи'],
+      ['川','река','セン','сэн','かわ','кава','小川','おがわ','огава','ручей'],
+      ['口','рот','コウ','ко:','くち','кути','入口','いりぐち','иригути','вход'],
+      ['木','дерево','モク','моку','き','ки','木曜日','もくようび','мокуё:би','четверг'],
+      ['水','вода','スイ','суй','みず','мидзу','水曜日','すいようび','суйё:би','среда'],
+      ['火','огонь','カ','ка','ひ','хи','火曜日','かようび','каё:би','вторник'],
+    ],
+    m: [
+      ['学','учёба','ガク','гаку','まな(ぶ)','манабу','学生','がくせい','гакусэй','студент'],
+      ['生','жизнь, рождение','セイ','сэй','い(きる)','икиру','先生','せんせい','сэнсэй','учитель'],
+      ['先','прежде, впереди','セン','сэн','さき','саки','先週','せんしゅう','сэнсю:','прошлая неделя'],
+      ['食','есть, еда','ショク','сёку','た(べる)','табэру','食事','しょくじ','сёкудзи','приём пищи'],
+      ['飲','пить','イン','ин','の(む)','ному','飲み物','のみもの','номимоно','напиток'],
+      ['見','смотреть','ケン','кэн','み(る)','миру','見物','けんぶつ','кэмбуцу','осмотр достопримечательностей'],
+      ['行','идти','コウ','ко:','い(く)','ику','旅行','りょこう','рёко:','путешествие'],
+      ['来','приходить','ライ','рай','く(る)','куру','来年','らいねん','райнэн','следующий год'],
+      ['時','время, час','ジ','дзи','とき','токи','時間','じかん','дзикан','время'],
+      ['間','промежуток','カン','кан','あいだ, ま','аида, ма','人間','にんげん','нингэн','человек, люди'],
+      ['話','разговор','ワ','ва','はな(す)','ханасу','電話','でんわ','дэнва','телефон'],
+      ['語','язык, слово','ゴ','го','かた(る)','катару','日本語','にほんご','нихонго','японский язык'],
+    ],
+    p: [
+      ['経','проходить, управлять','ケイ','кэй','へ(る)','хэру','経験','けいけん','кэйкэн','опыт'],
+      ['済','завершать','サイ','сай','す(む)','суму','経済','けいざい','кэйдзай','экономика'],
+      ['議','обсуждение','ギ','ги','—','—','会議','かいぎ','кайги','совещание'],
+      ['論','довод, теория','ロン','рон','—','—','議論','ぎろん','гирон','дискуссия'],
+      ['権','право, власть','ケン','кэн','—','—','権利','けんり','кэнри','право (на что-то)'],
+      ['境','граница','キョウ','кё:','さかい','сакай','環境','かんきょう','канкё:','окружающая среда'],
+      ['識','знание','シキ','сики','—','—','知識','ちしき','тисики','знания'],
+      ['際','край, случай','サイ','сай','きわ','кива','国際','こくさい','кокусай','международный'],
+      ['責','ответственность','セキ','сэки','せ(める)','сэмэру','責任','せきにん','сэкинин','ответственность'],
+      ['認','признавать','ニン','нин','みと(める)','митомэру','確認','かくにん','какунин','подтверждение'],
+      ['証','доказательство','ショウ','сё:','—','—','証明','しょうめい','сё:мэй','доказательство, справка'],
+      ['拡','расширять','カク','каку','—','—','拡大','かくだい','какудай','расширение'],
+    ],
+  };
+
+  // грамматика: { t, expl, f: [части формулы], ex: [[jp, kana|'', рус. чтение, перевод]] }
+  const GRAMMAR = {
+    n: [
+      { t: 'A は B です — «A есть B»', expl: 'Частица は (читается «ва») отмечает тему, です делает фразу вежливой. Глагола «быть» в русском смысле не нужно.',
+        f: ['[тема]', 'は', '[что это]', 'です'],
+        ex: [['わたしは がくせい です', '', 'ватаси ва гакусэй дэс', 'Я студент.'], ['これは ほん です', '', 'корэ ва хон дэс', 'Это книга.']] },
+      { t: 'Вопрос с か', expl: 'Добавьте か в конец, и утверждение станет вопросом. Знак вопроса в японском не обязателен, интонация идёт вверх.',
+        f: ['[фраза]', 'ですか'],
+        ex: [['がくせい ですか', '', 'гакусэй дэс ка', 'Вы студент?'], ['はい、そうです', '', 'хай, со: дэс', 'Да, так.'], ['いいえ、ちがいます', '', 'ии:э, тигаимас', 'Нет, это не так.']] },
+      { t: 'Частица の — «чей», «какой»', expl: 'A の B значит «B, который относится к A»: принадлежность, происхождение или свойство.',
+        f: ['A', 'の', 'B'],
+        ex: [['わたしの ほん', '', 'ватаси но хон', 'моя книга'], ['にほんの くるま', '', 'нихон но курума', 'японская машина']] },
+      { t: 'これ・それ・あれ — это, то, вон то', expl: 'これ — рядом с говорящим, それ — рядом с собеседником, あれ — далеко от обоих. どれ — «который?».',
+        f: ['これ / それ / あれ', 'は', '[что]', 'です'],
+        ex: [['それは なん ですか', '', 'сорэ ва нан дэс ка', 'Что это (у вас)?'], ['あれは やま です', '', 'арэ ва яма дэс', 'Вон то — гора.']] },
+    ],
+    m: [
+      { t: 'Вежливые глаголы на ～ます', expl: 'Форма ます звучит вежливо и подходит почти везде. Отрицание — ～ません, прошедшее — ～ました, прошедшее отрицание — ～ませんでした.',
+        f: ['[основа глагола]', 'ます / ません / ました'],
+        ex: [['毎日 日本語を 勉強します', 'まいにち にほんごを べんきょうします', 'майнити нихонго о бэнкё: симас', 'Каждый день учу японский.'], ['昨日 映画を 見ました', 'きのう えいがを みました', 'кино: эйга о мимасита', 'Вчера смотрел фильм.'], ['肉は 食べません', 'にくは たべません', 'нику ва табэмасэн', 'Мясо не ем.']] },
+      { t: '～てください — вежливая просьба', expl: 'Глагол в форме て плюс ください — «сделайте, пожалуйста». Так просят в магазине, на улице, у учителя.',
+        f: ['[глагол в て-форме]', 'ください'],
+        ex: [['ここに 名前を 書いてください', 'ここに なまえを かいてください', 'коко ни намаэ о каитэ кудасай', 'Напишите здесь имя, пожалуйста.'], ['ちょっと 待ってください', 'ちょっと まってください', 'тётто маттэ кудасай', 'Подождите немного.']] },
+      { t: '～たい — «хочу»', expl: 'Основа ます-формы плюс たい: 行きます → 行きたい. Объект желания часто отмечают が.',
+        f: ['[основа глагола]', 'たいです'],
+        ex: [['日本に 行きたいです', 'にほんに いきたいです', 'Нихон ни икитай дэс', 'Хочу поехать в Японию.'], ['寿司が 食べたいです', 'すしが たべたいです', 'суси га табэтай дэс', 'Хочу суши.']] },
+      { t: '～ています — процесс или состояние', expl: 'て-форма плюс います описывает то, что происходит сейчас, или результат, который длится.',
+        f: ['[глагол в て-форме]', 'います'],
+        ex: [['今 雨が 降っています', 'いま あめが ふっています', 'има амэ га футтэ имас', 'Сейчас идёт дождь.'], ['東京に 住んでいます', 'とうきょうに すんでいます', 'То:кё: ни сундэ имас', 'Я живу в Токио.']] },
+    ],
+    p: [
+      { t: 'Кэйго: почтительные и скромные глаголы', expl: 'Сонкэйго возвышает собеседника, кэндзё:го принижает себя. 行く → いらっしゃる (о других) и 参る (о себе); 言う → おっしゃる и 申す; 見る → ご覧になる и 拝見する.',
+        f: ['о других:', 'いらっしゃる', 'о себе:', '参る'],
+        ex: [['社長は もう いらっしゃいました', 'しゃちょうは もう いらっしゃいました', 'сятё: ва мо: ирассяимасита', 'Директор уже пришёл.'], ['資料を 拝見しました', 'しりょうを はいけんしました', 'сирё: о хайкэн симасита', 'Я ознакомился с материалами.']] },
+      { t: 'Условия: ～ば и ～たら', expl: '～ば — общее условие и логическая связь. ～たら — «когда случится» или «если вдруг», часто про один конкретный раз.',
+        f: ['[условие]', 'ば / たら', '[следствие]'],
+        ex: [['安ければ 買います', 'やすければ かいます', 'ясукэрэба каимас', 'Если будет дёшево, куплю.'], ['駅に 着いたら 電話してください', 'えきに ついたら でんわしてください', 'эки ни цуйтара дэнва ситэ кудасай', 'Когда доберётесь до станции, позвоните.']] },
+      { t: '～ようにする — стараться, чтобы', expl: 'Говорит о привычке или усилии ради результата. В форме ～ようにしています — «взял за правило».',
+        f: ['[глагол]', 'ように', 'する'],
+        ex: [['毎日 早く 寝るように しています', 'まいにち はやく ねるように しています', 'майнити хаяку нэру ё: ни ситэ имас', 'Стараюсь каждый день ложиться рано.'], ['忘れないように メモします', 'わすれないように メモします', 'васурэнай ё: ни мэмо симас', 'Запишу, чтобы не забыть.']] },
+      { t: '～わけではない — «не то чтобы»', expl: 'Частичное отрицание: смягчает вывод, который собеседник мог сделать.',
+        f: ['[утверждение]', 'わけではない'],
+        ex: [['嫌いな わけでは ない', 'きらいな わけでは ない', 'кираи на вакэ дэ ва най', 'Не то чтобы я это не любил.'], ['全部 わかる わけでは ありません', 'ぜんぶ わかる わけでは ありません', 'дзэмбу вакару вакэ дэ ва аримасэн', 'Не то чтобы я всё понимал.']] },
+    ],
+  };
+
+  // фразы: [уровень, тема, японский, кана или '', транскрипция, перевод, заметка]
+  const PHRASES = [
+    ['n','Приветствия','こんにちは','','коннитива','Здравствуйте, добрый день','В конце は, читается «ва».'],
+    ['n','Приветствия','おはよう ございます','','охаё: годзаимас','Доброе утро','Друзьям хватит просто おはよう.'],
+    ['n','Приветствия','こんばんは','','комбанва','Добрый вечер','ん перед б звучит как «м».'],
+    ['n','Приветствия','おやすみなさい','','оясуми насай','Спокойной ночи',''],
+    ['n','Приветствия','さようなら','','саё:нара','До свидания','Звучит официально, с друзьями — じゃあね.'],
+    ['n','Вежливость','ありがとう ございます','','аригато: годзаимас','Большое спасибо','Конечное у в -масу почти не слышно.'],
+    ['n','Вежливость','すみません','','сумимасэн','Извините; простите, можно вас','И извинение, и способ позвать официанта.'],
+    ['n','Вежливость','どういたしまして','','до: итасимаситэ','Не за что',''],
+    ['n','Вежливость','おねがいします','','онэгаисимас','Пожалуйста (прошу)','Когда о чём-то просите.'],
+    ['n','Знакомство','はじめまして','','хадзимэмаситэ','Приятно познакомиться','Говорят при первой встрече.'],
+    ['n','Знакомство','わたしは アンナ です','','ватаси ва Анна дэс','Меня зовут Анна','Подставьте своё имя катаканой.'],
+    ['n','Знакомство','よろしく おねがいします','','ёросику онэгаисимас','Прошу любить и жаловать','Завершает знакомство.'],
+    ['n','Магазин и кафе','これ ください','','корэ кудасай','Дайте вот это','Можно просто показать пальцем.'],
+    ['n','Магазин и кафе','いくら ですか','','икура дэс ка','Сколько стоит?',''],
+    ['n','Магазин и кафе','おいしい','','оисий','Вкусно!',''],
+    ['n','Магазин и кафе','いただきます','','итадакимас','Говорят перед едой','Благодарность за еду, дословного перевода нет.'],
+    ['n','Если что-то не так','わかりません','','вакаримасэн','Я не понимаю',''],
+    ['n','Если что-то не так','もう いちど おねがいします','','мо: итидо онэгаисимас','Повторите, пожалуйста',''],
+    ['n','Если что-то не так','トイレは どこ ですか','','тоирэ ва доко дэс ка','Где туалет?','トイレ записывается катаканой.'],
+
+    ['m','Приветствия','お久しぶりです','おひさしぶりです','о-хисасибури дэс','Давно не виделись',''],
+    ['m','Приветствия','元気ですか','げんきですか','гэнки дэс ка','Как дела?','Дословно «вы здоровы?».'],
+    ['m','Приветствия','お疲れ様です','おつかれさまです','о-цукарэ сама дэс','Спасибо за работу','Коллеги говорят так при встрече и прощании.'],
+    ['m','Знакомство','日本語を勉強しています','にほんごを べんきょうしています','нихонго о бэнкё: ситэ имас','Я изучаю японский',''],
+    ['m','Знакомство','どこから来ましたか','どこから きましたか','доко кара кимасита ка','Откуда вы?',''],
+    ['m','Знакомство','ロシアから来ました','ロシアから きました','Росиа кара кимасита','Я из России',''],
+    ['m','Магазин и кафе','メニューを見せてください','メニューを みせてください','мэню: о мисэтэ кудасай','Покажите меню, пожалуйста',''],
+    ['m','Магазин и кафе','お会計をお願いします','おかいけいを おねがいします','о-кайкэй о о-нэгаи симас','Счёт, пожалуйста',''],
+    ['m','Магазин и кафе','カードで払えますか','カードで はらえますか','ка:до дэ хараэмас ка','Можно оплатить картой?',''],
+    ['m','Дорога','駅はどこですか','えきは どこですか','эки ва доко дэс ка','Где станция?',''],
+    ['m','Дорога','この電車は東京に行きますか','この でんしゃは とうきょうに いきますか','коно дэнся ва То:кё: ни икимас ка','Этот поезд идёт в Токио?',''],
+    ['m','Дорога','切符を一枚ください','きっぷを いちまい ください','киппу о итимай кудасай','Один билет, пожалуйста','枚 — счётное слово для плоских предметов.'],
+    ['m','Если что-то не так','道に迷いました','みちに まよいました','мити ни маёимасита','Я заблудился',''],
+    ['m','Если что-то не так','ゆっくり話してください','ゆっくり はなしてください','юккури ханаситэ кудасай','Говорите медленнее, пожалуйста',''],
+    ['m','Если что-то не так','英語を話せますか','えいごを はなせますか','эйго о ханасэмас ка','Вы говорите по-английски?',''],
+    ['m','Разговор','楽しかったです','たのしかったです','таносикатта дэс','Было весело',''],
+    ['m','Разговор','本当ですか','ほんとうですか','хонто: дэс ка','Правда?','Частая реакция в разговоре.'],
+
+    ['p','Вежливость','恐れ入りますが','おそれいりますが','осорэиримас га','Прошу прощения, но…','Очень вежливое начало просьбы.'],
+    ['p','Вежливость','お手数をおかけしますが','おてすうを おかけしますが','о-тэсу: о о-какэ симас га','Простите за беспокойство, но…',''],
+    ['p','Вежливость','少々お待ちください','しょうしょう おまちください','сё:сё: о-мати кудасай','Подождите немного, пожалуйста','Так говорят продавцы и операторы.'],
+    ['p','Деловое','よろしくお願い申し上げます','よろしく おねがい もうしあげます','ёросику о-нэгаи мо:сиагэмас','С уважением, прошу вашего содействия','Стандартная концовка делового письма.'],
+    ['p','Деловое','ご検討いただけますでしょうか','ごけんとう いただけますでしょうか','го-кэнто: итадакэмас дэсё: ка','Не могли бы вы рассмотреть?',''],
+    ['p','Деловое','承知いたしました','しょうち いたしました','сё:ти итасимасита','Принято, понял(а)','Вежливее, чем わかりました.'],
+    ['p','Пословицы','猿も木から落ちる','さるも きから おちる','сару мо ки кара отиру','И обезьяна падает с дерева','Ошибаются даже мастера.'],
+    ['p','Пословицы','一期一会','いちごいちえ','итиго итиэ','Одна встреча — один шанс','Каждый момент неповторим, цените его.'],
+    ['p','Пословицы','七転び八起き','ななころび やおき','нанакороби яоки','Упасть семь раз, подняться восемь',''],
+    ['p','Разговор','言うまでもなく','いうまでもなく','иу мадэ мо наку','Само собой разумеется',''],
+    ['p','Разговор','気のせいかもしれない','きのせいかもしれない','ки но сэй ка мо сирэнай','Может, мне показалось',''],
+    ['p','Разговор','仕方がない','しかたがない','сиката га най','Ничего не поделаешь',''],
+  ];
+
+  // ===================== ОБЩЕЕ =====================
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = window.matchMedia && matchMedia('(hover: hover)').matches;
+  const $ = id => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} try { window.dispatchEvent(new CustomEvent('kana-store', { detail: k })); } catch (e) {} }
+  };
+  let stats = store.get('kana.stats', {});
+  const st = id => stats[id] || { c: 0, w: 0 };
+  const mastered = id => { const s = st(id); return s.c >= 3 && s.c / (s.c + s.w) >= 0.8; };
+  const weak = id => { const s = st(id); return s.w >= 2 && s.w > s.c / 2; };
+  let level = store.get('kana.level', 'n');
+  const FLOWER = '<svg viewBox="-12 -12 24 24"><use href="#sakura"/></svg>';
+
+  // озвучка
+  let jaVoice = null;
+  const canSpeak = 'speechSynthesis' in window;
+  function pickVoice() { try { jaVoice = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)) || null; } catch (e) {} updateVoiceUI(); }
+  if (canSpeak) { pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {} }
+  function speak(text) {
+    if (!canSpeak || !text) return;
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'ja-JP'; if (jaVoice) u.voice = jaVoice; u.rate = 0.85; speechSynthesis.speak(u); } catch (e) {}
+  }
+  function updateVoiceUI() {
+    const note = $('voiceNote'); if (!note) return;
+    note.textContent = !canSpeak ? 'Ваш браузер не умеет озвучивать текст, кнопки озвучки отключены.'
+      : (jaVoice ? '' : 'Японский голос в системе не найден, озвучка может звучать неточно. Его можно добавить в настройках речи вашей ОС.');
+  }
+  const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 5.5h3l4-3.5v12l-4-3.5H2z" stroke="none"/><path d="M11 5a4 4 0 0 1 0 6" fill="none" stroke-width="1.6"/></svg>';
+  const playBtn = (say, label, sm) => `<button class="play${sm ? ' sm' : ''}" data-say="${say}" aria-label="Озвучить ${label}" ${canSpeak ? '' : 'disabled'}>${PLAY}</button>`;
+  document.addEventListener('click', e => { const b = e.target.closest('[data-say]'); if (b) { e.stopPropagation(); speak(b.dataset.say); } }, true);
+
+  function tilt(el, max) {
+    if (!canHover || reduced) return;
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * max) + 'deg');
+      el.style.setProperty('--rx', (-((e.clientY - r.top) / r.height - .5) * max) + 'deg');
+    });
+    el.addEventListener('pointerleave', () => { el.style.setProperty('--ry', '0deg'); el.style.setProperty('--rx', '0deg'); });
+  }
+
+  // ===================== НАВИГАЦИЯ =====================
+  const VIEWS = ['home', 'test', 'azbuka', 'kandzi', 'grammatika', 'frazy', 'trener', 'podderzhka'];
+  let current = 'home';
+  function go(v, keepScroll) {
+    if (v === 'levels-anchor') { go('home', true); $('levels-anchor').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); return; }
+    if (!VIEWS.includes(v)) v = 'home';
+    current = v;
+    VIEWS.forEach(x => { $('view-' + x).hidden = x !== v; });
+    document.querySelectorAll('#links button').forEach(b => { if (b.dataset.go === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    if (v === 'azbuka') renderGrid(true);
+    if (v === 'trener' && !q) nextQ();
+    if (v === 'home') renderHome();
+    if (v === 'test') { $('testIntro').hidden = false; $('testRun').hidden = true; $('testResult').hidden = true; }
+    if (!keepScroll) window.scrollTo({ top: 0, behavior: 'auto' });
+    store.set('kana.view', v);
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+
+  function setLevel(l) {
+    level = l; store.set('kana.level', l);
+    document.querySelectorAll('[data-lvl]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lvl === l));
+    document.querySelectorAll('[data-badge]').forEach(b => b.innerHTML = `${FLOWER.replace('<svg', '<svg class="flower"')} ${LEVELS[l].name} <span class="kana">${LEVELS[l].jp}</span>`);
+    catSel = 'Все';
+    renderHome(); renderKanji(); renderGrammar(); renderPhrases(); renderTControls();
+    q = null; if (current === 'trener') nextQ();
+  }
+  document.querySelectorAll('[data-lvl]').forEach(b => b.onclick = () => setLevel(b.dataset.lvl));
+
+  // ===================== ГЛАВНАЯ =====================
+  function renderHome() {
+    $('levels').innerHTML = Object.entries(LEVELS).map(([id, L]) => `
+      <button class="lvl-card" data-pick="${id}" aria-pressed="${level === id}">
+        <span class="jp-big" aria-hidden="true">${L.jp}</span>
+        <span class="petals">${[1, 2, 3].map(i => `<svg viewBox="-12 -12 24 24" class="${i <= L.n ? 'on' : ''}"><use href="#sakura"/></svg>`).join('')}</span>
+        <span class="jlpt">${L.jlpt}</span>
+        <h3>${L.name}</h3>
+        <p>${L.desc}</p>
+        <ul>${L.list.map(x => `<li>${x}</li>`).join('')}</ul>
+        <span class="pick">${level === id ? 'Ваш уровень' : 'Выбрать уровень →'}</span>
+      </button>`).join('');
+    $('levels').querySelectorAll('.lvl-card').forEach(c => { c.onclick = () => setLevel(c.dataset.pick); tilt(c, 8); });
+    const L = LEVELS[level];
+    $('secSub').textContent = `Содержимое для уровня «${L.name}»`;
+    const ph = PHRASES.filter(p => p[0] === level);
+    const cards = [
+      ['azbuka', 'あ', 'Азбука', 'Хирагана, катакана и комбинированные слоги с озвучкой.', `${ALL.length} знаков в каждой азбуке`],
+      ['kandzi', KANJI[level][0][0], 'Кандзи', 'Карточки-перевёртыши с чтениями и примером слова.', `${KANJI[level].length} иероглифов`],
+      ['grammatika', '文', 'Грамматика', 'Схема конструкции и примеры с переводом.', `${GRAMMAR[level].length} урока`],
+      ['frazy', '話', 'Фразы', 'Готовые выражения, разложенные по темам.', `${ph.length} фраз, ${new Set(ph.map(p => p[1])).size} тем`],
+      ['trener', '練', 'Тренажёр', 'Кана, кандзи и фразы в виде теста.', 'Подстраивается под ошибки'],
+    ];
+    $('sections').innerHTML = cards.map(c => `<button class="sec-card" data-go="${c[0]}"><span class="glyph">${c[1]}</span><h3>${c[2]}</h3><p>${c[3]}</p><span class="meta">${c[4]}</span></button>`).join('');
+    renderProgress();
+  }
+  function renderProgress() {
+    const n = ALL.length;
+    const items = [
+      ['Хирагана', ALL.filter(x => mastered(x.h)).length, n],
+      ['Катакана', ALL.filter(x => mastered(x.k)).length, n],
+      [`Кандзи · ${LEVELS[level].name}`, KANJI[level].filter(k => mastered('kj:' + k[0])).length, KANJI[level].length],
+      [`Фразы · ${LEVELS[level].name}`, PHRASES.filter(p => p[0] === level && mastered('ph:' + p[2])).length, PHRASES.filter(p => p[0] === level).length],
+    ];
+    $('progressRow').innerHTML = items.map(([l, v, t]) => `<div class="pstat card"><div class="lbl">${l}</div><b>${v}</b> <span class="of">из ${t}</span><div class="bar"><i style="width:${t ? v / t * 100 : 0}%"></i></div></div>`).join('');
+  }
+
+  // ===================== АЗБУКА =====================
+  let azScript = store.get('kana.azScript', 'h');
+  let azDakOn = store.get('kana.azDak', true);
+  let selected = null;
+  function cellHTML(c, n) {
+    const ch = azScript === 'h' ? c[0] : c[1], other = azScript === 'h' ? c[1] : c[0];
+    const dot = mastered(ch) ? '<span class="dot" title="Выучено"></span>' : (weak(ch) ? '<span class="dot weak" title="Частые ошибки"></span>' : '');
+    return `<button class="kcell" style="--d:${n}" data-ch="${c[0]}" aria-pressed="${selected === c[0]}" aria-label="${ch}, ${c[3]}">
+      <span class="face front">${dot}<span class="k">${ch}</span><span class="r">${c[3]}</span></span>
+      <span class="face back" aria-hidden="true"><span class="k">${other}</span><span class="r">${azScript === 'h' ? 'катакана' : 'хирагана'}</span></span></button>`;
+  }
+  function renderGrid(intro) {
+    $('azH').setAttribute('aria-pressed', azScript === 'h'); $('azK').setAttribute('aria-pressed', azScript === 'k');
+    $('azDak').checked = azDakOn;
+    let html = '<div></div>' + ['а', 'и', 'у', 'э', 'о'].map(v => `<div class="colh">${v}</div>`).join('');
+    let sep = false, n = 0;
+    ROWS.filter(r => r.t !== 'y').forEach(r => {
+      if (r.t === 'd' && !azDakOn) return;
+      if (r.t === 'd' && !sep) { html += '<div class="rowsep">Звонкие и полузвонкие</div>'; sep = true; }
+      html += `<div class="rowh">${r.label}</div>`;
+      r.cells.forEach(c => { html += c ? cellHTML(c, n++) : '<div class="kempty"></div>'; });
+    });
+    $('kgrid').innerHTML = html;
+    let yh = '<div></div>' + ['я', 'ю', 'ё'].map(v => `<div class="colh">${v}</div>`).join('');
+    ROWS.filter(r => r.t === 'y').forEach(r => {
+      if (!azDakOn && ['gya', 'ja', 'bya', 'pya'].includes(r.id)) return;
+      yh += `<div class="rowh">${r.label}</div>` + r.cells.map(c => cellHTML(c, n++)).join('');
+    });
+    $('ygrid').innerHTML = yh;
+    ['kgrid', 'ygrid'].forEach(id => {
+      const g = $(id);
+      if (intro && !reduced) { g.classList.remove('intro'); void g.offsetWidth; g.classList.add('intro'); } else g.classList.remove('intro');
+      g.querySelectorAll('.kcell').forEach(b => b.onclick = () => selectKana(b.dataset.ch, true));
+    });
+  }
+  function selectKana(ch, say) { selected = BY_CHAR[ch].h; renderGrid(false); renderDetail(); if (say) speak(selected); }
+  function renderDetail() {
+    const x = BY_CHAR[selected || 'あ'];
+    const main = azScript === 'h' ? x.h : x.k, other = azScript === 'h' ? x.k : x.h;
+    const s = st(main), tot = s.c + s.w, row = ROWS.find(r => r.id === x.row);
+    $('detail').innerHTML = `
+      <div class="big-wrap"><div class="big ${main.length > 1 ? 'small-t' : ''}" aria-label="${main}">${main}</div></div>
+      <dl class="dl">
+        <dt>По-русски</dt><dd>${x.ru}</dd>
+        <dt>Ромадзи</dt><dd>${x.ro}</dd>
+        <dt>${azScript === 'h' ? 'Катакана' : 'Хирагана'}</dt><dd><span class="kana">${other}</span></dd>
+        <dt>Тренажёр</dt><dd>${tot ? `${s.c} из ${tot} верно${mastered(main) ? ' · выучено' : ''}` : 'ещё не тренировали'}</dd>
+      </dl>
+      ${NOTES[x.h] ? `<p class="note-sm">${NOTES[x.h]}</p>` : ''}
+      <div class="btns">
+        <button class="btn" data-say="${x.h}" ${canSpeak ? '' : 'disabled'}>Озвучить</button>
+        <button class="btn primary" id="dTrain">Тренировать ряд «${row.label}»</button>
+      </div>`;
+    $('dTrain').onclick = () => { deck = 'kana'; tRows = new Set([x.row]); tScript = azScript; saveT(); renderTControls(); q = null; go('trener'); };
+  }
+  $('azH').onclick = () => { azScript = 'h'; store.set('kana.azScript', 'h'); renderGrid(true); renderDetail(); };
+  $('azK').onclick = () => { azScript = 'k'; store.set('kana.azScript', 'k'); renderGrid(true); renderDetail(); };
+  $('azDak').onchange = () => { azDakOn = $('azDak').checked; store.set('kana.azDak', azDakOn); renderGrid(true); };
+
+  // ===================== КАНДЗИ =====================
+  function renderKanji() {
+    $('kjGrid').innerHTML = KANJI[level].map((k, i) => `
+      <div class="kj" role="button" tabindex="0" data-kj="${i}" aria-label="${k[0]}, ${k[1]}. Нажмите, чтобы перевернуть">
+        <div class="face front">${mastered('kj:' + k[0]) ? '<span class="dot" title="Выучено"></span>' : ''}<span class="glyph">${k[0]}</span><span class="mean">${k[1]}</span><span class="hint">нажмите, чтобы перевернуть</span></div>
+        <div class="face back">
+          <div class="row"><b>Он</b><span><span class="kana">${k[2]}</span> · ${k[3]}</span></div>
+          <div class="row"><b>Кун</b><span><span class="kana">${k[4]}</span> · ${k[5]}</span></div>
+          <div class="ex">
+            <div><div class="w">${k[6]}</div><div class="rd">${k[8]}</div><div class="tr">${k[9]}</div></div>
+            ${playBtn(k[7], k[6], true)}
+          </div>
+        </div>
+      </div>`).join('');
+    $('kjGrid').querySelectorAll('.kj').forEach(c => {
+      const flip = () => { c.classList.toggle('flipped'); if (c.classList.contains('flipped')) speak(KANJI[level][+c.dataset.kj][7]); };
+      c.onclick = flip;
+      c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } };
+    });
+  }
+
+  // ===================== ГРАММАТИКА =====================
+  function renderGrammar() {
+    $('lessons').innerHTML = GRAMMAR[level].map((g, i) => `
+      <article class="lesson card">
+        <div class="lesson-h"><span class="num">Урок ${i + 1}</span><h3>${g.t}</h3></div>
+        <p class="expl">${g.expl}</p>
+        <div class="formula">${g.f.map(p => (/[а-яё\[]/i.test(p) || /^[AB]$/.test(p)) ? `<span class="slot">${p}</span>` : `<span class="kana">${p}</span>`).join('<span class="muted">+</span>')}</div>
+        <div class="examples">${g.ex.map(e => `
+          <div class="ex-row">
+            ${playBtn(e[1] || e[0], e[0], true)}
+            <div class="jp">${e[0]}</div>
+            ${e[1] ? `<div class="kn">${e[1]}</div>` : ''}
+            <div class="rd">${e[2]}</div>
+            <div class="tr">${e[3]}</div>
+          </div>`).join('')}</div>
+      </article>`).join('');
+  }
+
+  // ===================== ФРАЗЫ =====================
+  let catSel = 'Все';
+  function renderPhrases() {
+    const list = PHRASES.filter(p => p[0] === level);
+    const cats = ['Все', ...new Set(list.map(p => p[1]))];
+    $('catChips').innerHTML = cats.map(c => `<button class="chip" data-cat="${c}" aria-pressed="${c === catSel}">${c}<span class="cnt">${c === 'Все' ? list.length : list.filter(p => p[1] === c).length}</span></button>`).join('');
+    $('catChips').querySelectorAll('.chip').forEach(b => b.onclick = () => { catSel = b.dataset.cat; renderPhrases(); });
+    const shown = catSel === 'Все' ? list : list.filter(p => p[1] === catSel);
+    $('phr').innerHTML = shown.map(p => `
+      <div class="pcard card">
+        <div class="cat">${p[1]}</div>
+        ${playBtn(p[3] || p[2], p[2])}
+        <div class="jp">${p[2]}</div>
+        ${p[3] ? `<div class="kn">${p[3]}</div>` : ''}
+        <div class="rd">${p[4]}</div>
+        <div class="tr-ru">${p[5]}</div>
+        ${p[6] ? `<div class="note">${p[6]}</div>` : ''}
+      </div>`).join('');
+    $('phr').querySelectorAll('.pcard').forEach(c => tilt(c, 8));
+    updateVoiceUI();
+  }
+
+  // ===================== ТРЕНАЖЁР =====================
+  let deck = store.get('kana.deck', 'kana');
+  let tScript = store.get('kana.tScript', 'h');
+  let tMode = store.get('kana.tMode', 'read');
+  let tRows = new Set(store.get('kana.tRows', ['a', 'ka']));
+  let q = null, answered = false, last = null;
+  const sess = { r: 0, t: 0, s: 0 };
+  function saveT() { store.set('kana.deck', deck); store.set('kana.tScript', tScript); store.set('kana.tMode', tMode); store.set('kana.tRows', [...tRows]); }
+  function renderTControls() {
+    document.querySelectorAll('[data-deck]').forEach(b => b.setAttribute('aria-pressed', b.dataset.deck === deck));
+    document.querySelectorAll('[data-ts]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ts === tScript));
+    document.querySelectorAll('[data-tm]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tm === tMode));
+    $('kanaOpts').hidden = deck !== 'kana';
+    $('deckNote').hidden = deck === 'kana';
+    $('deckNote').textContent = deck === 'kanji' ? `${KANJI[level].length} кандзи уровня «${LEVELS[level].name}». Уровень меняется в шапке сайта.`
+      : `${PHRASES.filter(p => p[0] === level).length} фраз уровня «${LEVELS[level].name}». Уровень меняется в шапке сайта.`;
+    const sample = r => { const c = r.cells.find(Boolean); return tScript === 'k' ? c[1] : c[0]; };
+    $('rowChips').innerHTML = ROWS.map(r => `<button class="chip" data-row="${r.id}" aria-pressed="${tRows.has(r.id)}"><span class="kana">${sample(r)}</span> ${r.label}</button>`).join('');
+    $('rowChips').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+      const id = b.dataset.row;
+      if (tRows.has(id)) { if (tRows.size > 1) tRows.delete(id); } else tRows.add(id);
+      saveT(); renderTControls(); nextQ();
+    });
+  }
+  document.querySelectorAll('[data-deck]').forEach(b => b.onclick = () => { deck = b.dataset.deck; saveT(); renderTControls(); nextQ(); });
+  document.querySelectorAll('[data-ts]').forEach(b => b.onclick = () => { tScript = b.dataset.ts; saveT(); renderTControls(); nextQ(); });
+  document.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { tMode = b.dataset.tm; saveT(); renderTControls(); nextQ(); });
+  $('selBasic').onclick = () => { tRows = new Set(ROWS.filter(r => r.t === 'b').map(r => r.id)); saveT(); renderTControls(); nextQ(); };
+  $('selAll').onclick = () => { tRows = new Set(ROWS.map(r => r.id)); saveT(); renderTControls(); nextQ(); };
+
+  // карточка: id (для статистики), jp (японская сторона), ru (русская сторона), say, kind
+  function buildDeck() {
+    if (deck === 'kanji') return KANJI[level].map(k => ({ id: 'kj:' + k[0], jp: k[0], ru: k[1], say: k[7], kind: 'kanji', extra: `${k[6]} — ${k[8]}, ${k[9]}` }));
+    if (deck === 'phr') return PHRASES.filter(p => p[0] === level).map(p => ({ id: 'ph:' + p[2], jp: p[2], ru: p[5], say: p[3] || p[2], kind: 'phr', extra: p[4] }));
+    const out = [];
+    ALL.filter(x => tRows.has(x.row)).forEach(x => {
+      if (tScript !== 'k') out.push({ id: x.h, jp: x.h, ru: x.ru, say: x.h, kind: 'kana', extra: `${x.h} ${x.k} · ${x.ro}`, sc: 'h' });
+      if (tScript !== 'h') out.push({ id: x.k, jp: x.k, ru: x.ru, say: x.h, kind: 'kana', extra: `${x.h} ${x.k} · ${x.ro}`, sc: 'k' });
+    });
+    return out;
+  }
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function nextQ() {
+    const p = buildDeck();
+    if (!p.length) return;
+    const cands = p.length > 1 ? p.filter(e => e.id !== last) : p;
+    const ws = cands.map(e => { const s = st(e.id); return (1 + 2 * s.w) / (1 + s.c); });
+    let r = Math.random() * ws.reduce((a, b) => a + b, 0), pick = cands[0];
+    for (let i = 0; i < cands.length; i++) { r -= ws[i]; if (r <= 0) { pick = cands[i]; break; } }
+    const used = new Set([pick.ru]), dis = [];
+    let src = shuffle(p.filter(e => e.sc === pick.sc));
+    if (pick.kind === 'kana') src = src.concat(shuffle(ALL.filter(x => x.t === ALL.find(y => y.h === pick.jp || y.k === pick.jp).t).map(x => ({ id: pick.sc === 'h' ? x.h : x.k, jp: pick.sc === 'h' ? x.h : x.k, ru: x.ru, sc: pick.sc }))))
+      .concat(shuffle(ALL.map(x => ({ id: x.h, jp: pick.sc === 'h' ? x.h : x.k, ru: x.ru, sc: pick.sc }))));
+    for (const e of src) { if (dis.length >= 3) break; if (!used.has(e.ru)) { used.add(e.ru); dis.push(e); } }
+    q = { t: pick, opts: shuffle([pick, ...dis]) };
+    last = pick.id; answered = false;
+    renderQ();
+  }
+  function animQ(cls) { const b = $('qBig'); b.classList.remove('enter', 'ok', 'no'); void b.offsetWidth; if (cls) b.classList.add(cls); }
+  function bigCls(text, isJp) {
+    if (isJp) return text.length <= 2 ? 'kana' : (text.length <= 3 ? 'kana' : 'jp');
+    return 'txt' + (text.length > 10 ? ' long' : '');
+  }
+  function renderQ() {
+    const read = tMode === 'read', t = q.t;
+    const prompts = {
+      kana: read ? 'Как читается этот знак?' : `Какой знак ${t.sc === 'h' ? 'хираганы' : 'катаканы'} так читается?`,
+      kanji: read ? 'Что значит этот кандзи?' : 'Какой кандзи это значит?',
+      phr: read ? 'Что значит эта фраза?' : 'Как это сказать по-японски?',
+    };
+    $('qPrompt').textContent = prompts[t.kind];
+    const shown = read ? t.jp : t.ru;
+    const big = $('qBig');
+    big.className = 'q-big ' + bigCls(shown, read);
+    if (t.kind === 'kanji' && read) big.className = 'q-big kana';
+    big.textContent = shown;
+    animQ('enter');
+    const optCls = read ? '' : (t.kind === 'phr' ? 'jp' : 'kana');
+    $('opts').innerHTML = q.opts.map((o, i) => `<button class="opt ${optCls}" data-i="${i}"><span class="n">${i + 1}</span>${read ? o.ru : o.jp}</button>`).join('');
+    $('opts').querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.i));
+    $('fb').innerHTML = '';
+  }
+  function answer(i) {
+    if (answered || !q || !q.opts[i]) return;
+    answered = true;
+    const t = q.t, ok = q.opts[i].ru === t.ru;
+    const s = st(t.id); ok ? s.c++ : s.w++; stats[t.id] = s; store.set('kana.stats', stats);
+    sess.t++; if (ok) { sess.r++; sess.s++; } else sess.s = 0;
+    $('sRight').textContent = sess.r; $('sTotal').textContent = sess.t; $('sStreak').textContent = sess.s;
+    $('opts').querySelectorAll('.opt').forEach((b, j) => {
+      b.disabled = true;
+      if (q.opts[j].ru === t.ru) b.classList.add('right'); else if (j === i) b.classList.add('wrong');
+    });
+    speak(t.say);
+    animQ(ok ? 'ok' : 'no');
+    const info = `<span class="kana" style="font-size:20px">${t.jp}</span> — ${t.ru}${t.extra ? ` <span class="muted">(${t.extra})</span>` : ''}`;
+    if (ok) {
+      $('fb').innerHTML = `<span class="ok">Верно!</span> <span>${info}</span>`;
+      setTimeout(() => { if (answered && q && q.t === t) nextQ(); }, t.kind === 'phr' ? 1500 : 1000);
+    } else {
+      $('fb').innerHTML = `<span class="no">Не то.</span> <span>${info}</span> <button class="btn primary" id="nextBtn">Дальше</button>`;
+      $('nextBtn').onclick = nextQ; $('nextBtn').focus({ preventScroll: true });
+    }
+    renderProgress(); if (t.kind === 'kana') renderGrid(false);
+  }
+  document.addEventListener('keydown', e => {
+    if (current !== 'trener' || !q) return;
+    if (e.target.closest && e.target.closest('input')) return;
+    if (/^[1-4]$/.test(e.key)) answer(+e.key - 1);
+    else if (e.key === 'Enter' && answered && document.activeElement?.id !== 'nextBtn') nextQ();
+  });
+  (function () {
+    const stage = $('stage'), card = $('qCard');
+    if (!canHover || reduced) return;
+    stage.addEventListener('pointermove', e => {
+      const r = stage.getBoundingClientRect();
+      card.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 20) + 'deg');
+      card.style.setProperty('--rx', (-((e.clientY - r.top) / r.height - .5) * 16) + 'deg');
+    });
+    stage.addEventListener('pointerleave', () => { card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg'); });
+  })();
+
+  // ===================== ВВОДНЫЙ ТЕСТ =====================
+  // [уровень, вопрос, японский текст или '', правильный ответ, неправильные...]
+  const TEST = [
+    ['n', 'Как читается этот знак?', 'あ', 'а', 'о', 'и', 'у'],
+    ['n', 'Как читается этот знак катаканы?', 'カ', 'ка', 'ки', 'та', 'ко'],
+    ['n', 'Как читается этот знак?', 'し', 'си', 'ти', 'цу', 'хи'],
+    ['n', 'Что значит эта фраза?', 'ありがとう', 'Спасибо', 'Привет', 'Извините', 'До свидания'],
+    ['m', 'Что значит этот глагол?', '食べます', 'Ем (вежливо)', 'Пью', 'Иду', 'Смотрю'],
+    ['m', 'Какая частица нужна вместо пропуска?', '日本＿行きたいです', 'に', 'を', 'が', 'の'],
+    ['m', 'Как вежливо попросить «Подождите, пожалуйста»?', '', '待ってください', '待ちます', '待ちたいです', '待っています'],
+    ['m', 'Что значит это слово?', '学生', 'Студент', 'Учитель', 'Школа', 'Японский язык'],
+    ['p', 'Какая почтительная форма у 行く, когда говорят о начальнике?', '', 'いらっしゃる', '参る', '申す', '拝見する'],
+    ['p', 'Что значит это слово?', '経済', 'Экономика', 'Совещание', 'Опыт', 'Право'],
+    ['p', 'Что значит эта фраза?', '安ければ買います', 'Если будет дёшево, куплю', 'Купил, потому что было дёшево', 'Дёшево, но не куплю', 'Хочу купить что-нибудь дёшево'],
+    ['p', 'Что значит эта фраза?', '嫌いなわけではない', 'Не то чтобы я это не любил', 'Я это совсем не люблю', 'Я это очень люблю', 'Мне это не нужно'],
+  ];
+  const BLOCKS = { n: 'Азбука и первые фразы', m: 'Вежливые глаголы и бытовые слова', p: 'Кэйго и сложная грамматика' };
+  let tq = 0, tScore = { n: 0, m: 0, p: 0 }, tOrder = [], tLocked = false;
+  function startTest() {
+    tq = 0; tScore = { n: 0, m: 0, p: 0 }; tLocked = false;
+    tOrder = TEST.map(q => shuffle([q[3], q[4], q[5], q[6]]));
+    $('testIntro').hidden = true; $('testResult').hidden = true; $('testRun').hidden = false;
+    renderTestQ();
+  }
+  function renderTestQ() {
+    const q = TEST[tq];
+    $('tBar').style.width = (tq / TEST.length * 100) + '%';
+    $('tStep').textContent = `Вопрос ${tq + 1} из ${TEST.length}`;
+    $('tBlock').textContent = BLOCKS[q[0]];
+    $('tQ').textContent = q[1];
+    $('tJp').hidden = !q[2]; $('tJp').textContent = q[2];
+    const jpOpts = /[ぁ-ゟ゠-ヿ一-龯]/.test(q[3]);
+    $('tOpts').innerHTML = tOrder[tq].map((o, i) => `<button class="opt ${jpOpts ? 'jp' : ''}" data-t="${i}"><span class="n">${i + 1}</span>${o}</button>`).join('') +
+      `<button class="opt idk" data-t="idk">Не знаю</button>`;
+    $('tOpts').querySelectorAll('.opt').forEach(b => b.onclick = () => testAnswer(b));
+    tLocked = false;
+  }
+  function testAnswer(b) {
+    if (tLocked) return; tLocked = true;
+    const q = TEST[tq], pick = b.dataset.t === 'idk' ? null : tOrder[tq][+b.dataset.t];
+    if (pick === q[3]) tScore[q[0]]++;
+    $('tOpts').querySelectorAll('.opt').forEach(x => {
+      x.disabled = true;
+      if (x.dataset.t !== 'idk' && tOrder[tq][+x.dataset.t] === q[3]) x.classList.add('right');
+      else if (x === b && pick !== q[3]) x.classList.add('wrong');
+    });
+    setTimeout(() => {
+      tq++;
+      const blockEnd = tq === TEST.length || TEST[tq][0] !== q[0];
+      // если блок провален, дальше спрашивать нет смысла
+      if (tq === TEST.length || (blockEnd && tScore[q[0]] < 3)) return finishTest();
+      renderTestQ();
+    }, 700);
+  }
+  function testLevel() {
+    if (tScore.n < 3) return { lv: 'n', note: 'Начните с азбуки: хирагана, потом катакана. Тренажёр подскажет, какие знаки повторить.' };
+    if (tScore.m < 3) return { lv: 'n', note: 'Азбуку вы уже знаете. Переходите к первым кандзи и грамматике новичка, а когда они станут лёгкими, переключитесь на «Средний».' };
+    if (tScore.p < 3) return { lv: 'm', note: 'Основы у вас есть. Дальше — вежливые формы глаголов, просьбы и фразы для поездки.' };
+    return { lv: 'p', note: 'Сильный уровень! Берите кэйго, деловые фразы и кандзи из новостей.' };
+  }
+  function finishTest() {
+    const r = testLevel(), L = LEVELS[r.lv];
+    $('tBar').style.width = '100%';
+    $('testRun').hidden = true; $('testResult').hidden = false;
+    $('trJp').textContent = L.jp; $('trName').textContent = L.name; $('trNote').textContent = r.note;
+    const done = Object.keys(tScore).filter(k => TEST.slice(0, tq).some(q => q[0] === k));
+    $('trScore').innerHTML = done.map(k => `<div class="tr-row"><span>${BLOCKS[k]}</span><b>${tScore[k]} из 4</b></div>`).join('');
+    $('trApply').onclick = () => { setLevel(r.lv); store.set('kana.testDone', r.lv); go('home', true); $('levels-anchor').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); };
+    $('trApply').textContent = level === r.lv ? 'Отлично, уровень уже выбран' : `Выбрать уровень «${L.name}»`;
+  }
+  $('testStart').onclick = startTest;
+  $('testSkip').onclick = () => { setLevel('n'); store.set('kana.testDone', 'n'); go('azbuka'); };
+  $('trAgain').onclick = startTest;
+
+  // ===================== СТАРТ =====================
+  renderDetail(); setLevel(level);
+  const h = (location.hash || '').slice(1);
+  go(VIEWS.includes(h) ? h : store.get('kana.view', 'home'));
+
+  window.__kana = { ALL, speak, reduced, select: ch => { selectKana(ch, false); } };
+})();
+</script>
+
+<script>
+// ===================== ФОНЫ И ПОДПИСКА «ХАНАМИ» =====================
+(function () {
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} try { window.dispatchEvent(new CustomEvent('kana-store', { detail: k })); } catch (e) {} }
+  };
+  const SCENES = [
+    { id: 'sakura', name: 'Сакура', jp: '桜', free: true, desc: 'Розовые холмы днём и сливовая ночь.' },
+    { id: 'tokyo', name: 'Ночной Токио', jp: '東京の夜', desc: 'Огни небоскрёбов, башня и сакура над ночным городом.' },
+    { id: 'fields', name: 'Рисовые поля', jp: '田んぼ', desc: 'Террасы на закате и заснеженная гора вдалеке.' },
+    { id: 'momiji', name: 'Осенние клёны', jp: '紅葉', desc: 'Красные клёны на холмах и кружащиеся листья.' },
+    { id: 'winter', name: 'Зимние ворота', jp: '雪の鳥居', desc: 'Красные тории в снегу и тихий снегопад.' },
+  ];
+  const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const HOLI = [
+    { id: 'h-newyear', name: 'Новый год', jp: 'お正月', from: [12, 28], to: [1, 7], desc: 'Кадомацу у входа, первый рассвет года и фейерверки.' },
+    { id: 'h-hina', name: 'Хинамацури', jp: '雛祭り', from: [2, 26], to: [3, 3], desc: 'Праздник девочек: цветущий персик, куклы и фонарики.' },
+    { id: 'h-kodomo', name: 'День детей', jp: 'こどもの日', from: [4, 29], to: [5, 5], desc: 'Карпы кои-нобори развеваются на ветру.' },
+    { id: 'h-tanabata', name: 'Танабата', jp: '七夕', from: [7, 1], to: [7, 7], desc: 'Млечный путь и бамбук с полосками желаний.' },
+    { id: 'h-hanabi', name: 'Обон и фейерверки', jp: '花火', from: [8, 8], to: [8, 16], desc: 'Фейерверки над рекой и плывущие фонарики.' },
+    { id: 'h-tsukimi', name: 'Цукими', jp: '月見', from: [9, 20], to: [9, 27], desc: 'Любование полной луной, трава сусуки и данго.' },
+    { id: 'h-halloween', name: 'Хэллоуин', jp: 'ハロウィン', from: [10, 24], to: [10, 31], desc: 'Тыквы-фонари, летучие мыши и оранжевая луна.' },
+    { id: 'h-xmas', name: 'Зимние огни', jp: 'イルミネーション', from: [12, 20], to: [12, 27], desc: 'Рождественская иллюминация, ёлка и снег.' },
+  ].map(h => Object.assign(h, { holiday: true }));
+  const md = d => (d.getMonth() + 1) * 100 + d.getDate();
+  function inRange(h, d) { const x = md(d), a = h.from[0] * 100 + h.from[1], b = h.to[0] * 100 + h.to[1]; return a <= b ? (x >= a && x <= b) : (x >= a || x <= b); }
+  const holidayNow = HOLI.find(h => inRange(h, new Date())) || null;
+  const fmtRange = h => h.from[0] === h.to[0] ? `${h.from[1]}–${h.to[1]} ${MONTHS[h.to[0] - 1]}` : `${h.from[1]} ${MONTHS[h.from[0] - 1]} – ${h.to[1]} ${MONTHS[h.to[0] - 1]}`;
+  SCENES.push(...HOLI);
+  // Коды сторонников. HANAMI-TEST — тестовый, замените на свои перед запуском.
+  const CODES = []; // на хостинге коды проверяет облако
+  const DAY = 864e5, SUB_DAYS = 30;
+  let supUntil = +store.get('kana.supUntil', 0) || 0;
+  let supporter = supUntil > Date.now();
+  const fmtDate = ms => { const d = new Date(ms); return `${d.getDate()} ${['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][d.getMonth()]}`; };
+  const sceneById = id => SCENES.find(s => s.id === id);
+  const isOpen = s => !!s && (s.free || (s.holiday ? !!(holidayNow && holidayNow.id === s.id) : supporter));
+  let holidayAuto = store.get('kana.holidayAuto', true);
+  let chosen = store.get('kana.scene', 'sakura');
+  if (!isOpen(sceneById(chosen))) chosen = 'sakura';
+  let preview = null;
+  const base = () => (holidayAuto && holidayNow) ? holidayNow.id : chosen;
+  const active = () => preview || base();
+  let mode = store.get('kana.mode', 'auto');
+  if (!['auto', 'light', 'dark'].includes(mode)) mode = 'auto';
+  function sysDark() {
+    const t = root.getAttribute('data-theme');
+    if (t === 'dark') return true;
+    if (t === 'light') return false;
+    return !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  const isDark = () => mode === 'auto' ? sysDark() : mode === 'dark';
+  function applyMode() {
+    root.dataset.mode = isDark() ? 'dark' : 'light';
+    document.querySelectorAll('[data-setmode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.setmode === mode));
+  }
+  document.querySelectorAll('[data-setmode]').forEach(b => b.onclick = () => { mode = b.dataset.setmode; store.set('kana.mode', mode); apply(); });
+  if (window.matchMedia) { const mq = matchMedia('(prefers-color-scheme: dark)'); const f = () => { if (mode === 'auto') apply(); }; mq.addEventListener ? mq.addEventListener('change', f) : mq.addListener(f); }
+  new MutationObserver(() => { if (mode === 'auto') apply(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- рисование ----------
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function grad(ctx, h, stops) { const g = ctx.createLinearGradient(0, 0, 0, h); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; }
+  function glowCircle(ctx, x, y, r, col, glow) { ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = r * 1.6; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.restore(); }
+  function hill(ctx, w, h, top, col, R, amp) {
+    const ph = R() * 6, f = 1 + R() * 2;
+    ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, h);
+    for (let x = 0; x <= w + 8; x += 8) ctx.lineTo(x, h * top + Math.sin(x / w * Math.PI * f + ph) * h * amp + Math.sin(x / w * Math.PI * f * 3.1 + ph * 2) * h * amp * .3);
+    ctx.lineTo(w, h); ctx.closePath(); ctx.fill();
+  }
+  const PAINT = {
+    sakura(ctx, w, h, dk) {
+      const R = rng(3), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#140a14'], [1, '#2c1529']] : [[0, '#fde4ed'], [1, '#fff5f8']]); ctx.fillRect(0, 0, w, h);
+      if (dk) glowCircle(ctx, w * .8, h * .2, m * .04, '#fdeef4', 'rgba(255,200,225,.7)');
+      hill(ctx, w, h, .78, dk ? '#3a1d36' : '#f7cddc', R, .03); hill(ctx, w, h, .86, dk ? '#4b2545' : '#f2b8cc', R, .02);
+    },
+    tokyo(ctx, w, h, dk) {
+      const R = rng(7), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#070617'], [.55, '#1b1446'], [1, '#4b1f5e']] : [[0, '#c4d3f2'], [.55, '#efd9ea'], [1, '#fbe6ee']]); ctx.fillRect(0, 0, w, h);
+      if (dk) { for (let i = 0; i < w * h / 5000; i++) { ctx.fillStyle = `rgba(255,255,255,${.2 + R() * .6})`; const s = R() < .1 ? 2 : 1; ctx.fillRect(R() * w, R() * h * .6, s, s); } glowCircle(ctx, w * .82, h * .17, m * .045, '#fff3dd', 'rgba(255,240,210,.8)'); }
+      else glowCircle(ctx, w * .82, h * .2, m * .05, '#fff8ef', 'rgba(255,240,220,.9)');
+      ctx.fillStyle = dk ? '#2a2160' : '#b8b2d8'; let x = 0;
+      while (x < w) { const bw = w * (.02 + R() * .05), bh = h * (.12 + R() * .22); ctx.fillRect(x, h - bh, bw, bh); x += bw + 2; }
+      const tx = w * .66, th = h * .44, tb = m * .05, legX = f => tb * (1 - (f / .9) * .92);
+      ctx.save(); ctx.strokeStyle = dk ? '#ff5a3c' : '#e0452f'; ctx.lineWidth = Math.max(1.4, m * .0028); if (dk) { ctx.shadowColor = '#ff5a3c'; ctx.shadowBlur = 12; }
+      ctx.beginPath(); ctx.moveTo(tx - tb, h); ctx.lineTo(tx - legX(.9), h - th * .9); ctx.lineTo(tx, h - th); ctx.lineTo(tx + legX(.9), h - th * .9); ctx.lineTo(tx + tb, h); ctx.stroke();
+      for (let f = .02; f < .86; f += .07) { const a = legX(f), b = legX(f + .07); ctx.beginPath(); ctx.moveTo(tx - a, h - th * f); ctx.lineTo(tx + b, h - th * (f + .07)); ctx.moveTo(tx + a, h - th * f); ctx.lineTo(tx - b, h - th * (f + .07)); ctx.stroke(); }
+      ctx.fillStyle = dk ? '#ff7a52' : '#f08a6a'; [.42, .7].forEach(f => { const a = legX(f) * 1.35; ctx.fillRect(tx - a, h - th * f - m * .006, a * 2, m * .012); });
+      ctx.restore();
+      x = -10;
+      while (x < w) {
+        const bw = w * (.03 + R() * .06), bh = h * (.06 + R() * .2);
+        ctx.fillStyle = dk ? '#120c2c' : '#8c86b3'; ctx.fillRect(x, h - bh, bw, bh);
+        for (let wy = h - bh + 8; wy < h - 6; wy += 9) for (let wx = x + 5; wx < x + bw - 5; wx += 8) if (R() < .28) { ctx.fillStyle = dk ? (R() < .7 ? 'rgba(255,214,140,.75)' : 'rgba(140,220,255,.7)') : 'rgba(235,240,255,.55)'; ctx.fillRect(wx, wy, 3, 4); }
+        if (R() < .3) { ctx.save(); const c = R() < .5 ? '#ff4f9a' : '#4fe3ff'; if (dk) { ctx.shadowColor = c; ctx.shadowBlur = 14; } else ctx.globalAlpha = .55; ctx.fillStyle = c; ctx.fillRect(x + bw * .4, h - bh + 10, 5, Math.min(bh * .5, 60)); ctx.restore(); }
+        x += bw + 3;
+      }
+    },
+    fields(ctx, w, h, dk) {
+      const R = rng(11), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#070f20'], [.5, '#15284a'], [.62, '#203450'], [1, '#203450']] : [[0, '#f3c4c0'], [.45, '#ffd5a6'], [.62, '#ffe9c8'], [1, '#ffe9c8']]); ctx.fillRect(0, 0, w, h);
+      if (dk) { for (let i = 0; i < w * h / 6000; i++) { ctx.fillStyle = `rgba(255,255,255,${.2 + R() * .6})`; ctx.fillRect(R() * w, R() * h * .5, 1, 1); } glowCircle(ctx, w * .28, h * .26, m * .045, '#fff4d6', 'rgba(255,240,200,.8)'); }
+      else glowCircle(ctx, w * .28, h * .4, m * .06, '#ffb070', 'rgba(255,170,100,.9)');
+      const mx = w * .68, my = h * .3, mb = h * .6, mw = w * .32, d = mb - my;
+      ctx.fillStyle = dk ? '#2b3550' : '#c4a6b4'; ctx.beginPath(); ctx.moveTo(mx - mw, mb); ctx.lineTo(mx - mw * .12, my); ctx.lineTo(mx + mw * .12, my); ctx.lineTo(mx + mw, mb); ctx.fill();
+      ctx.fillStyle = dk ? '#c9d4e6' : '#fff6f1'; ctx.beginPath(); ctx.moveTo(mx - mw * .12, my); ctx.lineTo(mx + mw * .12, my); ctx.lineTo(mx + mw * .3, my + d * .25); ctx.lineTo(mx + mw * .15, my + d * .2); ctx.lineTo(mx, my + d * .28); ctx.lineTo(mx - mw * .15, my + d * .2); ctx.lineTo(mx - mw * .3, my + d * .25); ctx.fill();
+      const cols = dk ? ['#2d4a2e', '#284329', '#223b24', '#1d3420', '#182c1b', '#142516'] : ['#b9c98a', '#a3bd72', '#8eb05f', '#7aa04e', '#668f41', '#557d36'];
+      cols.forEach((c, i) => {
+        const top = h * (.56 + i * .075), amp = h * .012 * (1 + i * .4), ph = R() * 6, yAt = x => top + Math.sin(x / (w * .12) + ph) * amp;
+        ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(0, h); for (let x = 0; x <= w + 8; x += 8) ctx.lineTo(x, yAt(x)); ctx.lineTo(w, h); ctx.fill();
+        ctx.strokeStyle = dk ? 'rgba(180,210,255,.35)' : 'rgba(255,240,215,.55)'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let x = 0; x <= w + 8; x += 8) { x ? ctx.lineTo(x, yAt(x) + 3) : ctx.moveTo(x, yAt(x) + 3); } ctx.stroke();
+        ctx.strokeStyle = dk ? 'rgba(0,0,0,.25)' : 'rgba(60,90,30,.2)'; ctx.lineWidth = 1;
+        for (let x = R() * 12; x < w; x += 12 + i * 2) { const y = yAt(x) + 6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 2, y + 8 + i * 2); ctx.stroke(); }
+      });
+    },
+    momiji(ctx, w, h, dk) {
+      const R = rng(23), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#1d0f1c'], [.6, '#3a1a1e'], [1, '#4a2318']] : [[0, '#fbe4cf'], [.6, '#f8d4b5'], [1, '#f3c09c']]); ctx.fillRect(0, 0, w, h);
+      glowCircle(ctx, w * .2, h * .22, m * .05, dk ? '#fff0dc' : '#fff1dc', dk ? 'rgba(255,220,180,.7)' : 'rgba(255,230,200,.8)');
+      hill(ctx, w, h, .55, dk ? '#4a2a26' : '#e6b9a0', R, .03); hill(ctx, w, h, .66, dk ? '#5a2c22' : '#d49072', R, .035);
+      const reds = dk ? ['#a8321d', '#c2512a', '#8a2414', '#d07a30', '#9c2c1a'] : ['#d9472a', '#e8743b', '#b8331f', '#f0a040', '#c4402a'];
+      for (let i = 0; i < w / 10; i++) { const x = R() * w, y = h * (.68 + R() * .12), r = m * (.025 + R() * .045); ctx.globalAlpha = .88; ctx.fillStyle = reds[(R() * reds.length) | 0]; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1; hill(ctx, w, h, .83, dk ? '#2a120c' : '#9c4a2c', R, .02);
+    },
+    winter(ctx, w, h, dk) {
+      const R = rng(31), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#08101f'], [.6, '#16223a'], [1, '#22304a']] : [[0, '#d6e2f1'], [.6, '#eef3f9'], [1, '#f7f9fc']]); ctx.fillRect(0, 0, w, h);
+      if (dk) { for (let i = 0; i < w * h / 6000; i++) { ctx.fillStyle = `rgba(255,255,255,${.2 + R() * .6})`; ctx.fillRect(R() * w, R() * h * .45, 1, 1); } glowCircle(ctx, w * .2, h * .18, m * .04, '#f4f8ff', 'rgba(220,235,255,.8)'); }
+      hill(ctx, w, h, .48, dk ? '#2b3a58' : '#c3d0e2', R, .08); hill(ctx, w, h, .6, dk ? '#3a4b6b' : '#dbe4f0', R, .04);
+      for (let i = 0; i < w / 30; i++) { const x = R() * w, y = h * (.64 + R() * .1), s = m * (.018 + R() * .028); ctx.fillStyle = dk ? '#1c2638' : '#5d7187'; ctx.beginPath(); ctx.moveTo(x, y - s * 2); ctx.lineTo(x - s, y); ctx.lineTo(x + s, y); ctx.fill(); ctx.fillStyle = dk ? '#d9e3f2' : '#fff'; ctx.beginPath(); ctx.moveTo(x, y - s * 2); ctx.lineTo(x - s * .38, y - s * 1.25); ctx.lineTo(x + s * .38, y - s * 1.25); ctx.fill(); }
+      hill(ctx, w, h, .76, dk ? '#c9d6ea' : '#f5f8fc', R, .02);
+      const tx = w * .74, base = h * .9, th = m * .34, tw = m * .32;
+      ctx.fillStyle = dk ? '#b52f28' : '#c7372f';
+      ctx.fillRect(tx - tw * .36, base - th, tw * .06, th); ctx.fillRect(tx + tw * .30, base - th, tw * .06, th);
+      ctx.fillRect(tx - tw * .45, base - th * .78, tw * .9, th * .06);
+      ctx.fillRect(tx - tw * .03, base - th * .95, tw * .06, th * .17);
+      ctx.beginPath(); ctx.moveTo(tx - tw * .62, base - th * 1.06); ctx.quadraticCurveTo(tx, base - th * .92, tx + tw * .62, base - th * 1.06); ctx.lineTo(tx + tw * .56, base - th * .95); ctx.quadraticCurveTo(tx, base - th * .86, tx - tw * .56, base - th * .95); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = dk ? '#e8eef8' : '#ffffff'; ctx.beginPath(); ctx.moveTo(tx - tw * .62, base - th * 1.06); ctx.quadraticCurveTo(tx, base - th * .92, tx + tw * .62, base - th * 1.06); ctx.quadraticCurveTo(tx, base - th * .99, tx - tw * .62, base - th * 1.11); ctx.closePath(); ctx.fill();
+      ctx.fillRect(tx - tw * .45, base - th * .795, tw * .9, th * .02);
+      hill(ctx, w, h, .88, dk ? '#dce6f4' : '#fbfdff', R, .012);
+    },
+  };
+  const PARTS = {
+    light: {
+      sakura: { kind: 'petal', cols: ['#f7a9c4', '#fbc6d8', '#f48fb1'], n: 30 },
+      tokyo: { kind: 'petal', cols: ['#f59ac0', '#f7b6cf', '#ef7fac'], n: 60 },
+      fields: { kind: 'petal', cols: ['#ffe0b8', '#ffd0d8', '#fff2dc'], n: 45 },
+      momiji: { kind: 'leaf', cols: ['#d9472a', '#e8743b', '#c4402a', '#f0a040'], n: 38 },
+      winter: { kind: 'snow', cols: ['#ffffff'], n: 120 },
+    },
+    dark: {
+      sakura: { kind: 'petal', cols: ['#ffb3cd', '#ff8db5', '#f7c6d8'], n: 30 },
+      tokyo: { kind: 'petal', cols: ['#ffb3cf', '#ff8fb8', '#ffd1e1'], n: 70 },
+      fields: { kind: 'glow', cols: ['#fff1a8', '#d8ff9a'], n: 40 },
+      momiji: { kind: 'leaf', cols: ['#e8582f', '#f08a3c', '#c4402a', '#f2b04a'], n: 38 },
+      winter: { kind: 'snow', cols: ['#ffffff'], n: 120 },
+    },
+  };
+  // ---------- праздничные фоны ----------
+  function stars(ctx, w, h, R, dens, maxY) { for (let i = 0; i < w * h / 5000 * dens; i++) { ctx.fillStyle = `rgba(255,255,255,${.2 + R() * .6})`; const s = R() < .08 ? 2 : 1; ctx.fillRect(R() * w, R() * h * (maxY || .6), s, s); } }
+  function flower(ctx, x, y, r, col) { ctx.fillStyle = col; for (let k = 0; k < 5; k++) { const a = k * 1.2566; ctx.beginPath(); ctx.arc(x + Math.cos(a) * r * .55, y + Math.sin(a) * r * .55, r * .5, 0, 7); ctx.fill(); } ctx.fillStyle = '#f5d36b'; ctx.beginPath(); ctx.arc(x, y, r * .22, 0, 7); ctx.fill(); }
+  function branch(ctx, x0, y0, x1, y1, R, dk, col, m) {
+    const cx = (x0 + x1) / 2, cy = Math.max(y0, y1) + m * .06;
+    ctx.strokeStyle = dk ? '#7a5644' : '#5a3a2a'; ctx.lineWidth = m * .01; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(cx, cy, x1, y1); ctx.stroke();
+    for (let i = 1; i <= 10; i++) {
+      const u = i / 11, x = (1 - u) * (1 - u) * x0 + 2 * (1 - u) * u * cx + u * u * x1, y = (1 - u) * (1 - u) * y0 + 2 * (1 - u) * u * cy + u * u * y1;
+      if (i % 3 === 0) { ctx.lineWidth = m * .005; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (R() - .5) * m * .08, y + R() * m * .07); ctx.stroke(); }
+      flower(ctx, x + (R() - .5) * m * .03, y + (R() - .5) * m * .03, m * (.016 + R() * .012), col);
+    }
+  }
+  function doll(ctx, x, y, s, robe) {
+    ctx.fillStyle = robe; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x + s, y); ctx.lineTo(x, y - s * 1.6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fbe9dc'; ctx.beginPath(); ctx.arc(x, y - s * 1.78, s * .36, 0, 7); ctx.fill();
+    ctx.fillStyle = '#1a1416'; ctx.beginPath(); ctx.arc(x, y - s * 1.86, s * .38, Math.PI, 0); ctx.fill();
+  }
+  function kadomatsu(ctx, cx, h, m, dk) {
+    const s = m * .085, base = h - s * .2;
+    ctx.fillStyle = dk ? '#2a5a34' : '#2f6b3a';
+    for (let k = 0; k < 7; k++) { ctx.beginPath(); ctx.arc(cx + (k - 3) * s * .18, base - s * 1.15 - Math.abs(k - 3) * s * .03, s * .22, 0, 7); ctx.fill(); }
+    [[-.3, 2.3], [0, 2.9], [.3, 2.0]].forEach(([dx, hh]) => {
+      const x = cx + dx * s, wd = s * .3, top = base - s * hh;
+      ctx.fillStyle = dk ? '#3c7a46' : '#4a9a55'; ctx.beginPath(); ctx.moveTo(x - wd / 2, base); ctx.lineTo(x - wd / 2, top + wd * .8); ctx.lineTo(x + wd / 2, top); ctx.lineTo(x + wd / 2, base); ctx.fill();
+      ctx.fillStyle = '#e4efc0'; ctx.beginPath(); ctx.ellipse(x, top + wd * .4, wd * .42, wd * .16, -.9, 0, 7); ctx.fill();
+    });
+    ctx.fillStyle = dk ? '#8a6a3e' : '#b48a52'; ctx.fillRect(cx - s * .62, base - s * 1.05, s * 1.24, s * 1.05);
+    ctx.fillStyle = dk ? '#c9a45e' : '#e2bf72'; ctx.fillRect(cx - s * .64, base - s * .9, s * 1.28, s * .1); ctx.fillRect(cx - s * .64, base - s * .45, s * 1.28, s * .1);
+  }
+  function pumpkin(ctx, x, y, r, dk) {
+    ctx.fillStyle = dk ? '#d4601a' : '#e0681c';
+    [-.45, 0, .45].forEach(dx => { ctx.beginPath(); ctx.ellipse(x + dx * r, y, r * .62, r * .8, 0, 0, 7); ctx.fill(); });
+    ctx.strokeStyle = 'rgba(90,30,0,.35)'; ctx.lineWidth = 1.2; [-.45, .45].forEach(dx => { ctx.beginPath(); ctx.ellipse(x + dx * r, y, r * .62, r * .8, 0, 0, 7); ctx.stroke(); });
+    ctx.fillStyle = '#4a5a2a'; ctx.fillRect(x - r * .08, y - r * 1.05, r * .16, r * .3);
+    ctx.save(); ctx.fillStyle = dk ? '#ffd36b' : '#3a1a0a'; if (dk) { ctx.shadowColor = '#ffb030'; ctx.shadowBlur = 14; }
+    [[-.38, -.15], [.38, -.15]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.moveTo(x + dx * r - r * .17, y + dy * r + r * .12); ctx.lineTo(x + dx * r + r * .17, y + dy * r + r * .12); ctx.lineTo(x + dx * r, y + dy * r - r * .16); ctx.fill(); });
+    ctx.beginPath(); ctx.moveTo(x - r * .6, y + r * .25);
+    for (let k = 0; k <= 6; k++) ctx.lineTo(x - r * .6 + k * r * .2, y + r * (k % 2 ? .38 : .25));
+    ctx.lineTo(x + r * .5, y + r * .5); ctx.lineTo(x - r * .5, y + r * .5); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function bareTree(ctx, x, y, len, ang, depth, col) {
+    const x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len;
+    ctx.strokeStyle = col; ctx.lineWidth = Math.max(1, depth * 1.6); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+    if (depth > 0) { bareTree(ctx, x2, y2, len * .72, ang - .45, depth - 1, col); bareTree(ctx, x2, y2, len * .68, ang + .38, depth - 1, col); }
+  }
+  function tanabataBranches(w, h, m) {
+    const sx = w * .1;
+    return [[.3, .28], [.45, .34], [.6, .26], [.72, .3]].map(([f, l]) => ({ x0: sx, y0: h * f, x1: sx + m * l, y1: h * f + m * .05 }));
+  }
+  // фейерверки
+  function fwStep(st, w, h, dt, cols, top, bottom) {
+    const R = st.R || Math.random; st.list = st.list || []; st.next = (st.next || 0) - dt;
+    if (st.next <= 0) { st.next = .5 + R() * 1.1; st.list.push({ x: w * (.12 + R() * .76), y: h * (top + R() * (bottom - top)), R: Math.min(w, h) * (.07 + R() * .08), age: 0, life: 1.7 + R() * .7, col: cols[(R() * cols.length) | 0], n: 34 + ((R() * 26) | 0), rot: R() * 6 }); }
+    st.list.forEach(f => f.age += dt); st.list = st.list.filter(f => f.age < f.life);
+  }
+  function fwDraw(ctx, st, dk) {
+    ctx.save(); if (dk) ctx.globalCompositeOperation = 'lighter';
+    for (const f of st.list || []) {
+      const k = f.age / f.life, rr = f.R * (1 - Math.pow(1 - k, 3));
+      ctx.globalAlpha = Math.max(0, 1 - k) * (dk ? .95 : .8); ctx.fillStyle = f.col;
+      for (let i = 0; i < f.n; i++) { const a = f.rot + i / f.n * 6.283; ctx.beginPath(); ctx.arc(f.x + Math.cos(a) * rr, f.y + Math.sin(a) * rr + k * k * f.R * .3, 1.7, 0, 7); ctx.fill(); }
+    }
+    ctx.restore();
+  }
+  Object.assign(PAINT, {
+    'h-newyear'(ctx, w, h, dk) {
+      const R = rng(41), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#0a0f24'], [.6, '#1d2346'], [1, '#3a2f5c']] : [[0, '#b9cdea'], [.55, '#f6d9c4'], [1, '#fff1e2']]); ctx.fillRect(0, 0, w, h);
+      if (dk) stars(ctx, w, h, R, .5); else glowCircle(ctx, w * .5, h * .67, m * .12, '#e8442f', 'rgba(255,120,80,.8)');
+      hill(ctx, w, h, .66, dk ? '#2a2f55' : '#d9c6d6', R, .04); hill(ctx, w, h, .8, dk ? '#dfe6f5' : '#ffffff', R, .02);
+      kadomatsu(ctx, w * .12, h, m, dk); kadomatsu(ctx, w * .88, h, m, dk);
+    },
+    'h-hina'(ctx, w, h, dk) {
+      const R = rng(43), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#1e1024'], [1, '#3a1a34']] : [[0, '#fde6ee'], [1, '#fff6f2']]); ctx.fillRect(0, 0, w, h);
+      branch(ctx, -10, h * .06, w * .4, h * .28, R, dk, dk ? '#ff9cc0' : '#f48fb1', m);
+      branch(ctx, w + 10, h * .1, w * .6, h * .32, R, dk, dk ? '#ffb8d0' : '#f7a1bf', m);
+      const bw = Math.min(w * .6, m * 1.1), cx = w * .5, step = m * .06;
+      for (let i = 0; i < 3; i++) { const ww = bw * (1 - i * .24); ctx.fillStyle = dk ? ['#7a1f2a', '#8a2430', '#9a2a36'][i] : ['#c8323c', '#d43c46', '#e04a52'][i]; ctx.fillRect(cx - ww / 2, h - step * (i + 1), ww, step); }
+      const ty = h - step * 3;
+      ctx.fillStyle = dk ? '#8a6a2a' : '#e8c35a'; ctx.fillRect(cx - m * .14, ty - m * .12, m * .28, m * .12);
+      doll(ctx, cx - m * .055, ty, m * .045, '#1f2a55'); doll(ctx, cx + m * .055, ty, m * .045, '#b8324a');
+      const lx = bw * .44;
+      [-1, 1].forEach(sg => { ctx.fillStyle = dk ? '#5a3a2a' : '#7a5040'; ctx.fillRect(cx + sg * lx - 2, h - step * 2, 4, step * .9); glowCircle(ctx, cx + sg * lx, h - step * 2.2, m * .022, '#ffe2b0', dk ? 'rgba(255,200,120,.9)' : 'rgba(255,200,120,.4)'); });
+    },
+    'h-kodomo'(ctx, w, h, dk) {
+      const R = rng(47), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#0e1a3a'], [.7, '#2a3f6e'], [1, '#e08a5a']] : [[0, '#7fb6ec'], [.7, '#cfe6fa'], [1, '#eef7ff']]); ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = dk ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.9)';
+      for (let i = 0; i < 5; i++) { const x = R() * w, y = h * (.08 + R() * .3), s = m * (.04 + R() * .04); for (let k = 0; k < 4; k++) { ctx.beginPath(); ctx.ellipse(x + k * s * .8, y + (k % 2) * s * .2, s, s * .6, 0, 0, 7); ctx.fill(); } }
+      hill(ctx, w, h, .72, dk ? '#1e3a2a' : '#8fc46a', R, .03); hill(ctx, w, h, .82, dk ? '#16301f' : '#6fae4f', R, .02);
+      const px = w * .62; ctx.fillStyle = dk ? '#c9b48a' : '#e8d8b0'; ctx.fillRect(px - m * .006, h * .18, m * .012, h * .7);
+      glowCircle(ctx, px, h * .17, m * .016, '#f2c84b', 'rgba(242,200,75,.5)');
+      ctx.strokeStyle = '#f2c84b'; ctx.lineWidth = 2; for (let k = 0; k < 8; k++) { const a = k * .785; ctx.beginPath(); ctx.moveTo(px, h * .17); ctx.lineTo(px + Math.cos(a) * m * .035, h * .17 + Math.sin(a) * m * .035); ctx.stroke(); }
+    },
+    'h-tanabata'(ctx, w, h, dk) {
+      const R = rng(53), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#05061a'], [.6, '#131a40'], [1, '#25204e']] : [[0, '#5b5fa8'], [.6, '#c79ac4'], [1, '#f6c7b6']]); ctx.fillRect(0, 0, w, h);
+      ctx.save(); ctx.translate(w * .55, h * .35); ctx.rotate(-.5);
+      const g = ctx.createLinearGradient(0, -h * .14, 0, h * .14); g.addColorStop(0, 'rgba(220,210,255,0)'); g.addColorStop(.5, dk ? 'rgba(220,210,255,.32)' : 'rgba(255,240,255,.28)'); g.addColorStop(1, 'rgba(220,210,255,0)');
+      ctx.fillStyle = g; ctx.fillRect(-w * 1.2, -h * .14, w * 2.4, h * .28);
+      for (let i = 0; i < w * 1.2; i++) { ctx.fillStyle = `rgba(255,255,255,${R() * .7})`; ctx.fillRect((R() - .5) * w * 2.4, (R() + R() + R() - 1.5) * h * .08, 1, 1); }
+      ctx.restore();
+      stars(ctx, w, h, R, dk ? .8 : .3, .8);
+      glowCircle(ctx, w * .38, h * .18, 3, '#e8f0ff', 'rgba(180,200,255,.9)'); glowCircle(ctx, w * .8, h * .5, 3, '#fffbe8', 'rgba(255,240,180,.9)');
+      hill(ctx, w, h, .88, dk ? '#0b0d22' : '#3a3060', R, .015);
+      const sx = w * .1, sw = m * .022; ctx.fillStyle = dk ? '#2a5a32' : '#3f8a4a'; ctx.fillRect(sx - sw / 2, h * .05, sw, h);
+      ctx.fillStyle = dk ? '#1d4024' : '#2f6b3a'; for (let y = h * .1; y < h; y += m * .12) ctx.fillRect(sx - sw / 2 - 1, y, sw + 2, 3);
+      tanabataBranches(w, h, m).forEach(b => {
+        ctx.strokeStyle = dk ? '#2a5a32' : '#3f8a4a'; ctx.lineWidth = m * .006; ctx.beginPath(); ctx.moveTo(b.x0, b.y0); ctx.lineTo(b.x1, b.y1); ctx.stroke();
+        ctx.fillStyle = dk ? '#3c7a46' : '#5aa860';
+        for (let u = .15; u < 1; u += .14) { const x = b.x0 + (b.x1 - b.x0) * u, y = b.y0 + (b.y1 - b.y0) * u; ctx.save(); ctx.translate(x, y); ctx.rotate(.6 + R() * .5); ctx.beginPath(); ctx.ellipse(m * .025, 0, m * .03, m * .007, 0, 0, 7); ctx.fill(); ctx.restore(); }
+      });
+    },
+    'h-hanabi'(ctx, w, h, dk) {
+      const R = rng(59), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h * .64, dk ? [[0, '#050818'], [1, '#18204a']] : [[0, '#3a4380'], [.6, '#b06a8a'], [1, '#f2a46a']]); ctx.fillRect(0, 0, w, h * .64);
+      if (dk) stars(ctx, w, h, R, .4, .5);
+      let x = 0; while (x < w) { const bw = w * (.02 + R() * .04), bh = h * (.02 + R() * .07); ctx.fillStyle = dk ? '#0b0f26' : '#2a2a50'; ctx.fillRect(x, h * .64 - bh, bw, bh); if (dk) for (let k = 0; k < 3; k++) if (R() < .6) { ctx.fillStyle = 'rgba(255,214,140,.7)'; ctx.fillRect(x + R() * bw, h * .64 - R() * bh, 2, 2); } x += bw + 1; }
+      ctx.fillStyle = grad(ctx, h, dk ? [[.64, '#0a1230'], [1, '#050818']] : [[.64, '#4a4f88'], [1, '#2a2c5c']]); ctx.fillRect(0, h * .64, w, h * .36);
+      for (let i = 0; i < 60; i++) { ctx.fillStyle = `rgba(255,255,255,${R() * .12})`; ctx.fillRect(R() * w, h * (.66 + R() * .32), 20 + R() * 60, 1); }
+    },
+    'h-tsukimi'(ctx, w, h, dk) {
+      const R = rng(61), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#070b1e'], [.7, '#1a2142'], [1, '#2a2a48']] : [[0, '#8f8fc4'], [.7, '#d9c7dc'], [1, '#f2e2d6']]); ctx.fillRect(0, 0, w, h);
+      if (dk) stars(ctx, w, h, R, .5);
+      const cx = w * .68, cy = h * .32, r = m * .16;
+      glowCircle(ctx, cx, cy, r, dk ? '#fff4d0' : '#fffaf0', dk ? 'rgba(255,240,190,.8)' : 'rgba(255,255,240,.9)');
+      ctx.fillStyle = 'rgba(160,140,90,.13)'; [[-.3, -.2, .22], [.25, .1, .18], [-.05, .35, .14], [.35, -.35, .1]].forEach(([dx, dy, rr]) => { ctx.beginPath(); ctx.arc(cx + dx * r, cy + dy * r, rr * r, 0, 7); ctx.fill(); });
+      hill(ctx, w, h, .8, dk ? '#141a33' : '#a99ab8', R, .02);
+      const bx = w * .2, by = h * .92, s = m * .022;
+      ctx.fillStyle = dk ? '#7a603a' : '#c9a46a'; ctx.beginPath(); ctx.moveTo(bx - s * 4, by - s * 1.6); ctx.lineTo(bx + s * 4, by - s * 1.6); ctx.lineTo(bx + s * 3, by + s * .6); ctx.lineTo(bx - s * 3, by + s * .6); ctx.fill();
+      ctx.fillStyle = '#fbf7ee'; [[3, 0], [2, 1], [1, 2]].forEach(([n, row]) => { for (let k = 0; k < n; k++) { ctx.beginPath(); ctx.arc(bx + (k - (n - 1) / 2) * s * 2, by - s * 2.6 - row * s * 1.75, s, 0, 7); ctx.fill(); } });
+    },
+    'h-halloween'(ctx, w, h, dk) {
+      const R = rng(67), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#120a24'], [.6, '#3a1640'], [1, '#7a2e1c']] : [[0, '#f3a46a'], [.6, '#f7c48a'], [1, '#fde2b8']]); ctx.fillRect(0, 0, w, h);
+      if (dk) stars(ctx, w, h, R, .4, .5);
+      glowCircle(ctx, w * .75, h * .25, m * .1, dk ? '#ff9a3d' : '#fff0d0', dk ? 'rgba(255,140,60,.8)' : 'rgba(255,240,210,.9)');
+      hill(ctx, w, h, .7, dk ? '#1a0e22' : '#9a5a42', R, .03);
+      bareTree(ctx, w * .14, h * .75, m * .14, -Math.PI / 2, 6, dk ? '#0d0714' : '#4a2a20');
+      hill(ctx, w, h, .84, dk ? '#0d0714' : '#6a3a2c', R, .015);
+      [[.34, .085], [.46, .06], [.57, .075], [.85, .05]].forEach(([fx, fr]) => pumpkin(ctx, w * fx, h * .9, m * fr, dk));
+    },
+    'h-xmas'(ctx, w, h, dk) {
+      const R = rng(71), m = Math.min(w, h);
+      ctx.fillStyle = grad(ctx, h, dk ? [[0, '#08102a'], [1, '#1e2b50']] : [[0, '#cfdcef'], [1, '#f2f6fb']]); ctx.fillRect(0, 0, w, h);
+      if (dk) stars(ctx, w, h, R, .3, .4);
+      let x = 0; while (x < w) { const bw = w * (.04 + R() * .06), bh = h * (.15 + R() * .25); ctx.fillStyle = dk ? '#0f1734' : '#a9b7cf'; ctx.fillRect(x, h * .86 - bh, bw, bh); for (let wy = h * .86 - bh + 10; wy < h * .84; wy += 12) for (let wx = x + 6; wx < x + bw - 6; wx += 10) if (R() < .3) { ctx.fillStyle = dk ? 'rgba(255,214,140,.75)' : 'rgba(255,255,255,.6)'; ctx.fillRect(wx, wy, 4, 5); } x += bw + 4; }
+      hill(ctx, w, h, .84, dk ? '#dbe4f2' : '#ffffff', R, .01);
+      const tx = w * .72, base = h * .88, th = m * .42;
+      ctx.fillStyle = '#5a3a2a'; ctx.fillRect(tx - m * .015, base - th * .12, m * .03, th * .12);
+      for (let i = 0; i < 4; i++) { const y = base - th * .1 - i * th * .21, ww = m * (.16 - i * .03); ctx.fillStyle = dk ? '#1f5a3a' : '#2f7d4f'; ctx.beginPath(); ctx.moveTo(tx - ww, y); ctx.lineTo(tx + ww, y); ctx.lineTo(tx, y - th * .3); ctx.fill(); }
+      ctx.save(); ctx.fillStyle = '#f2c84b'; ctx.shadowColor = '#f2c84b'; ctx.shadowBlur = dk ? 16 : 4; ctx.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? m * .012 : m * .03; ctx.lineTo(tx + Math.cos(a) * r, base - th * .1 - th * .93 + Math.sin(a) * r); } ctx.fill(); ctx.restore();
+    },
+  });
+  const LIGHTCOLS = ['#ff5a5a', '#f2c84b', '#4fc3ff', '#7be38a', '#ff8ad8'];
+  const ANIM = {
+    'h-newyear'(ctx, w, h, t, dt, dk, st) { if (!dk) return; fwStep(st, w, h, dt, ['#ff6a5c', '#ffe08a', '#ffffff', '#ff9ad0'], .08, .35); fwDraw(ctx, st, dk); },
+    'h-hanabi'(ctx, w, h, t, dt, dk, st) { fwStep(st, w, h, dt, ['#ff6fa8', '#7fd8ff', '#ffd08a', '#b6ff8a', '#ffffff'], .08, .4); fwDraw(ctx, st, dk); },
+    'h-kodomo'(ctx, w, h, t, dt, dk) {
+      const m = Math.min(w, h), px = w * .62, py = h * .2;
+      const wave = (u, ph, W) => Math.sin(t * 3.2 - u * 4 + ph) * W * .8 * u;
+      const fuki = ['#2f6fd6', '#ffffff', '#d6452f', '#2f9a5a', '#e8c35a'];
+      fuki.forEach((c, k) => { ctx.fillStyle = c; ctx.beginPath(); const L = m * .3, bw = m * .012, y0 = py + m * .02 + k * bw; for (let i = 0; i <= 14; i++) { const u = i / 14; ctx.lineTo(px + u * L, y0 + wave(u, 0, m * .04)); } for (let i = 14; i >= 0; i--) { const u = i / 14; ctx.lineTo(px + u * L, y0 + bw + wave(u, 0, m * .04)); } ctx.fill(); });
+      [[.13, .42, .055, '#22232e', '#4a4c5e'], [.26, .34, .045, '#d6452f', '#f08a6e'], [.37, .26, .036, '#2f6fd6', '#7fb0ff']].forEach(([oy, L, Wd, col, sc], idx) => {
+        L *= m; Wd *= m; const y0 = py + m * oy, ph = idx * .8, N = 16, pts = [];
+        for (let i = 0; i <= N; i++) { const u = i / N; pts.push([px + u * L, y0 + wave(u, ph, Wd), Wd * (1 - .45 * u)]); }
+        ctx.fillStyle = col; ctx.beginPath(); pts.forEach(p => ctx.lineTo(p[0], p[1] - p[2])); for (let i = N; i >= 0; i--) ctx.lineTo(pts[i][0], pts[i][1] + pts[i][2]); ctx.fill();
+        const e = pts[N]; ctx.beginPath(); ctx.moveTo(e[0], e[1]); ctx.lineTo(e[0] + Wd * .7, e[1] - Wd * .9); ctx.lineTo(e[0] + Wd * .45, e[1]); ctx.lineTo(e[0] + Wd * .7, e[1] + Wd * .9); ctx.fill();
+        ctx.strokeStyle = sc; ctx.lineWidth = 1.3; for (let i = 4; i < N - 2; i += 2) { ctx.beginPath(); ctx.arc(pts[i][0], pts[i][1], pts[i][2] * .55, -1.2, 1.2); ctx.stroke(); }
+        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pts[2][0], pts[2][1] - Wd * .15, Wd * .3, 0, 7); ctx.fill();
+        ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(pts[2][0], pts[2][1] - Wd * .15, Wd * .14, 0, 7); ctx.fill();
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(px + 2, y0, Wd * .2, Wd * .9, 0, 0, 7); ctx.stroke();
+      });
+    },
+    'h-tanabata'(ctx, w, h, t, dt, dk) {
+      const m = Math.min(w, h), cols = ['#e84a5f', '#f2c84b', '#4fa3e8', '#7bd389', '#c58bff', '#ff9a4d'];
+      tanabataBranches(w, h, m).forEach((b, bi) => [.35, .62, .9].forEach((u, k) => {
+        const x = b.x0 + (b.x1 - b.x0) * u, y = b.y0 + (b.y1 - b.y0) * u;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(t * 1.4 + bi * 1.7 + k) * .16);
+        ctx.fillStyle = cols[(bi * 3 + k) % cols.length]; ctx.fillRect(-m * .009, m * .005, m * .018, m * .065);
+        ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, m * .006); ctx.stroke(); ctx.restore();
+      }));
+    },
+    'h-tsukimi'(ctx, w, h, t, dt, dk) {
+      const m = Math.min(w, h), n = Math.round(w / 26);
+      for (let i = 0; i < n; i++) {
+        const hs = Math.sin(i * 12.9898) * 43758.5453, fr = hs - Math.floor(hs);
+        const x = (i + fr) * (w / n), len = h * (.18 + fr * .2), sway = Math.sin(t * 1.1 + i * .7) * m * .025;
+        const tx = x + sway, ty = h - len;
+        ctx.strokeStyle = dk ? '#3a4a3a' : '#8a8a5a'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x, h); ctx.quadraticCurveTo(x, h - len * .5, tx, ty); ctx.stroke();
+        ctx.strokeStyle = dk ? 'rgba(216,207,168,.8)' : 'rgba(250,240,210,.95)'; ctx.lineWidth = 1;
+        for (let k = 0; k < 7; k++) { const yy = ty + k * m * .008; ctx.beginPath(); ctx.moveTo(tx + sway * .1 * k, yy); ctx.lineTo(tx + sway * .1 * k + m * .02, yy + m * .012); ctx.stroke(); }
+      }
+    },
+    'h-xmas'(ctx, w, h, t, dt, dk) {
+      const m = Math.min(w, h);
+      for (let g = 0; g < 2; g++) {
+        const y0 = h * (.04 + g * .07), sag = h * .05, n = Math.round(w / 34);
+        ctx.strokeStyle = dk ? 'rgba(255,255,255,.25)' : 'rgba(60,70,90,.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, y0); ctx.quadraticCurveTo(w / 2, y0 + sag * 2, w, y0); ctx.stroke();
+        for (let i = 0; i <= n; i++) { const u = i / n, x = u * w, y = (1 - u) * (1 - u) * y0 + 2 * (1 - u) * u * (y0 + sag * 2) + u * u * y0; const c = LIGHTCOLS[(i + g) % 5]; ctx.save(); ctx.globalAlpha = .45 + Math.abs(Math.sin(t * 2.4 + i * .9 + g)) * .55; ctx.fillStyle = c; if (dk) { ctx.shadowColor = c; ctx.shadowBlur = 10; } ctx.beginPath(); ctx.arc(x, y + 4, 3, 0, 7); ctx.fill(); ctx.restore(); }
+      }
+      const R = rng(9), tx = w * .72, base = h * .88, th = m * .42;
+      for (let i = 0; i < 34; i++) { const lv = R(), y = base - th * .1 - lv * th * .8, half = m * .15 * (1 - lv * .85), x = tx + (R() * 2 - 1) * half * .85; const c = LIGHTCOLS[i % 5]; ctx.save(); ctx.globalAlpha = .4 + Math.abs(Math.sin(t * 3 + i)) * .6; ctx.fillStyle = c; if (dk) { ctx.shadowColor = c; ctx.shadowBlur = 8; } ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 7); ctx.fill(); ctx.restore(); }
+    },
+  };
+  Object.assign(PARTS.light, {
+    'h-newyear': { kind: 'glow', cols: ['#e8b84b', '#f2c84b'], n: 25 },
+    'h-hina': { kind: 'petal', cols: ['#f7b2c8', '#f48fb1', '#fbd0dc'], n: 40 },
+    'h-kodomo': { kind: 'petal', cols: ['#b5dc8f', '#cfe8b0'], n: 14 },
+    'h-tanabata': { kind: 'glow', cols: ['#fff3b0', '#ffffff'], n: 22 },
+    'h-hanabi': { kind: 'lantern', cols: ['#ffb067', '#ffd08a', '#ff8a5c'], n: 18 },
+    'h-tsukimi': { kind: 'glow', cols: ['#fff0c8'], n: 14 },
+    'h-halloween': { kind: 'bat', cols: ['#3a1f2a'], n: 12 },
+    'h-xmas': { kind: 'snow', cols: ['#ffffff'], n: 110 },
+  });
+  Object.assign(PARTS.dark, {
+    'h-newyear': { kind: 'snow', cols: ['#ffffff'], n: 60 },
+    'h-hina': { kind: 'petal', cols: ['#ffc4d6', '#ff9cc0', '#ffe0ea'], n: 40 },
+    'h-kodomo': { kind: 'petal', cols: ['#9cc87a', '#b5dc8f'], n: 14 },
+    'h-tanabata': { kind: 'glow', cols: ['#fff3b0', '#ffffff'], n: 26 },
+    'h-hanabi': { kind: 'lantern', cols: ['#ffb067', '#ffd08a', '#ff8a5c'], n: 18 },
+    'h-tsukimi': { kind: 'glow', cols: ['#fff0c8'], n: 16 },
+    'h-halloween': { kind: 'bat', cols: ['#1d0f2a'], n: 14 },
+    'h-xmas': { kind: 'snow', cols: ['#ffffff'], n: 110 },
+  });
+  function makeParts(w, h, cfg, R) {
+    R = R || Math.random;
+    const n = Math.round(cfg.n * (w < 720 ? .6 : 1));
+    const fix = p => { if (p.bat) { p.y = R() * h * .5; p.s = 8 + R() * 8; } if (p.lantern) { p.y = h * (.72 + R() * .22); p.s = 4 + R() * 3; } return p; };
+    return Array.from({ length: n }, () => ({
+      x: R() * w, y: R() * h, vy: (cfg.kind === 'snow' ? .25 + R() * .5 : .35 + R() * .6) * 60, sw: R() * 6.28, sws: .6 + R(),
+      rot: R() * 6.28, vr: (R() - .5) * 2.2, s: cfg.kind === 'snow' ? 1.2 + R() * 2.6 : (cfg.kind === 'leaf' ? 7 + R() * 7 : 4 + R() * 4),
+      col: cfg.cols[(R() * cfg.cols.length) | 0], fl: R() * 6.28, glow: cfg.kind === 'glow', bat: cfg.kind === 'bat', lantern: cfg.kind === 'lantern',
+    })).map(fix);
+  }
+  function drawPart(ctx, p, kind) {
+    ctx.save(); ctx.translate(p.x, p.y);
+    if (kind === 'bat') { const f = Math.sin(p.fl * 4), s = p.s; ctx.fillStyle = p.col; ctx.beginPath(); ctx.ellipse(0, 0, s * .22, s * .35, 0, 0, 7); ctx.fill();
+      [-1, 1].forEach(sg => { ctx.beginPath(); ctx.moveTo(0, -s * .1); ctx.lineTo(sg * s * .7, -s * .5 * f - s * .1); ctx.lineTo(sg * s * 1.5, -s * .3 * f); ctx.lineTo(sg * s * 1.15, s * .15); ctx.lineTo(sg * s * .75, s * .05); ctx.lineTo(sg * s * .4, s * .25); ctx.closePath(); ctx.fill(); });
+      ctx.restore(); return; }
+    if (kind === 'lantern') { const s = p.s; ctx.fillStyle = 'rgba(40,20,10,.8)'; ctx.fillRect(-s * .8, s * .8, s * 1.6, s * .35); ctx.shadowColor = p.col; ctx.shadowBlur = 14; ctx.globalAlpha = .8 + Math.sin(p.fl * 2) * .2; ctx.fillStyle = p.col; ctx.fillRect(-s * .6, -s * .8, s * 1.2, s * 1.6); ctx.shadowBlur = 0; ctx.globalAlpha = .25; ctx.fillRect(-s * .6, s * 1.3, s * 1.2, s * 1.4); ctx.restore(); return; }
+    if (kind === 'glow') { ctx.globalAlpha = .45 + Math.abs(Math.sin(p.fl)) * .55; ctx.shadowColor = p.col; ctx.shadowBlur = 10; ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(0, 0, 2.2, 0, 7); ctx.fill(); ctx.restore(); return; }
+    if (kind === 'snow') { ctx.fillStyle = p.col; ctx.strokeStyle = 'rgba(110,140,180,.35)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.arc(0, 0, p.s, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore(); return; }
+    ctx.rotate(p.rot); ctx.scale(1, .45 + Math.abs(Math.cos(p.fl)) * .55); ctx.fillStyle = p.col;
+    const s = p.s;
+    if (kind === 'petal') {
+      ctx.beginPath(); ctx.moveTo(0, -s); ctx.bezierCurveTo(s * .9, -s * .6, s * .7, s * .7, 0, s); ctx.bezierCurveTo(-s * .7, s * .7, -s * .9, -s * .6, 0, -s); ctx.fill();
+    } else {
+      ctx.beginPath();
+      for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? s * .42 : s; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = p.col; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, s * 1.2); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function stepParts(parts, dt, t, w, h) {
+    for (const p of parts) {
+      if (p.bat) { p.x += (40 + p.sws * 30) * dt; p.y += Math.sin(t * 2 + p.sw) * 24 * dt; p.fl += dt * 3; if (p.x > w + 30) { p.x = -30; p.y = Math.random() * h * .5; } continue; }
+      if (p.lantern) { p.x += 8 * p.sws * dt; p.fl += dt; if (p.x > w + 20) p.x = -20; continue; }
+      if (p.glow) { p.y += Math.sin(t * .7 + p.sw) * 14 * dt; p.x += Math.cos(t * .5 + p.sw) * 16 * dt; p.fl += dt * 1.4; if (p.x > w + 20) p.x = -20; if (p.x < -20) p.x = w + 20; continue; }
+      p.y += p.vy * dt; p.x += (Math.sin(t * p.sws + p.sw) * 22 + 10) * dt; p.rot += p.vr * dt; p.fl += dt * 2.2;
+      if (p.y > h + 20) { p.y = -20; p.x = Math.random() * w; }
+      if (p.x > w + 20) p.x = -20;
+    }
+  }
+
+  // ---------- полноэкранный фон ----------
+  const cv = $('bgScene'), ctx = cv.getContext('2d'), off = document.createElement('canvas');
+  let parts = [], W = 0, H = 0, dpr = 1, cur = null, curDark = false, animSt = {};
+  function setup() {
+    const s = active(); cur = s; curDark = isDark();
+    if (s === 'sakura') { cv.hidden = true; return; }
+    cv.hidden = false;
+    dpr = Math.min(window.devicePixelRatio || 1, 2); W = window.innerWidth; H = window.innerHeight;
+    if (!W || !H) { W = H = 0; return; }
+    cv.width = off.width = Math.round(W * dpr); cv.height = off.height = Math.round(H * dpr);
+    const o = off.getContext('2d'); o.setTransform(dpr, 0, 0, dpr, 0, 0); PAINT[s](o, W, H, curDark);
+    parts = makeParts(W, H, PARTS[curDark ? 'dark' : 'light'][s]);
+    animSt = {};
+    draw(0);
+  }
+  function draw(dt) {
+    if (!off.width || !off.height || !W || !H) return;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(off, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (ANIM[cur]) ANIM[cur](ctx, W, H, t, dt || 0, curDark, animSt);
+    const k = PARTS[curDark ? 'dark' : 'light'][cur].kind; for (const p of parts) drawPart(ctx, p, k);
+  }
+  let prev = performance.now(), t = 0, rz = 0;
+  function loop(now) {
+    const dt = Math.min(.05, (now - prev) / 1000); prev = now;
+    if (cur !== 'sakura' && !document.hidden && !reduced) { t += dt; stepParts(parts, dt, t, W, H); draw(dt); }
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (!W || !H || Math.abs(window.innerWidth - W) > 2 || Math.abs(window.innerHeight - H) > 80) setup(); }); });
+
+  function apply() {
+    applyMode();
+    const s = active();
+    if (s === 'sakura') delete root.dataset.scene; else root.dataset.scene = s;
+    setup();
+    renderBar(); renderSupport();
+  }
+
+  // ---------- страница «Поддержать» ----------
+  function thumb(canvas, id) {
+    const w = 320, h = 180, d = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * d; canvas.height = h * d;
+    const c = canvas.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0);
+    const dk = isDark(), cfg = PARTS[dk ? 'dark' : 'light'][id];
+    PAINT[id](c, w, h, dk);
+    if (ANIM[id]) { const st = { R: rng(13) }; for (let i = 0; i < 14; i++) { if (id === 'h-hanabi' || (id === 'h-newyear' && dk)) fwStep(st, w, h, .14, ['#ff6fa8', '#7fd8ff', '#ffd08a', '#ffffff'], .08, .4); } const st2 = Object.assign(st, { next: 99 }); ANIM[id](c, w, h, 1.4, 0, dk, st2); }
+    const R = rng(5); makeParts(w, h, cfg, R).slice(0, 14).forEach(p => drawPart(c, p, cfg.kind));
+  }
+  const LOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/></svg>';
+  function renderSupport() {
+    const el = $('supportRoot'); if (!el) return;
+    const left = Math.ceil((supUntil - Date.now()) / DAY);
+    $('supStatus').innerHTML = supporter
+      ? `<span class="sup-ok">«Ханами» активна до ${fmtDate(supUntil)}${left <= 5 ? ` · осталось ${left} дн.` : ''}. Спасибо за поддержку!</span>`
+      : (supUntil ? `<span class="muted" style="font-size:14px">Подписка закончилась ${fmtDate(supUntil)}. Введите новый код, чтобы продлить.</span>` : '');
+    $('codeLabel').textContent = supporter ? 'Продлить ещё на 30 дней: введите новый код' : 'Уже поддержали? Введите код';
+    const curBase = base();
+    const card = s => {
+      const open = isOpen(s), on = curBase === s.id && !preview, pv = preview === s.id, now = holidayNow && holidayNow.id === s.id;
+      let tag;
+      if (s.free) tag = '<span class="bg-tag free">Бесплатно</span>';
+      else if (s.holiday) tag = now ? `<span class="bg-tag free">Сейчас · до ${s.to[1]} ${MONTHS[s.to[0] - 1]}</span>` : `<span class="bg-tag date">${LOCK} Откроется ${s.from[1]} ${MONTHS[s.from[0] - 1]}</span>`;
+      else tag = `<span class="bg-tag">${supporter ? '' : LOCK + ' '}Ханами</span>`;
+      const sealed = s.holiday && !now;
+      return `<article class="bg-card ${on ? 'on' : ''} ${sealed ? 'sealed' : ''}">
+        <div class="thumb-wrap"><canvas class="bg-thumb" data-thumb="${s.id}" aria-hidden="true"></canvas>${sealed ? `<span class="seal">${LOCK}<span>${fmtRange(s)}</span></span>` : ''}</div>
+        <div class="bg-body">
+          <div class="bg-top"><h3>${s.name}</h3><span class="kana bg-jp">${s.jp}</span></div>
+          <p>${s.desc}</p>
+          <div class="bg-foot">
+            ${tag}
+            <div class="bg-actions">
+              ${on ? '<span class="bg-on">Включён</span>' : (open ? `<button class="btn primary" data-set="${s.id}">Включить</button>` : '')}
+              ${!open && !sealed ? `<button class="btn" data-try="${s.id}" ${pv ? 'disabled' : ''}>${pv ? 'Примеряете' : 'Примерить'}</button>` : ''}
+            </div>
+          </div>
+        </div>
+      </article>`;
+    };
+    $('bgGrid').innerHTML = SCENES.filter(s => !s.holiday).map(card).join('');
+    const now0 = new Date(), dayOf = h => { let d = new Date(now0.getFullYear(), h.from[0] - 1, h.from[1]); if (d < now0) d = new Date(now0.getFullYear() + 1, h.from[0] - 1, h.from[1]); return d; };
+    const order = HOLI.slice().sort((a, b) => (holidayNow && a.id === holidayNow.id ? -1 : holidayNow && b.id === holidayNow.id ? 1 : dayOf(a) - dayOf(b)));
+    $('holiGrid').innerHTML = order.map(card).join('');
+    $('holiAuto').checked = holidayAuto;
+    ['bgGrid', 'holiGrid'].forEach(g => {
+      $(g).querySelectorAll('[data-thumb]').forEach(c => thumb(c, c.dataset.thumb));
+      $(g).querySelectorAll('[data-set]').forEach(b => b.onclick = () => {
+        chosen = b.dataset.set; preview = null; store.set('kana.scene', chosen);
+        if (!(holidayNow && chosen === holidayNow.id)) { holidayAuto = false; store.set('kana.holidayAuto', false); }
+        apply();
+      });
+      $(g).querySelectorAll('[data-try]').forEach(b => b.onclick = () => { preview = b.dataset.try; apply(); });
+    });
+    const pill = $('holidayPill');
+    if (holidayNow && active() === holidayNow.id) { pill.hidden = false; pill.textContent = `Праздничный фон: ${holidayNow.name} · до ${holidayNow.to[1]} ${MONTHS[holidayNow.to[0] - 1]}`; }
+    else pill.hidden = true;
+    $('supBadge').hidden = !supporter;
+  }
+  function renderBar() {
+    const bar = $('previewBar');
+    if (!preview) { bar.hidden = true; return; }
+    const s = sceneById(preview);
+    bar.hidden = false;
+    $('pvText').innerHTML = `Вы примеряете фон <b>«${s.name}»</b>. После перезагрузки он сбросится.`;
+  }
+  $('holiAuto').onchange = () => { holidayAuto = $('holiAuto').checked; store.set('kana.holidayAuto', holidayAuto); preview = null; apply(); };
+  $('pvBack').onclick = () => { preview = null; apply(); };
+  $('pvSupport').onclick = () => { const b = document.querySelector('[data-go="podderzhka"]'); if (b) b.click(); };
+  $('codeBox').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = $('codeInput').value.trim().toUpperCase();
+    if (window.KANA_CLOUD) {
+      $('codeMsg').textContent = '';
+      window.KANA_CLOUD.redeem(v, supUntil).then(until => { $('codeInput').value = ''; if (preview) { chosen = preview; preview = null; store.set('kana.scene', chosen); } setUntil(until); })
+        .catch(err => { $('codeMsg').textContent = err && err.message ? err.message : 'Код не подошёл.'; });
+      return;
+    }
+    if (CODES.includes(v)) {
+      if (preview) { chosen = preview; preview = null; store.set('kana.scene', chosen); }
+      $('codeMsg').textContent = ''; $('codeInput').value = '';
+      setUntil(Math.max(Date.now(), supUntil) + SUB_DAYS * DAY);
+    } else {
+      $('codeMsg').textContent = 'Код не подошёл. Проверьте, нет ли лишних пробелов, и попробуйте ещё раз.';
+    }
+  });
+
+  function setUntil(ms) {
+    supUntil = +ms || 0; store.set('kana.supUntil', supUntil);
+    supporter = supUntil > Date.now();
+    if (!isOpen(sceneById(chosen))) { chosen = 'sakura'; store.set('kana.scene', chosen); }
+    apply();
+  }
+  // если подписка закончится, пока сайт открыт
+  setInterval(() => { if (supporter && supUntil <= Date.now()) setUntil(supUntil); }, 60000);
+  window.__scene = { setUntil, until: () => supUntil, isSupporter: () => supporter };
+
+  apply();
+  requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+// ===================== 3D: сфера каны и лепестки сакуры =====================
+(function () {
+  const K = window.__kana, canvas = document.getElementById('scene');
+  const tip = document.getElementById('tip3d'), hero = canvas.parentElement;
+  function fallback() { canvas.hidden = true; document.getElementById('heroFallback').hidden = false; document.getElementById('hint3d').hidden = true; }
+  if (!window.THREE) { fallback(); return; }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { fallback(); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0xffffff, 9, 22);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
+  const globe = new THREE.Group(); scene.add(globe);
+  const R = 3.1;
+
+  const wireMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 });
+  const wire = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(R * 0.86, 1)), wireMat);
+  globe.add(wire);
+
+  function glowTex() {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+    const g = cv.getContext('2d'), gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+    gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(cv);
+  }
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex(), transparent: true, depthWrite: false, opacity: 0.45 }));
+  glow.scale.set(7.5, 7.5, 1); globe.add(glow);
+
+  const sprites = [];
+  function kanaTex(ch) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+    const g = cv.getContext('2d');
+    g.font = '600 92px "Klee One", "Hiragino Mincho ProN", "Yu Mincho", serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#ffffff'; g.fillText(ch, 64, 70);
+    const t = new THREE.CanvasTexture(cv); t.anisotropy = 4; return t;
+  }
+  function buildKana() {
+    const items = [];
+    K.ALL.filter(x => x.t === 'b').forEach(x => { items.push({ ch: x.h, x, kata: false }); items.push({ ch: x.k, x, kata: true }); });
+    const N = items.length, golden = Math.PI * (3 - Math.sqrt(5));
+    items.forEach((it, i) => {
+      const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = golden * i;
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: kanaTex(it.ch), transparent: true, depthWrite: false }));
+      s.position.set(Math.cos(th) * r * R, y * R, Math.sin(th) * r * R);
+      s.scale.setScalar(0.58);
+      s.userData = { it, target: 0.58 };
+      globe.add(s); sprites.push(s);
+    });
+    applyTheme();
+  }
+
+  // лепестки
+  const ps = new THREE.Shape();
+  ps.moveTo(0, 0); ps.bezierCurveTo(0.09, 0.05, 0.11, 0.17, 0.03, 0.24);
+  ps.lineTo(0, 0.2); ps.lineTo(-0.03, 0.24); ps.bezierCurveTo(-0.11, 0.17, -0.09, 0.05, 0, 0);
+  const PN = window.innerWidth < 720 ? 80 : 160;
+  const petalMat = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
+  const petals = new THREE.InstancedMesh(new THREE.ShapeGeometry(ps), petalMat, PN);
+  const pd = [], dummy = new THREE.Object3D();
+  for (let i = 0; i < PN; i++) pd.push({ x: (Math.random() - .5) * 20, y: Math.random() * 12 - 6, z: Math.random() * 10 - 7, vy: 0.35 + Math.random() * 0.5, sw: Math.random() * 6.28, sws: 0.5 + Math.random(), rx: Math.random() * 6.28, ry: Math.random() * 6.28, rs: (Math.random() - .5) * 2, sc: 0.7 + Math.random() * 0.9 });
+  scene.add(petals);
+  function updatePetals(dt, t) {
+    for (let i = 0; i < PN; i++) {
+      const p = pd[i];
+      p.y -= p.vy * dt; p.x += Math.sin(t * p.sws + p.sw) * 0.35 * dt + 0.12 * dt;
+      p.rx += p.rs * dt; p.ry += p.rs * 0.7 * dt;
+      if (p.y < -6.5) { p.y = 6.5; p.x = (Math.random() - .5) * 20; }
+      if (p.x > 11) p.x = -11;
+      dummy.position.set(p.x, p.y, p.z); dummy.rotation.set(p.rx, p.ry, p.rx * .5); dummy.scale.setScalar(p.sc);
+      dummy.updateMatrix(); petals.setMatrixAt(i, dummy.matrix);
+    }
+    petals.instanceMatrix.needsUpdate = true;
+  }
+
+  // цвета из темы
+  let C = {};
+  function applyTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => new THREE.Color(cs.getPropertyValue(n).trim() || '#000');
+    C = { ink: v('--ink'), plum: v('--plum'), accent: v('--accent'), line: v('--line'), bg: v('--bg'), petal: v('--petal'), guide: v('--guide') };
+    scene.fog.color.copy(C.bg);
+    wireMat.color.copy(C.guide);
+    glow.material.color.copy(C.accent);
+    petalMat.color.copy(C.petal);
+    sprites.forEach(s => { s.userData.base = s.userData.it.kata ? C.plum : C.ink; if (s !== hovered) s.material.color.copy(s.userData.base); });
+  }
+  if (window.matchMedia) { const mq = matchMedia('(prefers-color-scheme: dark)'); (mq.addEventListener ? mq.addEventListener('change', applyTheme) : mq.addListener(applyTheme)); }
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-scene', 'data-mode'] });
+
+  let W = 1, H = 1;
+  function resize() {
+    W = hero.clientWidth; H = hero.clientHeight;
+    if (!W || !H) return;
+    const narrow = W < 720;
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+    globe.position.set(narrow ? 0 : Math.min(3.4, 2.7 * camera.aspect / 1.8), narrow ? 1.2 : 0, 0);
+    camera.position.z = narrow ? 11.5 : 10;
+  }
+  window.addEventListener('resize', resize);
+
+  const pointer = new THREE.Vector2(-9, -9), ray = new THREE.Raycaster();
+  let dragging = false, moved = 0, lastX = 0, lastY = 0, velY = 0.25, velX = 0, hovered = null, tiltX = 0, tiltY = 0;
+  canvas.addEventListener('pointerdown', e => { dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY; canvas.classList.add('dragging'); });
+  window.addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false; canvas.classList.remove('dragging');
+    if (moved < 6 && hovered) { const it = hovered.userData.it; K.speak(it.x.h); K.select(it.x.h); }
+  });
+  canvas.addEventListener('pointermove', e => {
+    const r = canvas.getBoundingClientRect();
+    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1; pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    tiltX = pointer.y * 0.15; tiltY = pointer.x * 0.2;
+    if (dragging) { const dx = e.clientX - lastX, dy = e.clientY - lastY; moved += Math.abs(dx) + Math.abs(dy); velY = dx * 0.18; velX = dy * 0.12; lastX = e.clientX; lastY = e.clientY; }
+  });
+  canvas.addEventListener('pointerleave', () => { pointer.set(-9, -9); if (!dragging) tiltX = tiltY = 0; });
+
+  function setHover(s) {
+    if (hovered === s) return;
+    if (hovered) { hovered.userData.target = 0.58; hovered.material.color.copy(hovered.userData.base); }
+    hovered = s;
+    if (s) {
+      s.userData.target = 1.05; s.material.color.copy(C.accent);
+      const it = s.userData.it;
+      tip.innerHTML = `<span class="kana">${it.ch}</span>${it.x.ru}<span class="ro">${it.x.ro} · ${it.kata ? 'катакана' : 'хирагана'}</span>`;
+      tip.hidden = false;
+    } else tip.hidden = true;
+  }
+
+  let running = true, visible = true, t = 0, prev = performance.now();
+  const reduced = K.reduced, v = new THREE.Vector3();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+    if (running && visible && hero.offsetParent !== null) {
+      if (W !== hero.clientWidth || H !== hero.clientHeight) resize();
+      t += dt;
+      const spin = reduced ? 0 : 1;
+      globe.rotation.y += velY * dt * spin + (dragging ? 0 : 0.12 * dt * spin);
+      globe.rotation.x += velX * dt * spin;
+      velY += (0 - velY) * Math.min(1, dt * (dragging ? 0 : 1.6));
+      velX += (0 - velX) * Math.min(1, dt * 2.2);
+      globe.rotation.x += ((tiltX * 0.6) - globe.rotation.x) * Math.min(1, dt * 1.5);
+      globe.rotation.z += ((-tiltY * 0.25) - globe.rotation.z) * Math.min(1, dt * 1.5);
+      if (!reduced) { wire.rotation.y -= dt * 0.05; updatePetals(dt, t); glow.material.opacity = 0.35 + Math.sin(t * 1.3) * 0.1; }
+      if (pointer.x > -2 && sprites.length) {
+        ray.setFromCamera(pointer, camera);
+        const hits = ray.intersectObjects(sprites, false).filter(h => { h.object.getWorldPosition(v); return v.z > globe.position.z - 0.3; });
+        setHover(hits.length ? hits[0].object : null);
+      } else setHover(null);
+      for (const s of sprites) {
+        s.getWorldPosition(v);
+        const d = (v.z - globe.position.z + R) / (2 * R);
+        s.material.opacity = s === hovered ? 1 : 0.15 + d * 0.85;
+        s.scale.setScalar(s.scale.x + (s.userData.target - s.scale.x) * Math.min(1, dt * 10));
+      }
+      if (hovered) { hovered.getWorldPosition(v); v.project(camera); tip.style.left = ((v.x + 1) / 2 * W) + 'px'; tip.style.top = ((1 - v.y) / 2 * H) + 'px'; }
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(frame);
+  }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
+  document.addEventListener('visibilitychange', () => { running = !document.hidden; prev = performance.now(); });
+
+  applyTheme(); resize(); updatePetals(0, 0);
+  const fontReady = document.fonts && document.fonts.load ? Promise.race([document.fonts.load('600 92px "Klee One"', 'あア'), new Promise(r => setTimeout(r, 1800))]) : Promise.resolve();
+  fontReady.catch(() => {}).then(buildKana).finally(() => requestAnimationFrame(frame));
+})();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// Вставьте сюда firebaseConfig из консоли Firebase (Настройки проекта → Ваши приложения → Веб).
+window.FIREBASE_CONFIG = {
+  apiKey: "ВСТАВЬТЕ_API_KEY",
+  authDomain: "ВАШ-ПРОЕКТ.firebaseapp.com",
+  projectId: "ВАШ-ПРОЕКТ",
+  storageBucket: "ВАШ-ПРОЕКТ.appspot.com",
+  messagingSenderId: "",
+  appId: ""
+};
+
+</script>
+<script>
+// ===================== ОБЛАКО: вход и синхронизация (Firebase) =====================
+(function () {
+  const cfg = window.FIREBASE_CONFIG;
+  if (!window.firebase || !cfg || !cfg.apiKey || /ВСТАВЬТЕ/.test(cfg.apiKey)) return;
+  firebase.initializeApp(cfg);
+  const auth = firebase.auth(), db = firebase.firestore();
+  auth.languageCode = 'ru';
+  const $ = id => document.getElementById(id);
+
+  // какие настройки и данные синхронизируются
+  const KEYS = ['kana.stats', 'kana.level', 'kana.scene', 'kana.mode', 'kana.azScript', 'kana.azDak', 'kana.deck', 'kana.tScript', 'kana.tMode', 'kana.tRows', 'kana.holidayAuto'];
+  const readLocal = () => { const o = {}; KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v != null) o[k] = JSON.parse(v); } catch (e) {} }); return o; };
+  const writeLocal = o => KEYS.forEach(k => { if (k in o) try { localStorage.setItem(k, JSON.stringify(o[k])); } catch (e) {} });
+  function mergeStats(a, b) {
+    const out = Object.assign({}, a || {});
+    Object.entries(b || {}).forEach(([id, v]) => { const u = out[id]; if (!u || (v.c + v.w) > (u.c + u.w)) out[id] = v; });
+    return out;
+  }
+
+  const ERR = {
+    'auth/invalid-email': 'Похоже, в адресе почты опечатка.',
+    'auth/missing-password': 'Введите пароль.',
+    'auth/user-not-found': 'Неверная почта или пароль.',
+    'auth/wrong-password': 'Неверная почта или пароль.',
+    'auth/invalid-credential': 'Неверная почта или пароль.',
+    'auth/invalid-login-credentials': 'Неверная почта или пароль.',
+    'auth/email-already-in-use': 'Эта почта уже зарегистрирована. Переключитесь на «Вход».',
+    'auth/weak-password': 'Пароль должен быть не короче 6 символов.',
+    'auth/too-many-requests': 'Слишком много попыток. Подождите пару минут и попробуйте снова.',
+    'auth/popup-closed-by-user': 'Окно входа через Google закрыто.',
+    'auth/popup-blocked': 'Браузер заблокировал окно входа. Разрешите всплывающие окна для этого сайта.',
+    'auth/network-request-failed': 'Нет связи с сервером. Проверьте интернет.',
+    'auth/unauthorized-domain': 'Этот адрес сайта не добавлен в настройки входа Firebase.',
+  };
+  const errText = e => ERR[e && e.code] || 'Не получилось. Попробуйте ещё раз.';
+
+  // ---------- синхронизация ----------
+  let user = null, ref = null, ready = false, timer = 0, lastSaved = null;
+  function setSyncText(t) { if ($('authSync')) $('authSync').textContent = t; if ($('footSync')) $('footSync').textContent = t; }
+  async function pullAndMerge() {
+    const snap = await ref.get();
+    const local = readLocal();
+    if (!snap.exists) {
+      await ref.set({ data: local, email: user.email || '', createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      window.__scene && window.__scene.setUntil(0);
+      return false;
+    }
+    const d = snap.data(), cloud = d.data || {};
+    const merged = Object.assign({}, local, cloud);
+    merged['kana.stats'] = mergeStats(local['kana.stats'], cloud['kana.stats']);
+    const changed = JSON.stringify(merged) !== JSON.stringify(local);
+    writeLocal(merged);
+    const until = d.supporterUntil && d.supporterUntil.toMillis ? d.supporterUntil.toMillis() : 0;
+    try { localStorage.setItem('kana.supUntil', JSON.stringify(until)); } catch (e) {}
+    await ref.set({ data: merged, email: user.email || '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    if (!changed) window.__scene && window.__scene.setUntil(until);
+    return changed;
+  }
+  function scheduleSave() {
+    if (!ready || !ref) return;
+    clearTimeout(timer);
+    setSyncText('Сохраняю…');
+    timer = setTimeout(async () => {
+      const data = readLocal(), str = JSON.stringify(data);
+      if (str === lastSaved) { setSyncText('Прогресс сохранён в облаке'); return; }
+      try { await ref.set({ data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); lastSaved = str; setSyncText('Прогресс сохранён в облаке'); }
+      catch (e) { setSyncText('Не удалось сохранить, попробую позже'); }
+    }, 2500);
+  }
+  window.addEventListener('kana-store', e => { if (KEYS.includes(e.detail)) scheduleSave(); });
+
+  auth.onAuthStateChanged(async u => {
+    user = u; ready = false; ref = u ? db.collection('users').doc(u.uid) : null;
+    renderAcc();
+    if (!u) { setSyncText('Прогресс хранится в этом браузере'); window.__scene && window.__scene.until() && window.__scene.setUntil(0); return; }
+    setSyncText('Загружаю прогресс…');
+    try {
+      const changed = await pullAndMerge();
+      const flag = 'kana.merged.' + u.uid;
+      let seen = false; try { seen = sessionStorage.getItem(flag) === '1'; sessionStorage.setItem(flag, '1'); } catch (e) {}
+      if (changed && !seen) { location.reload(); return; }
+      ready = true; lastSaved = JSON.stringify(readLocal());
+      setSyncText('Прогресс сохранён в облаке');
+    } catch (e) { setSyncText('Облако недоступно, прогресс пока сохраняется в браузере'); }
+  });
+
+  // ---------- коды «Ханами» ----------
+  window.KANA_CLOUD = {
+    // Код продлевает «Ханами» на 30 дней от сегодня или от даты окончания, если она ещё не наступила.
+    async redeem(code) {
+      if (!user) { openModal(); throw new Error('Войдите в аккаунт, чтобы активировать код.'); }
+      if (!code) throw new Error('Введите код.');
+      const snap = await ref.get();
+      const prev = snap.exists && snap.data().supporterUntil ? snap.data().supporterUntil.toMillis() : 0;
+      const until = Math.max(Date.now(), prev) + 30 * 864e5 - 60000;
+      const batch = db.batch();
+      batch.update(db.collection('codes').doc(code), { used: true, usedBy: user.uid, usedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      batch.set(ref, { supporterUntil: firebase.firestore.Timestamp.fromMillis(until), code }, { merge: true });
+      try { await batch.commit(); }
+      catch (e) { throw new Error('Код не подошёл или уже использован. Проверьте, нет ли лишних пробелов.'); }
+      return until;
+    },
+  };
+
+  // ---------- интерфейс ----------
+  let amode = 'in';
+  const acc = $('accBtn'), modal = $('authModal');
+  acc.hidden = false;
+  function renderAcc() {
+    if (user) {
+      const name = user.displayName || user.email || 'Аккаунт';
+      acc.textContent = name.trim()[0].toUpperCase(); acc.classList.add('in'); acc.title = name; acc.setAttribute('aria-label', 'Аккаунт: ' + name);
+      $('authOut').hidden = true; $('authIn').hidden = false; $('authWho').textContent = user.email || name;
+    } else {
+      acc.textContent = 'Войти'; acc.classList.remove('in'); acc.title = ''; acc.setAttribute('aria-label', 'Войти');
+      $('authOut').hidden = false; $('authIn').hidden = true;
+    }
+  }
+  function openModal() { modal.hidden = false; $('authMsg').textContent = ''; setTimeout(() => (user ? $('authLogout') : $('authEmail')).focus(), 30); }
+  function closeModal() { modal.hidden = true; }
+  acc.onclick = openModal;
+  $('authClose').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+  document.querySelectorAll('[data-amode]').forEach(b => b.onclick = () => {
+    amode = b.dataset.amode;
+    document.querySelectorAll('[data-amode]').forEach(x => x.setAttribute('aria-pressed', x.dataset.amode === amode));
+    $('authSubmit').textContent = amode === 'in' ? 'Войти' : 'Создать аккаунт';
+    $('authPass').autocomplete = amode === 'in' ? 'current-password' : 'new-password';
+    $('authMsg').textContent = '';
+  });
+  $('authForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = $('authEmail').value.trim(), pass = $('authPass').value, msg = $('authMsg');
+    msg.className = 'auth-msg'; msg.textContent = '';
+    $('authSubmit').disabled = true;
+    try {
+      if (amode === 'in') await auth.signInWithEmailAndPassword(email, pass);
+      else await auth.createUserWithEmailAndPassword(email, pass);
+      closeModal();
+    } catch (err) { msg.textContent = errText(err); }
+    $('authSubmit').disabled = false;
+  });
+  $('authGoogle').onclick = async () => {
+    try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); closeModal(); }
+    catch (err) { $('authMsg').className = 'auth-msg'; $('authMsg').textContent = errText(err); }
+  };
+  $('authReset').onclick = async () => {
+    const email = $('authEmail').value.trim(), msg = $('authMsg');
+    if (!email) { msg.className = 'auth-msg'; msg.textContent = 'Впишите почту, и мы пришлём ссылку для сброса пароля.'; return; }
+    try { await auth.sendPasswordResetEmail(email); msg.className = 'auth-msg ok'; msg.textContent = 'Письмо со ссылкой отправлено. Проверьте почту и папку «Спам».'; }
+    catch (err) { msg.className = 'auth-msg'; msg.textContent = errText(err); }
+  };
+  $('authLogout').onclick = async () => {
+    await auth.signOut();
+    window.__scene && window.__scene.setUntil(0);
+    closeModal();
+  };
+  renderAcc();
+})();
+
+</script>
+</body>
+</html>
