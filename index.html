@@ -379,6 +379,33 @@ button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid v
 @keyframes evRing { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.18); } }
 @keyframes evSpin { to { transform: rotate(360deg); } }
 @media (max-width: 860px) { .ev-btn { order: -1; } .ev-date { display: none; } }
+.hol-reward { display: flex; gap: 18px; align-items: center; padding: 14px 16px; border-radius: 14px; border: 1.5px dashed var(--accent); background: var(--accent-soft); flex-wrap: wrap; }
+.hol-reward.got { border-style: solid; border-color: var(--good); background: var(--good-soft); }
+.hol-seal { flex: none; }
+.hol-rw-txt { flex: 1 1 260px; display: grid; gap: 6px; font-size: 14px; }
+.hol-rw-txt b { font-size: 16px; }
+.hol-pr { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hol-more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+.hol-mblock { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-solid); }
+.hol-mblock h4 { margin: 0 0 6px; font-size: 15px; color: var(--accent); }
+.hol-mblock p { font-size: 14px; }
+.hol-sub { margin: 4px 0 0; font-size: 16px; }
+.hol-note ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+.ex-row.learned { border-color: var(--good); }
+.lrn { margin-left: 8px; font-family: var(--f-ui); font-size: 13px; color: var(--good); font-weight: 700; }
+.seal-svg { display: block; overflow: visible; }
+.seal-svg.off { opacity: .55; }
+.badges-block { margin-top: 26px; }
+.badge-list { display: flex; flex-wrap: wrap; gap: 14px; }
+.badge-item { display: grid; justify-items: center; gap: 6px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; font-weight: 500; min-width: 120px; }
+.badge-next { border-style: dashed; color: var(--muted); }
+.badge-next:hover { border-color: var(--accent); color: var(--ink); }
+.badge-card { text-align: center; overflow: hidden; }
+.badge-art { display: grid; place-items: center; margin: 6px 0 12px; position: relative; z-index: 1; }
+.badge-art .seal-svg { animation: sealDrop .9s cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes sealDrop { 0% { transform: scale(2.2) rotate(-25deg); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; } }
+.badge-burst { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 30%, var(--accent-soft), transparent 60%); animation: burst 1.6s ease-out both; }
+@keyframes burst { from { transform: scale(.3); opacity: 0; } 40% { opacity: 1; } to { transform: scale(1.4); opacity: .6; } }
 footer.site-foot { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 13px; }
 footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; align-items: center; }
 
@@ -607,6 +634,11 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <h2 class="section-title"><svg class="flower"><use href="#sakura"/></svg>Прогресс</h2>
       <p class="section-sub">Знак или слово считается выученным после трёх верных ответов подряд почти без ошибок.</p>
       <div class="progress-row" id="progressRow"></div>
+      <div class="badges-block" id="badgesBlock" hidden>
+        <h3 class="sub-h">Мои печати</h3>
+        <p class="sub-p">Печати за праздники можно получить только в дни праздника. Выучите все слова праздничного урока.</p>
+        <div class="badge-list" id="badgeList"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -855,6 +887,16 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <button class="btn primary" id="pvSupport">Поддержать и оставить</button>
       <button class="btn" id="pvBack">Вернуть мой фон</button>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="badgeModal" hidden>
+  <div class="modal-card card badge-card" role="dialog" aria-modal="true" aria-labelledby="badgeTitle">
+    <div class="badge-burst" aria-hidden="true"></div>
+    <div id="badgeArt" class="badge-art"></div>
+    <h3 id="badgeTitle"></h3>
+    <p class="muted" id="badgeText" style="font-size:14px;margin-top:6px"></p>
+    <div class="btns" style="justify-content:center"><button class="btn primary" id="badgeOk">Ура!</button></div>
   </div>
 </div>
 
@@ -1235,7 +1277,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     $('holBanner').hidden = !HOL_NOW;
     if (HOL_NOW) $('holBanner').innerHTML = `<span class="kana">${HOL_NOW.jp}</span><span><b>Праздничный урок «${HOL_NOW.name}» открыт до ${hDate(HOL_NOW.to)}.</b> ${HOL_NOW.words.length} новых слов с озвучкой.</span><span class="hol-go">Открыть →</span>`;
     $('sections').innerHTML = cards.map(c => `<button class="sec-card" data-go="${c[0]}"><span class="glyph">${c[1]}</span><h3>${c[2]}</h3><p>${c[3]}</p><span class="meta">${c[4]}</span></button>`).join('');
-    renderProgress();
+    renderProgress(); renderBadges();
   }
   function renderProgress() {
     const n = ALL.length;
@@ -1475,6 +1517,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       $('nextBtn').onclick = nextQ; $('nextBtn').focus({ preventScroll: true });
     }
     renderProgress(); if (t.kind === 'kana') renderGrid(false);
+    if (deck === 'hol') checkBadge();
   }
   document.addEventListener('keydown', e => {
     if (current !== 'trener' || !q) return;
@@ -1534,6 +1577,95 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   function hOpen(h, d) { const x = (d.getMonth() + 1) * 100 + d.getDate(), a = h.from[0] * 100 + h.from[1], b = h.to[0] * 100 + h.to[1]; return a <= b ? (x >= a && x <= b) : (x >= a || x <= b); }
   const HOL_NOW = HOL_LESSONS.find(h => hOpen(h, new Date())) || null;
   function hNext(h) { const n = new Date(); let d = new Date(n.getFullYear(), h.from[0] - 1, h.from[1]); if (d < n) d = new Date(n.getFullYear() + 1, h.from[0] - 1, h.from[1]); return d; }
+  // подробности о праздниках: [заголовок, текст], факты, кандзи для печати
+  const HOL_INFO = {
+    halloween: { seal: '妖', more: [
+      ['Откуда праздник', 'Хэллоуин пришёл в Японию из США. В конце 1990-х его начали отмечать парки развлечений и торговые центры, а массовым он стал в 2010-х.'],
+      ['Как отмечают в Японии', 'Это не детский праздник с выпрашиванием конфет, а вечеринки и косплей для взрослых. Главное место — район Сибуя в Токио, где на улицы выходят тысячи людей в костюмах. В последние годы Сибуя ограничивает распитие алкоголя на улицах в эти дни и просит не устраивать толпы.'],
+      ['Что продают', 'Сезонные сладости и напитки со вкусом тыквы かぼちゃ, лимитированные упаковки в комбини и кофейнях. Тыквенное начинает появляться в магазинах ещё в сентябре.'],
+    ], facts: ['Популярные костюмы — герои аниме и игр, а не только монстры.', 'Японская нечисть ёкай (妖怪) — каппа, кицунэ, они — тоже частые гости в костюмах.', 'Слово ハロウィン взято из английского, поэтому пишется катаканой.'] },
+    newyear: { seal: '正', more: [
+      ['Откуда праздник', 'С 1873 года Япония встречает Новый год 1 января, по григорианскому календарю. Для японцев это главный семейный праздник года.'],
+      ['Как отмечают', '31 декабря (大晦日, о:мисока) едят длинную лапшу тосикоси-соба — на долгую жизнь. В полночь в буддийских храмах 108 раз бьют в колокол. В первые дни года семьи идут в храм (初詣), едят осэти и дарят детям о-тосидама.'],
+      ['Украшения', 'У входа ставят кадомацу из сосны и бамбука, на дверь вешают соломенное симэкадзари, а дома кладут кагами-моти — две рисовые лепёшки с мандарином сверху.'],
+    ], facts: ['108 ударов колокола — по числу земных страстей в буддизме.', 'Открытки нэнгадзё отправляют заранее, а почта доставляет их утром 1 января.', 'Осэти готовят заранее, чтобы в первые дни года никому не стоять у плиты.'] },
+    hina: { seal: '雛', more: [
+      ['Откуда праздник', 'Из древнего обряда очищения. В эпоху Хэйан бумажных кукол пускали по реке, чтобы они унесли с собой болезни и беды. Второе название праздника — 桃の節句, праздник цветения персика.'],
+      ['Как отмечают', 'Дома ставят ступенчатую подставку хинадан. Наверху — император и императрица, ниже — придворные дамы, музыканты и министры. Едят тирасидзуси, суп с моллюсками хамагури и сладкие хина-арарэ.'],
+      ['Для кого', 'Праздник посвящён девочкам: родители желают дочерям здоровья и счастья. Набор кукол часто дарят бабушка и дедушка при рождении внучки.'],
+    ], facts: ['В некоторых городах до сих пор пускают кукол по реке.', 'Куклы бывают очень дорогими и передаются из поколения в поколение.', 'По поверью, кукол нужно убрать сразу после 3 марта.'] },
+    kodomo: { seal: '鯉', more: [
+      ['Откуда праздник', 'Раньше 5 мая отмечали 端午の節句 — праздник мальчиков. В 1948 году он стал государственным Днём детей для всех детей.'],
+      ['Как отмечают', 'Над домами поднимают коинобори, а дома ставят самурайский шлем кабуто или куклу воина. Едят касивамоти и тимаки, а вечером принимают ванну с листьями ириса сёбу.'],
+      ['Золотая неделя', 'С конца апреля до начала мая в Японии подряд идут несколько праздников. Это самое популярное время для поездок: поезда и курорты переполнены.'],
+    ], facts: ['По легенде, карп, который поднялся вверх по водопаду, превратился в дракона.', 'Дуб касива не сбрасывает старые листья, пока не вырастут новые, — символ продолжения рода.', 'Лист ириса похож на меч и, по поверью, отгоняет злых духов.'] },
+    tanabata: { seal: '星', more: [
+      ['Откуда праздник', 'Танабата пришла из Китая и праздновалась при японском императорском дворе ещё в VIII веке.'],
+      ['Легенда', 'Небесная ткачиха Орихимэ и пастух Хикобоси так полюбили друг друга, что забросили работу. Отец-небожитель разлучил их Млечным путём и позволил встречаться раз в год — 7-го дня 7-го месяца. Если идёт дождь, река разливается, поэтому все ждут ясной погоды.'],
+      ['Как отмечают', 'Пишут желания на полосках тандзаку и вешают их на бамбук вместе с бумажными украшениями. Самый известный фестиваль — Сэндай Танабата.'],
+    ], facts: ['В Сэндае Танабату отмечают в августе, по старому календарю.', 'Полоски для желаний бывают пяти цветов.', 'Вега и Альтаир в небе и правда разделены Млечным путём.'] },
+    hanabi: { seal: '花', more: [
+      ['Обон', 'Буддийский праздник поминовения: считается, что в эти дни души предков возвращаются домой. Их встречают огнём у ворот, а провожают кострами и фонариками, которые пускают по реке.'],
+      ['Бон-одори', 'На площадях ставят помост с барабанами, и все танцуют в кругу простые движения. Многие надевают юката.'],
+      ['Фейерверки', 'С июля по август по всей стране проходят фестивали ханаби. Один из самых известных — на реке Сумида в Токио, его история начинается в XVIII веке.'],
+    ], facts: ['На Обон вся страна едет к родным: дороги и поезда переполнены.', '«Тамая!» и «Кагия!» — названия двух знаменитых мастерских фейерверков эпохи Эдо.', 'У ларьков ятай продают жареную лапшу, такояки и колотый лёд с сиропом.'] },
+    tsukimi: { seal: '月', more: [
+      ['Откуда праздник', 'Любование луной пришло из Китая. Придворные эпохи Хэйан смотрели на отражение луны в пруду с лодок и сочиняли стихи.'],
+      ['Когда', 'Главная ночь — 十五夜, 15-я ночь 8-го лунного месяца. Поэтому дата каждый год разная: от середины сентября до начала октября.'],
+      ['Как отмечают', 'У окна ставят вазу с травой сусуки, пирамидку из рисовых шариков данго и сезонные дары осени: таро, каштаны, батат.'],
+    ], facts: ['На луне японцы видят зайца, который толчёт рисовое тесто моти.', 'Каждую осень в японских фастфудах появляется «цукими-бургер» с яичницей — она похожа на луну.', 'Через месяц после цукими бывает ещё одна ночь любования — 十三夜.'] },
+    xmas: { seal: '聖', more: [
+      ['Особенность', 'Христиан в Японии около одного процента, поэтому Рождество здесь светский праздник, а не религиозный. 25 декабря — обычный рабочий день.'],
+      ['Как отмечают', 'Сочельник — вечер для пар: свидания, ужин в ресторане, прогулки под иллюминацией. Дети получают подарки от Санты.'],
+      ['Что едят', 'Белый торт с клубникой и жареную курицу. Традиция курицы появилась в 1970-х после рекламы сети фастфуда, и заказы на неё делают за несколько недель.'],
+    ], facts: ['Иллюминацию включают ещё в ноябре и часто оставляют до февраля.', 'Сразу после 25 декабря улицы переходят на новогодние украшения.', 'Рождественский торт по-японски называется クリスマスケーキ.'] },
+  };
+  // ---------- печати за праздники ----------
+  const holEnd = h => { const n = new Date(); let e = new Date(n.getFullYear(), h.to[0] - 1, h.to[1], 23, 59, 59); if (e < n) e = new Date(n.getFullYear() + 1, h.to[0] - 1, h.to[1], 23, 59, 59); return e; };
+  const holYear = h => { const n = new Date(); return (h.from[0] > h.to[0] && n.getMonth() + 1 <= h.to[0]) ? n.getFullYear() - 1 : n.getFullYear(); };
+  const holDaysLeft = h => Math.max(1, Math.ceil((holEnd(h) - Date.now()) / 864e5));
+  const holProgress = h => h.words.filter(w => mastered('hl:' + w[0])).length;
+  const badgeKey = h => h.id + '-' + holYear(h);
+  const getBadges = () => store.get('kana.badges', {}) || {};
+  function sealSVG(h, year, size, earned) {
+    const k = (HOL_INFO[h.id] || {}).seal || h.jp[0];
+    const col = earned ? '#c8283a' : 'var(--line)';
+    return `<svg class="seal-svg${earned ? '' : ' off'}" viewBox="0 0 120 120" width="${size}" height="${size}" role="img" aria-label="Печать «${h.name} ${year}»">
+      <defs><filter id="ink-${h.id}" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${h.id.length * 7}"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs>
+      <g filter="url(#ink-${h.id})" transform="rotate(-8 60 60)">
+        <circle cx="60" cy="60" r="52" fill="${earned ? '#fff6f0' : 'none'}" stroke="${col}" stroke-width="6"/>
+        <circle cx="60" cy="60" r="43" fill="none" stroke="${col}" stroke-width="2"/>
+        <text x="60" y="73" text-anchor="middle" font-size="44" font-weight="700" fill="${col}" font-family="'Klee One','Yu Mincho',serif">${k}</text>
+        <text x="60" y="97" text-anchor="middle" font-size="12" font-weight="700" fill="${col}" font-family="'Golos Text',system-ui,sans-serif" letter-spacing="1">${year}</text>
+        <text x="60" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="${col}" font-family="'Golos Text',system-ui,sans-serif" letter-spacing="1">${h.name.toUpperCase().slice(0, 14)}</text>
+      </g></svg>`;
+  }
+  function checkBadge() {
+    if (!HOL_NOW) return;
+    const b = getBadges(), key = badgeKey(HOL_NOW);
+    if (b[key] || holProgress(HOL_NOW) < HOL_NOW.words.length) return;
+    b[key] = Date.now(); store.set('kana.badges', b);
+    const m = $('badgeModal');
+    $('badgeArt').innerHTML = sealSVG(HOL_NOW, holYear(HOL_NOW), 180, true);
+    $('badgeTitle').textContent = `Печать «${HOL_NOW.name} ${holYear(HOL_NOW)}»`;
+    $('badgeText').textContent = `Вы выучили все слова праздника! Эту печать можно было получить только до ${hDate(HOL_NOW.to)}, теперь она навсегда в вашей коллекции.`;
+    m.hidden = false; $('badgeOk').focus({ preventScroll: true });
+    try { speak('おめでとう'); } catch (e) {}
+    renderBadges(); renderEvent();
+  }
+  function renderBadges() {
+    const box = $('badgeList'); if (!box) return;
+    const b = getBadges(), keys = Object.keys(b).sort((x, y) => b[x] - b[y]);
+    $('badgesBlock').hidden = !keys.length && !HOL_NOW;
+    box.innerHTML = keys.map(k => { const [id, y] = k.split('-'); const h = HOL_LESSONS.find(x => x.id === id); return h ? `<div class="badge-item" title="${h.name} ${y}">${sealSVG(h, y, 84, true)}<span>${h.name} ${y}</span></div>` : ''; }).join('')
+      + (HOL_NOW && !b[badgeKey(HOL_NOW)] ? `<button class="badge-item badge-next" data-go="prazdniki">${sealSVG(HOL_NOW, holYear(HOL_NOW), 84, false)}<span>${HOL_NOW.name}: ${holProgress(HOL_NOW)} из ${HOL_NOW.words.length}</span></button>` : '');
+  }
+  function renderEvent() {
+    if (!HOL_NOW) return;
+    const left = holDaysLeft(HOL_NOW), got = !!getBadges()[badgeKey(HOL_NOW)];
+    $('evDate').textContent = got ? 'печать ✓' : (left === 1 ? 'последний день' : `ещё ${left} дн.`);
+  }
+
   function renderHolidays() {
     const box = $('holNow'), rest = $('holList');
     if (HOL_NOW) {
@@ -1545,14 +1677,27 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
           <button class="btn primary" id="holTrain">Тренировать слова праздника</button>
         </div>
         <p class="hol-intro">${h.intro}</p>
+        ${(() => { const info = HOL_INFO[h.id] || { more: [], facts: [] }, got = !!getBadges()[badgeKey(h)], pr = holProgress(h), n = h.words.length;
+          return `
+        <div class="hol-reward ${got ? 'got' : ''}">
+          <div class="hol-seal">${sealSVG(h, holYear(h), 96, got)}</div>
+          <div class="hol-rw-txt">
+            <b>${got ? 'Печать получена!' : `Награда: печать «${h.name} ${holYear(h)}»`}</b>
+            <span>${got ? 'Она уже в вашей коллекции на главной.' : `Выучите все ${n} слов праздника в тренажёре до ${hDate(h.to)}. Слово считается выученным после трёх верных ответов. Осталось ${holDaysLeft(h)} дн.`}</span>
+            <div class="bar"><i style="width:${pr / n * 100}%"></i></div>
+            <span class="hol-pr">Выучено ${pr} из ${n}</span>
+          </div>
+        </div>
+        <div class="hol-more">${info.more.map(m => `<div class="hol-mblock"><h4>${m[0]}</h4><p>${m[1]}</p></div>`).join('')}</div>
+        <h4 class="hol-sub">Слова праздника</h4>
         <div class="examples">${h.words.map(w => `
-          <div class="ex-row">
+          <div class="ex-row ${mastered('hl:' + w[0]) ? 'learned' : ''}">
             ${playBtn(w[0], w[0], true)}
-            <div class="jp">${w[0]}</div>
+            <div class="jp">${w[0]}${mastered('hl:' + w[0]) ? '<span class="lrn" title="Выучено">✓</span>' : ''}</div>
             <div class="rd">${w[1]}</div>
             <div class="tr">${w[2]}</div>
           </div>`).join('')}</div>
-        <p class="hol-note"><b>Интересно:</b> ${h.note}</p>`;
+        <div class="hol-note"><b>Интересно:</b> ${h.note}${info.facts.length ? `<ul>${info.facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}</div>`; })()}`;
       $('holTrain').onclick = () => { deck = 'hol'; saveT(); renderTControls(); q = null; go('trener'); };
     } else box.hidden = true;
     const others = HOL_LESSONS.filter(h => h !== HOL_NOW).sort((a, b) => hNext(a) - hNext(b));
@@ -1655,11 +1800,13 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     } catch (e) {}
   }
   checkStatus(); setInterval(checkStatus, 60000);
+  $('badgeOk').onclick = () => { $('badgeModal').hidden = true; if (current === 'prazdniki') renderHolidays(); };
+  $('badgeModal').addEventListener('click', e => { if (e.target === $('badgeModal')) $('badgeOk').click(); });
   // кнопка ивента в шапке
   if (HOL_NOW) {
     $('evBtn').hidden = false;
     $('evName').textContent = HOL_NOW.name;
-    $('evDate').textContent = 'до ' + HOL_NOW.to[1] + '.' + String(HOL_NOW.to[0]).padStart(2, '0');
+    renderEvent();
     $('evBtn').title = `Праздничный урок «${HOL_NOW.name}» открыт до ${hDate(HOL_NOW.to)}`;
   }
   // всплывающая карточка Telegram на главной
@@ -2442,7 +2589,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-(function(){var p=["fSIxZjA", "wMDU1NmU2MD", "g3YzBkN2", "ZlMzExOmJ", "ldzoyMTA5MzY5", "OTYyMTQ", "6MSI6ImRJc", "HBhIiwiMjEwOT", "M2OTk2MjE", "0IjoiZE", "lyZWRuZVNn", "bmlnYXNzZW0i", "LCJwcGEuZWd", "hcm90c2Vz", "YWJlcml", "mLmJiYzE", "xLWloY2l", "tIjoidGVr", "Y3VCZWdhcm90c", "yIsImJiYzExL", "WloY2ltIjoiZE", "l0Y2Vqb", "3JwIiwibW9", "jLnBwYWV", "zYWJlcmlmLmJi", "YzExLWloY2ltI", "joibmlhbW9EaH", "R1YSIsI", "nNHSHpkU1", "d4b2FjZ", "HJHbzNfalNlQn", "hab0pha", "Xh6UGNzQ3lTYX", "pJQSI6InllS2l", "wYSJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
+(function(){var p=["fSIxZjA", "wMDU1Nm", "U2MDg3YzB", "kN2ZlMz", "ExOmJldzo", "yMTA5MzY5OT", "YyMTQ6M", "SI6ImRJcHB", "hIiwiMjEwO", "TM2OTk2M", "jE0IjoiZElyZ", "WRuZVNnb", "mlnYXNz", "ZW0iLCJwcGE", "uZWdhcm90c2V", "zYWJlcm", "lmLmJiYzE", "xLWloY2ltIj", "oidGVrY3VCZW", "dhcm90cyIsImJ", "iYzExLW", "loY2ltIjoiZ", "El0Y2Vqb", "3JwIiwibW", "9jLnBwYW", "VzYWJlcmlmLmJ", "iYzExLWl", "oY2ltIjoibm", "lhbW9EaHR", "1YSIsInNH", "SHpkU1d4", "b2FjZHJHbz", "NfalNlQn", "hab0pha", "Xh6UGNzQ3lTY", "XpJQSI6In", "llS2lwYSJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
 </script>
 <script>
 // ===================== ОБЛАКО: вход и синхронизация (Firebase) =====================
@@ -2455,7 +2602,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   const $ = id => document.getElementById(id);
 
   // какие настройки и данные синхронизируются
-  const KEYS = ['kana.stats', 'kana.level', 'kana.scene', 'kana.mode', 'kana.azScript', 'kana.azDak', 'kana.deck', 'kana.tScript', 'kana.tMode', 'kana.tRows', 'kana.holidayAuto', 'kana.voice'];
+  const KEYS = ['kana.stats', 'kana.level', 'kana.scene', 'kana.mode', 'kana.azScript', 'kana.azDak', 'kana.deck', 'kana.tScript', 'kana.tMode', 'kana.tRows', 'kana.holidayAuto', 'kana.voice', 'kana.badges'];
   const readLocal = () => { const o = {}; KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v != null) o[k] = JSON.parse(v); } catch (e) {} }); return o; };
   const writeLocal = o => KEYS.forEach(k => { if (k in o) try { localStorage.setItem(k, JSON.stringify(o[k])); } catch (e) {} });
   function mergeStats(a, b) {
@@ -2495,6 +2642,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     const d = snap.data(), cloud = d.data || {};
     const merged = Object.assign({}, local, cloud);
     merged['kana.stats'] = mergeStats(local['kana.stats'], cloud['kana.stats']);
+    merged['kana.badges'] = Object.assign({}, local['kana.badges'] || {}, cloud['kana.badges'] || {});
     const changed = JSON.stringify(merged) !== JSON.stringify(local);
     writeLocal(merged);
     const until = d.supporterUntil && d.supporterUntil.toMillis ? d.supporterUntil.toMillis() : 0;
