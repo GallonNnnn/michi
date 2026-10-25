@@ -330,6 +330,26 @@ button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid v
 .tr-jp { font-size: 56px; color: var(--accent); line-height: 1.2; }
 .tr-score { display: grid; gap: 6px; margin-top: 16px; max-width: 460px; }
 .tr-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); font-size: 14px; font-variant-numeric: tabular-nums; }
+.hol-banner { width: 100%; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; text-align: left; padding: 14px 18px; margin-bottom: 20px; border: 1.5px solid var(--accent); border-radius: 14px; background: var(--accent-soft); color: var(--ink); font-size: 15px; }
+.hol-banner .kana { font-size: 26px; color: var(--accent); }
+.hol-banner span:nth-child(2) { flex: 1 1 260px; }
+.hol-go { font-weight: 600; color: var(--accent); }
+.hol-now { margin-bottom: 28px; border-color: var(--accent); }
+.hol-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px 20px; flex-wrap: wrap; }
+.hol-head h3 { font-family: var(--f-display); font-size: 24px; margin-top: 8px; }
+.hol-head h3 .kana { color: var(--accent); font-size: .85em; }
+.hol-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--good-soft); color: var(--good); }
+.hol-intro { max-width: 70ch; }
+.hol-note { max-width: 70ch; font-size: 14px; color: var(--muted); padding: 12px 14px; border-radius: 12px; background: var(--plum-soft); }
+.hol-note b { color: var(--plum); }
+.hol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 14px; }
+.hol-lock { padding: 18px; display: grid; gap: 6px; justify-items: start; }
+.hol-lock .hol-glyph { font-size: 28px; color: var(--muted); opacity: .7; }
+.hol-lock h3 { font-size: 17px; }
+.hol-lock p { font-size: 14px; }
+.tg-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--accent); text-decoration: none; }
+.tg-link:hover { text-decoration: underline; }
+.tg-btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 footer.site-foot { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 13px; }
 footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; align-items: center; }
 
@@ -444,7 +464,7 @@ footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-
 canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
-<script>window.KANA_AUDIO = { base: "audio/", map: {"あ": "98fdfc0a74", "い": "3c01c77f19", "う": "af2b29a995", "え": "a60311a2fc", "お": "ac6bc7de71", "か": "288c9e0771", "き": "27acc76c00", "く": "ac94e11218", "け": "d32afeb0ab", "こ": "91714b00e5", "さ": "7a4faed063", "し": "812f45bfcf", "す": "5b8252a1e9", "せ": "e1c730bd83", "そ": "b345d8cc83", "た": "cf4d17f99d", "ち": "e022bea2e9", "つ": "0c414c812b", "て": "e2d9706115", "と": "a986a7bc9e", "な": "478d2f9eb1", "に": "de3d1ecc94", "ぬ": "ad142ed057", "ね": "3a104bbe56", "の": "56377d14d4", "は": "1fa0519cfd", "ひ": "469e92c9cf", "ふ": "382a438fd4", "へ": "72c746d609", "ほ": "5a340fe475", "ま": "400805e5a9", "み": "1c5425dae8", "む": "50029791cb", "め": "634540f05d", "も": "3c6945772d", "や": "bdab1b1739", "ゆ": "44567171f3", "よ": "6f46f7d4a2", "ら": "ba7526a5c0", "り": "71d1c63e50", "る": "ffab9d02a3", "れ": "df82f999c7", "ろ": "eb766006ab", "わ": "dedb707d83", "を": "eba95ba0c6", "ん": "48a866bfda", "が": "a142816563", "ぎ": "9a77c2df49", "ぐ": "6e159a91b7", "げ": "9167af511d", "ご": "27a87259d9", "ざ": "d08b423295", "じ": "41f11fe610", "ず": "e77eb4831e", "ぜ": "8759dfeb91", "ぞ": "bad314622d", "だ": "b3d236275f", "ぢ": "139b8c6e1d", "づ": "600f5ab1c0", "で": "7350618fce", "ど": "76504d6136", "ば": "d8c158e0a2", "び": "5fb5aba499", "ぶ": "82b3fbb771", "べ": "eefc5770b9", "ぼ": "7ebddc8507", "ぱ": "81223f8ee5", "ぴ": "749766f43a", "ぷ": "224fecb162", "ぺ": "bd1d804433", "ぽ": "06b58547dc", "きゃ": "b2b7e45bf3", "きゅ": "298ab383a4", "きょ": "d9ee3c16a6", "しゃ": "b6e3f9666c", "しゅ": "64d0737038", "しょ": "7a5aea5515", "ちゃ": "062957be36", "ちゅ": "619fdc4f93", "ちょ": "4def51326a", "にゃ": "be4c29664d", "にゅ": "658da3d97e", "にょ": "0954bcc575", "ひゃ": "f28cd0be88", "ひゅ": "e0e6bdfbd6", "ひょ": "0627f89093", "みゃ": "0eb0633f6c", "みゅ": "5bd384349a", "みょ": "6617e33d95", "りゃ": "f58558332c", "りゅ": "73c41f0e48", "りょ": "1ab62bb6d7", "ぎゃ": "95e3d0ad8f", "ぎゅ": "81a5e9e8a0", "ぎょ": "08831cb24c", "じゃ": "d91490197b", "じゅ": "567ca1db79", "じょ": "1157598384", "びゃ": "4d8780b09f", "びゅ": "747dbd8ebc", "びょ": "0a1cc845fa", "ぴゃ": "ef826d2af5", "ぴゅ": "984576b5ce", "ぴょ": "220216f18a", "ひとつ": "b9a975d70c", "にがつ": "aab2ac2d93", "さんにん": "4c585e93c4", "にほんじん": "d13a0fc29c", "にほん": "01b64b5814", "げつようび": "13856bbf7c", "ふじさん": "52e59e9d27", "おがわ": "ffa1784189", "いりぐち": "43c0172ad9", "もくようび": "561867c6f7", "すいようび": "18d9cd747a", "かようび": "f99c2b5c53", "がくせい": "58f16b7e12", "せんせい": "4ca0d0546b", "せんしゅう": "815d3b8775", "しょくじ": "63fd1574d6", "のみもの": "ff998bd5e8", "けんぶつ": "7c9bca3117", "りょこう": "a17d5f880e", "らいねん": "1ecc559ba6", "じかん": "4352828545", "にんげん": "1a1eaee44f", "でんわ": "78b47ae41b", "にほんご": "f31040750b", "けいけん": "f6ea7ae190", "けいざい": "3f18d2a253", "かいぎ": "dfae52c337", "ぎろん": "51a246ee2f", "けんり": "183186bc13", "かんきょう": "74a29b24c5", "ちしき": "00488d4f41", "こくさい": "3457f44a95", "せきにん": "9ff579c5a4", "かくにん": "d7ef1f662c", "しょうめい": "b22580dc65", "かくだい": "95873602df", "わたしは がくせい です": "4e88f1d4b4", "これは ほん です": "73bf72b460", "がくせい ですか": "cff8eacf7e", "はい、そうです": "05b136051f", "いいえ、ちがいます": "24673d7a0f", "わたしの ほん": "2d109f97a5", "にほんの くるま": "78d64a5d34", "それは なん ですか": "9186e6d621", "あれは やま です": "78cbf6ac83", "まいにち にほんごを べんきょうします": "4eb736b280", "きのう えいがを みました": "2d622121f3", "にくは たべません": "c88b29bae4", "ここに なまえを かいてください": "87450ff0a1", "ちょっと まってください": "5cac5ee022", "にほんに いきたいです": "480afcd565", "すしが たべたいです": "99176e8f00", "いま あめが ふっています": "dac0739a12", "とうきょうに すんでいます": "9145a23cb7", "しゃちょうは もう いらっしゃいました": "6636722b34", "しりょうを はいけんしました": "b8423cabc3", "やすければ かいます": "22bd8aaad8", "えきに ついたら でんわしてください": "ced363c75d", "まいにち はやく ねるように しています": "ad1f8afc36", "わすれないように メモします": "43695acae8", "きらいな わけでは ない": "d49f1f4ae3", "ぜんぶ わかる わけでは ありません": "6b060bb809", "こんにちは": "20427a708c", "おはよう ございます": "be5223eb9b", "こんばんは": "eabdada4ab", "おやすみなさい": "17b912b634", "さようなら": "800001ba24", "ありがとう ございます": "1c1bd1d64c", "すみません": "cce1862bcb", "どういたしまして": "afbd6d8d88", "おねがいします": "eab3d932d7", "はじめまして": "75f97f5860", "わたしは アンナ です": "a928bb77bf", "よろしく おねがいします": "c9ee5bbe5e", "これ ください": "8252e60176", "いくら ですか": "735c6571d9", "おいしい": "ac15ff1452", "いただきます": "25567f8581", "わかりません": "6dcfc9b79b", "もう いちど おねがいします": "0ff0ae13e0", "トイレは どこ ですか": "d3b768a81e", "おひさしぶりです": "7b1f5f4e6d", "げんきですか": "6c41aef6f0", "おつかれさまです": "8ea0c5993a", "にほんごを べんきょうしています": "6f41c64abe", "どこから きましたか": "6e3ee5c026", "ロシアから きました": "b94943642a", "メニューを みせてください": "2b4d773e30", "おかいけいを おねがいします": "3a69cf5373", "カードで はらえますか": "75e3d7bfd6", "えきは どこですか": "5bac2b678c", "この でんしゃは とうきょうに いきますか": "1ef37f1b11", "きっぷを いちまい ください": "786e811c70", "みちに まよいました": "67f7c493f4", "ゆっくり はなしてください": "f95f984b2c", "えいごを はなせますか": "efb2099bc1", "たのしかったです": "582b7b0ec0", "ほんとうですか": "b0a4c530f8", "おそれいりますが": "875a342f09", "おてすうを おかけしますが": "40c6ab322d", "しょうしょう おまちください": "e5bacf6932", "よろしく おねがい もうしあげます": "9ec5dfc951", "ごけんとう いただけますでしょうか": "9ef623eee7", "しょうち いたしました": "1befe2d396", "さるも きから おちる": "7afbb1da41", "いちごいちえ": "3894166a90", "ななころび やおき": "1a56466b29", "いうまでもなく": "2805d3caff", "きのせいかもしれない": "873f72cf3e", "しかたがない": "cca2b2346c"} };</script>
+<script>window.KANA_AUDIO = { base: "audio/", map: {"あ": "98fdfc0a74", "い": "3c01c77f19", "う": "af2b29a995", "え": "a60311a2fc", "お": "ac6bc7de71", "か": "288c9e0771", "き": "27acc76c00", "く": "ac94e11218", "け": "d32afeb0ab", "こ": "91714b00e5", "さ": "7a4faed063", "し": "812f45bfcf", "す": "5b8252a1e9", "せ": "e1c730bd83", "そ": "b345d8cc83", "た": "cf4d17f99d", "ち": "e022bea2e9", "つ": "0c414c812b", "て": "e2d9706115", "と": "a986a7bc9e", "な": "478d2f9eb1", "に": "de3d1ecc94", "ぬ": "ad142ed057", "ね": "3a104bbe56", "の": "56377d14d4", "は": "1fa0519cfd", "ひ": "469e92c9cf", "ふ": "382a438fd4", "へ": "72c746d609", "ほ": "5a340fe475", "ま": "400805e5a9", "み": "1c5425dae8", "む": "50029791cb", "め": "634540f05d", "も": "3c6945772d", "や": "bdab1b1739", "ゆ": "44567171f3", "よ": "6f46f7d4a2", "ら": "ba7526a5c0", "り": "71d1c63e50", "る": "ffab9d02a3", "れ": "df82f999c7", "ろ": "eb766006ab", "わ": "dedb707d83", "を": "eba95ba0c6", "ん": "48a866bfda", "が": "a142816563", "ぎ": "9a77c2df49", "ぐ": "6e159a91b7", "げ": "9167af511d", "ご": "27a87259d9", "ざ": "d08b423295", "じ": "41f11fe610", "ず": "e77eb4831e", "ぜ": "8759dfeb91", "ぞ": "bad314622d", "だ": "b3d236275f", "ぢ": "139b8c6e1d", "づ": "600f5ab1c0", "で": "7350618fce", "ど": "76504d6136", "ば": "d8c158e0a2", "び": "5fb5aba499", "ぶ": "82b3fbb771", "べ": "eefc5770b9", "ぼ": "7ebddc8507", "ぱ": "81223f8ee5", "ぴ": "749766f43a", "ぷ": "224fecb162", "ぺ": "bd1d804433", "ぽ": "06b58547dc", "きゃ": "b2b7e45bf3", "きゅ": "298ab383a4", "きょ": "d9ee3c16a6", "しゃ": "b6e3f9666c", "しゅ": "64d0737038", "しょ": "7a5aea5515", "ちゃ": "062957be36", "ちゅ": "619fdc4f93", "ちょ": "4def51326a", "にゃ": "be4c29664d", "にゅ": "658da3d97e", "にょ": "0954bcc575", "ひゃ": "f28cd0be88", "ひゅ": "e0e6bdfbd6", "ひょ": "0627f89093", "みゃ": "0eb0633f6c", "みゅ": "5bd384349a", "みょ": "6617e33d95", "りゃ": "f58558332c", "りゅ": "73c41f0e48", "りょ": "1ab62bb6d7", "ぎゃ": "95e3d0ad8f", "ぎゅ": "81a5e9e8a0", "ぎょ": "08831cb24c", "じゃ": "d91490197b", "じゅ": "567ca1db79", "じょ": "1157598384", "びゃ": "4d8780b09f", "びゅ": "747dbd8ebc", "びょ": "0a1cc845fa", "ぴゃ": "ef826d2af5", "ぴゅ": "984576b5ce", "ぴょ": "220216f18a", "ひとつ": "b9a975d70c", "にがつ": "aab2ac2d93", "さんにん": "4c585e93c4", "にほんじん": "d13a0fc29c", "にほん": "01b64b5814", "げつようび": "13856bbf7c", "ふじさん": "52e59e9d27", "おがわ": "ffa1784189", "いりぐち": "43c0172ad9", "もくようび": "561867c6f7", "すいようび": "18d9cd747a", "かようび": "f99c2b5c53", "がくせい": "58f16b7e12", "せんせい": "4ca0d0546b", "せんしゅう": "815d3b8775", "しょくじ": "63fd1574d6", "のみもの": "ff998bd5e8", "けんぶつ": "7c9bca3117", "りょこう": "a17d5f880e", "らいねん": "1ecc559ba6", "じかん": "4352828545", "にんげん": "1a1eaee44f", "でんわ": "78b47ae41b", "にほんご": "f31040750b", "けいけん": "f6ea7ae190", "けいざい": "3f18d2a253", "かいぎ": "dfae52c337", "ぎろん": "51a246ee2f", "けんり": "183186bc13", "かんきょう": "74a29b24c5", "ちしき": "00488d4f41", "こくさい": "3457f44a95", "せきにん": "9ff579c5a4", "かくにん": "d7ef1f662c", "しょうめい": "b22580dc65", "かくだい": "95873602df", "わたしは がくせい です": "4e88f1d4b4", "これは ほん です": "73bf72b460", "がくせい ですか": "cff8eacf7e", "はい、そうです": "05b136051f", "いいえ、ちがいます": "24673d7a0f", "わたしの ほん": "2d109f97a5", "にほんの くるま": "78d64a5d34", "それは なん ですか": "9186e6d621", "あれは やま です": "78cbf6ac83", "まいにち にほんごを べんきょうします": "4eb736b280", "きのう えいがを みました": "2d622121f3", "にくは たべません": "c88b29bae4", "ここに なまえを かいてください": "87450ff0a1", "ちょっと まってください": "5cac5ee022", "にほんに いきたいです": "480afcd565", "すしが たべたいです": "99176e8f00", "いま あめが ふっています": "dac0739a12", "とうきょうに すんでいます": "9145a23cb7", "しゃちょうは もう いらっしゃいました": "6636722b34", "しりょうを はいけんしました": "b8423cabc3", "やすければ かいます": "22bd8aaad8", "えきに ついたら でんわしてください": "ced363c75d", "まいにち はやく ねるように しています": "ad1f8afc36", "わすれないように メモします": "43695acae8", "きらいな わけでは ない": "d49f1f4ae3", "ぜんぶ わかる わけでは ありません": "6b060bb809", "こんにちは": "20427a708c", "おはよう ございます": "be5223eb9b", "こんばんは": "eabdada4ab", "おやすみなさい": "17b912b634", "さようなら": "800001ba24", "ありがとう ございます": "1c1bd1d64c", "すみません": "cce1862bcb", "どういたしまして": "afbd6d8d88", "おねがいします": "eab3d932d7", "はじめまして": "75f97f5860", "わたしは アンナ です": "a928bb77bf", "よろしく おねがいします": "c9ee5bbe5e", "これ ください": "8252e60176", "いくら ですか": "735c6571d9", "おいしい": "ac15ff1452", "いただきます": "25567f8581", "わかりません": "6dcfc9b79b", "もう いちど おねがいします": "0ff0ae13e0", "トイレは どこ ですか": "d3b768a81e", "おひさしぶりです": "7b1f5f4e6d", "げんきですか": "6c41aef6f0", "おつかれさまです": "8ea0c5993a", "にほんごを べんきょうしています": "6f41c64abe", "どこから きましたか": "6e3ee5c026", "ロシアから きました": "b94943642a", "メニューを みせてください": "2b4d773e30", "おかいけいを おねがいします": "3a69cf5373", "カードで はらえますか": "75e3d7bfd6", "えきは どこですか": "5bac2b678c", "この でんしゃは とうきょうに いきますか": "1ef37f1b11", "きっぷを いちまい ください": "786e811c70", "みちに まよいました": "67f7c493f4", "ゆっくり はなしてください": "f95f984b2c", "えいごを はなせますか": "efb2099bc1", "たのしかったです": "582b7b0ec0", "ほんとうですか": "b0a4c530f8", "おそれいりますが": "875a342f09", "おてすうを おかけしますが": "40c6ab322d", "しょうしょう おまちください": "e5bacf6932", "よろしく おねがい もうしあげます": "9ec5dfc951", "ごけんとう いただけますでしょうか": "9ef623eee7", "しょうち いたしました": "1befe2d396", "さるも きから おちる": "7afbb1da41", "いちごいちえ": "3894166a90", "ななころび やおき": "1a56466b29", "いうまでもなく": "2805d3caff", "きのせいかもしれない": "873f72cf3e", "しかたがない": "cca2b2346c", "あけまして おめでとう ございます": "ea1a9dbb43", "ことしも よろしく おねがいします": "ed7e5ded93", "よいおとしを": "7f8c21229c", "おしょうがつ": "66ee0220ca", "はつもうで": "985a6e2e03", "おせち": "b0b25fca14", "おとしだま": "172253a270", "ねんがじょう": "f9cf67e422", "ひなまつり": "a17566efcf", "ひなにんぎょう": "6e1ee42748", "おひなさま": "3e83dc6467", "もも の はな": "94ed81ce99", "ひなあられ": "de4bd049ab", "ちらしずし": "db53f763d6", "しろざけ": "46d994e03b", "こどもの ひ": "ea869d6358", "こいのぼり": "9635eff176", "かぶと": "65dd4f4494", "かしわもち": "3b75ceceb8", "しょうぶゆ": "cc1ba62a6b", "ゴールデンウィーク": "36cbc6b984", "げんきに そだってね": "e83f58cc5b", "たなばた": "2edb99f10f", "たんざく": "d7d7629ec0", "ねがいごと": "a76da9d493", "ほし": "0a63d58c29", "あまのがわ": "1bbc0423a0", "おりひめ": "9af4545cdb", "ひこぼし": "0b604279fd", "ねがいが かないますように": "0032bb4508", "はなび": "58de676008", "はなびたいかい": "5431e39fef", "おぼん": "af54cdc887", "ゆかた": "e9a513ba06", "ぼんおどり": "1b0c743b22", "やたい": "df27b6343d", "きれい": "2b8c515b44", "たまや": "1690ac7c8a", "つきみ": "0ee57a554f", "まんげつ": "47e6ec4258", "おつきさま": "5dda7d429b", "つきみだんご": "0fe5c16601", "すすき": "a3c302e18c", "うさぎ": "400fafd17f", "つきが きれいですね": "0218017abb", "ハロウィン": "15af117d05", "おばけ": "2490ced5ac", "かぼちゃ": "9c24f5bf45", "まじょ": "7323a25d61", "こうもり": "83ae3ac9ce", "こわい": "a5ef7e5ded", "トリック・オア・トリート": "fc6cf41a61", "おかしを ください": "06b71e27c9", "クリスマス": "a646289ad7", "メリー クリスマス": "c70e4b20e3", "イルミネーション": "9f3e8bd9c7", "プレゼント": "5a5f08df94", "サンタさん": "808a715fb2", "クリスマスケーキ": "df1cc66d16", "フライドチキン": "e59b4ef94c", "こいびと": "8916327bcb"} };</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -485,6 +505,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <button data-go="grammatika">Грамматика</button>
       <button data-go="frazy">Фразы</button>
       <button data-go="trener">Тренажёр</button>
+      <button data-go="prazdniki">Праздники</button>
       <button data-go="podderzhka">Поддержать</button>
     </div>
     <div class="nav-tools">
@@ -525,6 +546,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <div class="cta">
         <button class="btn primary lg" data-go="test">Узнать свой уровень</button>
         <button class="btn lg" data-go="trener">Сразу в тренажёр</button>
+        <a class="btn lg tg-btn" href="https://t.me/legendmifs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:currentColor;flex:none"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13 1.4 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.8c.9-.3 1.6.2 1.4 1.5Z"/></svg>Telegram</a>
       </div>
       <div class="hint3d" id="hint3d"><b>Потяните сферу</b> и наведите на знак, чтобы увидеть чтение. Клик озвучит его.</div>
     </div>
@@ -536,6 +558,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       <div class="levels" id="levels"></div>
     </div>
     <div class="home-block">
+      <button class="hol-banner" id="holBanner" data-go="prazdniki" hidden></button>
       <h2 class="section-title"><svg class="flower"><use href="#sakura"/></svg>Разделы</h2>
       <p class="section-sub" id="secSub">Для уровня «Новичок»</p>
       <div class="sections" id="sections"></div>
@@ -663,6 +686,21 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   </div>
 </section>
 
+<!-- ПРАЗДНИКИ -->
+<section id="view-prazdniki" class="view" hidden>
+  <div class="wrap gutter page">
+    <div class="page-head">
+      <div>
+        <h2>Праздничные уроки <span class="jp">祭り</span></h2>
+        <p>Слова и фразы японских праздников. Каждый урок открывается только в дни своего праздника, вместе с праздничным фоном.</p>
+      </div>
+    </div>
+    <article class="lesson card hol-now" id="holNow" hidden></article>
+    <h3 class="sub-h" id="holListTitle">Скоро откроются</h3>
+    <div class="hol-grid" id="holList"></div>
+  </div>
+</section>
+
 <!-- ТРЕНАЖЁР -->
 <section id="view-trener" class="view" hidden>
   <div class="wrap gutter page">
@@ -681,6 +719,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
             <button data-deck="kana" aria-pressed="true">Кана</button>
             <button data-deck="kanji" aria-pressed="false">Кандзи</button>
             <button data-deck="phr" aria-pressed="false">Фразы</button>
+            <button data-deck="hol" aria-pressed="false" id="deckHol" hidden>Праздник</button>
           </div>
         </div>
         <div>
@@ -754,6 +793,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
           <div class="code-msg" id="codeMsg" aria-live="polite"></div>
         </form>
         <p class="free-note">Без подписки сайт работает полностью: любой фон можно примерить бесплатно.</p>
+        <a class="tg-link" href="https://t.me/legendmifs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:currentColor;flex:none"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13 1.4 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.8c.9-.3 1.6.2 1.4 1.5Z"/></svg>Новости проекта в Telegram</a>
       </aside>
       <div>
         <h3 class="sub-h" style="margin-top:0">Фоны сайта</h3>
@@ -811,7 +851,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 </div>
 
 <footer class="site-foot gutter">
-  <div class="wrap"><span>Путеводитель в японский · чтения по системе Поливанова · <a href="https://boosty.to/nihongo_michi" target="_blank" rel="noopener" style="color:var(--accent)">Поддержать на Boosty</a></span><span id="footSync">Прогресс хранится в этом браузере</span></div>
+  <div class="wrap"><span>Путеводитель в японский · чтения по системе Поливанова · <a href="https://boosty.to/nihongo_michi" target="_blank" rel="noopener" style="color:var(--accent)">Поддержать на Boosty</a> · <a href="https://t.me/legendmifs" target="_blank" rel="noopener" style="color:var(--accent)">Telegram-канал</a></span><span id="footSync">Прогресс хранится в этом браузере</span></div>
 </footer>
 
 <script>
@@ -1097,7 +1137,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   }
 
   // ===================== НАВИГАЦИЯ =====================
-  const VIEWS = ['home', 'test', 'azbuka', 'kandzi', 'grammatika', 'frazy', 'trener', 'podderzhka'];
+  const VIEWS = ['home', 'test', 'azbuka', 'kandzi', 'grammatika', 'frazy', 'trener', 'prazdniki', 'podderzhka'];
   let current = 'home';
   function go(v, keepScroll) {
     if (v === 'levels-anchor') { go('home', true); $('levels-anchor').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); return; }
@@ -1108,6 +1148,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     if (v === 'azbuka') renderGrid(true);
     if (v === 'trener' && !q) nextQ();
     if (v === 'home') renderHome();
+    if (v === 'prazdniki') renderHolidays();
     if (v === 'test') { $('testIntro').hidden = false; $('testRun').hidden = true; $('testResult').hidden = true; }
     // примерка платного фона действует только на странице «Поддержать»
     if (v !== 'podderzhka' && window.__scene) window.__scene.endPreview();
@@ -1149,7 +1190,10 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
       ['grammatika', '文', 'Грамматика', 'Схема конструкции и примеры с переводом.', `${GRAMMAR[level].length} урока`],
       ['frazy', '話', 'Фразы', 'Готовые выражения, разложенные по темам.', `${ph.length} фраз, ${new Set(ph.map(p => p[1])).size} тем`],
       ['trener', '練', 'Тренажёр', 'Кана, кандзи и фразы в виде теста.', 'Подстраивается под ошибки'],
+      ['prazdniki', '祭', 'Праздники', 'Слова японских праздников, открываются в свои даты.', HOL_NOW ? `Сейчас открыт: ${HOL_NOW.name}` : `Следующий: ${HOL_LESSONS.slice().sort((a, b) => hNext(a) - hNext(b))[0].name}`],
     ];
+    $('holBanner').hidden = !HOL_NOW;
+    if (HOL_NOW) $('holBanner').innerHTML = `<span class="kana">${HOL_NOW.jp}</span><span><b>Праздничный урок «${HOL_NOW.name}» открыт до ${hDate(HOL_NOW.to)}.</b> ${HOL_NOW.words.length} новых слов с озвучкой.</span><span class="hol-go">Открыть →</span>`;
     $('sections').innerHTML = cards.map(c => `<button class="sec-card" data-go="${c[0]}"><span class="glyph">${c[1]}</span><h3>${c[2]}</h3><p>${c[3]}</p><span class="meta">${c[4]}</span></button>`).join('');
     renderProgress();
   }
@@ -1298,7 +1342,8 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     document.querySelectorAll('[data-tm]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tm === tMode));
     $('kanaOpts').hidden = deck !== 'kana';
     $('deckNote').hidden = deck === 'kana';
-    $('deckNote').textContent = deck === 'kanji' ? `${KANJI[level].length} кандзи уровня «${LEVELS[level].name}». Уровень меняется в шапке сайта.`
+    $('deckHol').hidden = !HOL_NOW;
+    $('deckNote').textContent = deck === 'hol' && HOL_NOW ? `${HOL_NOW.words.length} слов праздника «${HOL_NOW.name}». Колода доступна до ${hDate(HOL_NOW.to)}.` : deck === 'kanji' ? `${KANJI[level].length} кандзи уровня «${LEVELS[level].name}». Уровень меняется в шапке сайта.`
       : `${PHRASES.filter(p => p[0] === level).length} фраз уровня «${LEVELS[level].name}». Уровень меняется в шапке сайта.`;
     const sample = r => { const c = r.cells.find(Boolean); return tScript === 'k' ? c[1] : c[0]; };
     $('rowChips').innerHTML = ROWS.map(r => `<button class="chip" data-row="${r.id}" aria-pressed="${tRows.has(r.id)}"><span class="kana">${sample(r)}</span> ${r.label}</button>`).join('');
@@ -1316,6 +1361,8 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 
   // карточка: id (для статистики), jp (японская сторона), ru (русская сторона), say, kind
   function buildDeck() {
+    if (deck === 'hol' && !HOL_NOW) deck = 'phr';
+    if (deck === 'hol') return HOL_NOW.words.map(w => ({ id: 'hl:' + w[0], jp: w[0], ru: w[2], say: w[0], kind: 'phr', extra: w[1] }));
     if (deck === 'kanji') return KANJI[level].map(k => ({ id: 'kj:' + k[0], jp: k[0], ru: k[1], say: k[7], kind: 'kanji', extra: `${k[6]} — ${k[8]}, ${k[9]}` }));
     if (deck === 'phr') return PHRASES.filter(p => p[0] === level).map(p => ({ id: 'ph:' + p[2], jp: p[2], ru: p[5], say: p[3] || p[2], kind: 'phr', extra: p[4] }));
     const out = [];
@@ -1405,6 +1452,78 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     });
     stage.addEventListener('pointerleave', () => { card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg'); });
   })();
+
+  // ===================== ПРАЗДНИЧНЫЕ УРОКИ =====================
+  // [японский, чтение по-русски, перевод]
+  const HOL_LESSONS = [
+    { id: 'newyear', name: 'Новый год', jp: 'お正月', from: [12, 28], to: [1, 7],
+      intro: 'Главный праздник Японии. В первые дни года семьи едят новогодние блюда осэти, ходят в храм и дарят детям деньги в конвертах.',
+      note: 'Поздравлять «С Новым годом» принято только после 1 января. До этого говорят よいおとしを.',
+      words: [['あけまして おめでとう ございます', 'акэмаситэ омэдэто: годзаимас', 'С Новым годом!'], ['ことしも よろしく おねがいします', 'котоси мо ёросику онэгаисимас', 'Прошу и в этом году не оставлять меня'], ['よいおとしを', 'ёи отоси о', 'Хорошего Нового года (до 1 января)'], ['おしょうがつ', 'осё:гацу', 'Новый год, новогодние праздники'], ['はつもうで', 'хацумо:дэ', 'Первое посещение храма в году'], ['おせち', 'осэти', 'Новогодние блюда'], ['おとしだま', 'отосидама', 'Новогодние деньги детям'], ['ねんがじょう', 'нэнгадзё:', 'Новогодняя открытка']] },
+    { id: 'hina', name: 'Хинамацури', jp: '雛祭り', from: [2, 26], to: [3, 3],
+      intro: 'Праздник девочек, 3 марта. Дома выставляют лесенку с куклами хина в нарядах придворных эпохи Хэйан и желают девочкам счастья.',
+      note: 'Кукол убирают сразу после праздника: по поверью, иначе дочь поздно выйдет замуж.',
+      words: [['ひなまつり', 'хинамацури', 'Праздник девочек'], ['ひなにんぎょう', 'хинанингё:', 'Куклы хина'], ['おひなさま', 'охинасама', 'Куклы хина (ласково)'], ['もも の はな', 'момо но хана', 'Цветы персика'], ['ひなあられ', 'хинаарарэ', 'Сладкие рисовые хлопья'], ['ちらしずし', 'тирасидзуси', 'Суси-ассорти в миске'], ['しろざけ', 'сирозакэ', 'Сладкий белый сакэ']] },
+    { id: 'kodomo', name: 'День детей', jp: 'こどもの日', from: [4, 29], to: [5, 5],
+      intro: '5 мая, последний день «Золотой недели». Над домами поднимают флажки в виде карпов: карп плывёт против течения и символизирует силу.',
+      note: 'Карпов вешают по числу членов семьи: чёрный — отец, красный — мать, маленькие — дети.',
+      words: [['こどもの ひ', 'кодомо но хи', 'День детей'], ['こいのぼり', 'коинобори', 'Флажки-карпы'], ['かぶと', 'кабуто', 'Самурайский шлем'], ['かしわもち', 'касивамоти', 'Рисовый пирожок в дубовом листе'], ['しょうぶゆ', 'сё:бую', 'Ванна с листьями ириса'], ['ゴールデンウィーク', 'го:рудэн ви:ку', '«Золотая неделя» праздников'], ['げんきに そだってね', 'гэнки ни содаттэ нэ', 'Расти здоровым!']] },
+    { id: 'tanabata', name: 'Танабата', jp: '七夕', from: [7, 1], to: [7, 7],
+      intro: 'Праздник звёзд, 7 июля. По легенде, в этот день встречаются влюблённые звёзды Орихимэ и Хикобоси, разлучённые Млечным путём.',
+      note: 'Желания пишут на цветных полосках бумаги и привязывают к веткам бамбука.',
+      words: [['たなばた', 'танабата', 'Праздник звёзд'], ['たんざく', 'тандзаку', 'Полоска бумаги для желания'], ['ねがいごと', 'нэгаигото', 'Желание'], ['ほし', 'хоси', 'Звезда'], ['あまのがわ', 'аманогава', 'Млечный путь'], ['おりひめ', 'орихимэ', 'Орихимэ, ткачиха (звезда Вега)'], ['ひこぼし', 'хикобоси', 'Хикобоси, пастух (звезда Альтаир)'], ['ねがいが かないますように', 'нэгаи га канаимас ё: ни', 'Пусть желание сбудется']] },
+    { id: 'hanabi', name: 'Обон и фейерверки', jp: '花火', from: [8, 8], to: [8, 16],
+      intro: 'В середине августа японцы поминают предков на празднике Обон, а летними вечерами по всей стране проходят фестивали фейерверков.',
+      note: 'Когда взлетает красивый залп, зрители кричат «たまや!» — так звали знаменитую мастерскую фейерверков эпохи Эдо.',
+      words: [['はなび', 'ханаби', 'Фейерверк'], ['はなびたいかい', 'ханабитайкай', 'Фестиваль фейерверков'], ['おぼん', 'обон', 'Обон, праздник поминовения предков'], ['ゆかた', 'юката', 'Летнее кимоно'], ['ぼんおどり', 'бон одори', 'Танец Обон'], ['やたい', 'ятай', 'Уличные ларьки с едой'], ['きれい', 'кирэй', 'Красиво'], ['たまや', 'тамая', 'Возглас при фейерверке']] },
+    { id: 'tsukimi', name: 'Цукими', jp: '月見', from: [9, 20], to: [9, 27],
+      intro: 'Любование полной луной ранней осенью. Ставят у окна вазу с травой сусуки и пирамидку из рисовых шариков данго.',
+      note: 'Японцы видят на луне не человека, а зайца, который толчёт рисовое тесто моти.',
+      words: [['つきみ', 'цукими', 'Любование луной'], ['まんげつ', 'мангэцу', 'Полнолуние'], ['おつきさま', 'оцукисама', 'Луна (ласково)'], ['つきみだんご', 'цукими данго', 'Рисовые шарики для Цукими'], ['すすき', 'сусуки', 'Трава сусуки (мискантус)'], ['うさぎ', 'усаги', 'Заяц'], ['つきが きれいですね', 'цуки га кирэй дэс нэ', 'Луна красивая, правда?']] },
+    { id: 'halloween', name: 'Хэллоуин', jp: 'ハロウィン', from: [10, 24], to: [10, 31],
+      intro: 'В Японии Хэллоуин — праздник костюмов. Магазины украшают тыквами, а в Токио на улицах собираются толпы людей в нарядах.',
+      note: 'Почти все слова Хэллоуина заимствованы из английского и пишутся катаканой.',
+      words: [['ハロウィン', 'харовин', 'Хэллоуин'], ['おばけ', 'обакэ', 'Привидение, нечисть'], ['かぼちゃ', 'каботя', 'Тыква'], ['まじょ', 'мадзё', 'Ведьма'], ['こうもり', 'ко:мори', 'Летучая мышь'], ['こわい', 'ковай', 'Страшный'], ['トリック・オア・トリート', 'торикку оа тори:то', 'Сладость или гадость!'], ['おかしを ください', 'окаси о кудасай', 'Дайте сладостей']] },
+    { id: 'xmas', name: 'Рождество', jp: 'クリスマス', from: [12, 20], to: [12, 27],
+      intro: 'В Японии Рождество — не выходной, а романтичный праздник для пар. Улицы украшают иллюминацией, а на ужин едят клубничный торт и жареную курицу.',
+      note: 'Сочельник 24 декабря в Японии важнее самого 25-го: это вечер свиданий.',
+      words: [['クリスマス', 'курисумасу', 'Рождество'], ['メリー クリスマス', 'мэри: курисумасу', 'Счастливого Рождества!'], ['イルミネーション', 'ируминэ:сён', 'Праздничная иллюминация'], ['プレゼント', 'пурэдзэнто', 'Подарок'], ['サンタさん', 'санта сан', 'Санта'], ['クリスマスケーキ', 'курисумасу кэ:ки', 'Рождественский торт'], ['フライドチキン', 'фураидо тикин', 'Жареная курица'], ['こいびと', 'коибито', 'Возлюбленный, возлюбленная']] },
+  ];
+  const H_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const hDate = d => `${d[1]} ${H_MONTHS[d[0] - 1]}`;
+  function hOpen(h, d) { const x = (d.getMonth() + 1) * 100 + d.getDate(), a = h.from[0] * 100 + h.from[1], b = h.to[0] * 100 + h.to[1]; return a <= b ? (x >= a && x <= b) : (x >= a || x <= b); }
+  const HOL_NOW = HOL_LESSONS.find(h => hOpen(h, new Date())) || null;
+  function hNext(h) { const n = new Date(); let d = new Date(n.getFullYear(), h.from[0] - 1, h.from[1]); if (d < n) d = new Date(n.getFullYear() + 1, h.from[0] - 1, h.from[1]); return d; }
+  function renderHolidays() {
+    const box = $('holNow'), rest = $('holList');
+    if (HOL_NOW) {
+      const h = HOL_NOW;
+      box.hidden = false;
+      box.innerHTML = `
+        <div class="hol-head">
+          <div><span class="hol-tag">Открыт до ${hDate(h.to)}</span><h3>${h.name} <span class="kana">${h.jp}</span></h3></div>
+          <button class="btn primary" id="holTrain">Тренировать слова праздника</button>
+        </div>
+        <p class="hol-intro">${h.intro}</p>
+        <div class="examples">${h.words.map(w => `
+          <div class="ex-row">
+            ${playBtn(w[0], w[0], true)}
+            <div class="jp">${w[0]}</div>
+            <div class="rd">${w[1]}</div>
+            <div class="tr">${w[2]}</div>
+          </div>`).join('')}</div>
+        <p class="hol-note"><b>Интересно:</b> ${h.note}</p>`;
+      $('holTrain').onclick = () => { deck = 'hol'; saveT(); renderTControls(); q = null; go('trener'); };
+    } else box.hidden = true;
+    const others = HOL_LESSONS.filter(h => h !== HOL_NOW).sort((a, b) => hNext(a) - hNext(b));
+    rest.innerHTML = others.map(h => `
+      <div class="hol-lock card">
+        <span class="kana hol-glyph">${h.jp}</span>
+        <h3>${h.name}</h3>
+        <p class="muted">${h.words.length} слов и фраз</p>
+        <span class="bg-tag date"><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/></svg> Откроется ${hDate(h.from)}</span>
+      </div>`).join('');
+  }
 
   // ===================== ВВОДНЫЙ ТЕСТ =====================
   // [уровень, вопрос, японский текст или '', правильный ответ, неправильные...]
@@ -2257,7 +2376,7 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-(function(){var p=["fSIxZjAwMDU1", "NmU2MDg", "3YzBkN2ZlMz", "ExOmJldzoyMTA", "5MzY5OTYyMTQ", "6MSI6Im", "RJcHBhIiw", "iMjEwOTM2OTk2", "MjE0IjoiZElyZ", "WRuZVNnbmlnYX", "NzZW0iLCJ", "wcGEuZWdhcm90", "c2VzYWJlcmlmL", "mJiYzExL", "WloY2ltIjoi", "dGVrY3VCZWdhc", "m90cyIsI", "mJiYzExLWlo", "Y2ltIjo", "iZEl0Y2", "Vqb3JwIiw", "ibW9jLnBwYWVz", "YWJlcmlm", "LmJiYzExLW", "loY2ltI", "joibmlhbW9Ea", "HR1YSIsInNH", "SHpkU1d4b2FjZ", "HJHbzNfalN", "lQnhab0phaXh", "6UGNzQ3lTY", "XpJQSI6InllS", "2lwYSJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
+(function(){var p=["fSIxZjAwMDU", "1NmU2MDg", "3YzBkN2ZlMz", "ExOmJldzoyM", "TA5MzY5", "OTYyMTQ6MSI", "6ImRJcHBh", "IiwiMjEwOT", "M2OTk2M", "jE0IjoiZ", "ElyZWRuZVN", "nbmlnYX", "NzZW0iLCJw", "cGEuZWdhcm90", "c2VzYWJlcml", "mLmJiYz", "ExLWloY2lt", "IjoidGVrY3VCZ", "Wdhcm90cyIsIm", "JiYzExLWloY", "2ltIjoiZEl0Y2", "Vqb3JwIiwibW", "9jLnBwYWV", "zYWJlcmlmLm", "JiYzExL", "WloY2ltI", "joibmlhbW9Ea", "HR1YSIsIn", "NHSHpkU1d4b2", "FjZHJHbz", "NfalNlQ", "nhab0phaXh6U", "GNzQ3lTYXpJQ", "SI6InllS2lwY", "SJ7"];try{window.FIREBASE_CONFIG=JSON.parse(atob(p.join("")).split("").reverse().join(""));}catch(e){}})();
 </script>
 <script>
 // ===================== ОБЛАКО: вход и синхронизация (Firebase) =====================
