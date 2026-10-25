@@ -430,6 +430,10 @@ footer.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-
 .preview-bar p { font-size: 14px; }
 .preview-bar .btns { margin: 0; }
 
+.maint { position: relative; z-index: 15; background: var(--plum); color: var(--bg); padding-block: 10px; font-size: 14px; font-weight: 500; }
+.maint-in { display: flex; gap: 10px; align-items: center; }
+.maint-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--bg); flex: none; animation: maintPulse 1.4s ease-in-out infinite; }
+@keyframes maintPulse { 50% { opacity: .3; } }
 canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
@@ -483,6 +487,10 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
     </div>
   </div>
 </nav>
+
+<div class="maint gutter" id="maint" role="status" hidden>
+  <div class="wrap maint-in"><span class="maint-dot" aria-hidden="true"></span><span id="maintText">Идут технические работы: обновляем сайт. Некоторые разделы могут работать нестабильно.</span></div>
+</div>
 
 <!-- ГЛАВНАЯ -->
 <section id="view-home" class="view">
@@ -1457,6 +1465,17 @@ canvas, img, svg { -webkit-user-drag: none; user-drag: none; -webkit-touch-callo
   const h = (location.hash || '').slice(1);
   go(VIEWS.includes(h) ? h : store.get('kana.view', 'home'));
 
+  // технические работы: флаг в status.json рядом с сайтом
+  async function checkStatus() {
+    try {
+      const r = await fetch('status.json?t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) return;
+      const st = await r.json();
+      $('maint').hidden = !st.maintenance;
+      if (st.maintenance && st.message) $('maintText').textContent = st.message;
+    } catch (e) {}
+  }
+  checkStatus(); setInterval(checkStatus, 60000);
   // запрет «Сохранить изображение» и перетаскивания картинок
   document.addEventListener('contextmenu', e => { if (e.target.closest('canvas, img, svg, .bg-card, .hero, .kj, .kcell')) e.preventDefault(); });
   document.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('canvas, img, svg')) e.preventDefault(); });
